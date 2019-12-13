@@ -1,0 +1,56 @@
+/**
+ * http请求拦截处理
+ */
+import axios from 'axios'
+axios.defaults.headers = {
+	'Content-Type':'application/x-www-form-urlencoded'
+};
+axios.interceptors.request.use(config => {
+    config.baseURL = window.vm.API.baseURL;
+	if(config.method.toUpperCase() =="POST"){//post方式时，提交的参数转成string类型
+		config.data = window.vm.qs.stringify(config.data);
+	}
+	//过滤拦截路径
+	if(window.vm.API.constObj.requestFilter.indexOf(config.url) === -1){//拦截的请求
+		let stateObj = window.vm.$store.state;
+		if(stateObj.user && stateObj.user.token) {//token验证
+			//token 转码
+			let submitToken = encodeURIComponent(stateObj.user.token);
+			config.headers.token = encodeURIComponent(submitToken);
+			return config;
+	    }else{
+	      	//清除登录信息并跳转到登录页面
+	        window.vm.commonFun.againLogin(true);
+	        return;
+	    }
+	}else{
+		return config;
+	}
+}, error => {
+	Message.error({
+		message: '加载超时'
+	})
+	return Promise.reject(error);
+});
+// http响应拦截器
+axios.interceptors.response.use(response => {
+	if (response.data.status) {
+        switch (response.data.status) {
+            case 300://token过期
+                window.vm.$message({
+		            type: 'error',
+		            message: '登录信息过期，请重新登录!'
+	          	});  
+	           //清除token信息并跳转到登录页面
+	           window.vm.commonFun.againLogin(true);
+	        break;
+        }
+    }
+	return response;
+}, error => {
+	Message.error({
+		message: '加载失败'
+	})
+	return Promise.reject(error);
+})
+export default axios;
