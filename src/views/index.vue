@@ -10,7 +10,19 @@
 		<!--状态栏-->
 		<div class="status-bar">
 			<!--状态栏系统菜单-->
-			<SystemMenu v-if="systemMenuVisible" @openCallBack="statusBarData" @closeCallBack="closeParentDialog"></SystemMenu>
+			<!--<SystemMenu v-if="systemMenuVisible" @openCallBack="statusBarData" @closeCallBack="closeParentDialog" ref="systemMenu"></SystemMenu>-->
+			<div v-show="systemMenuVisible" class="systemMenu">
+				<ul class="leftMenus">
+					<li v-for="menus in systemMenus" @click="alertComponent(menus)">
+						<img :src="menus.icon" :tile="menus.name"/>
+					</li>
+				</ul><ul class="rightMenus">
+					<li v-for="menus in systemModules" @click="alertComponent(menus)">
+						<img :src="menus.icon" :tile="menus.name"/>
+						<span>{{menus.name}}</span>
+					</li>
+				</ul>
+			</div>
 			<img class="menuLogo" @click="clickSystemMenu" src="../assets/img/logo_icon.png" alt="菜单图标" title="打开系统菜单"/>
 			<el-input
 			    placeholder="在此处搜索应用"
@@ -19,50 +31,60 @@
 			</el-input>
 			<!--显示活动的app图标-->
 			<el-tooltip v-if="activeApps.length > 0" v-for="app in activeApps" :content="`${app.name}`" placement="top" visible-arrow="false" :key="`${app.name}`" @click.native="clickMinimizedApp(app)">
-  				<img  v-bind:src="app.icon" />
+  				<img class="statusIcon" v-bind:src="app.icon" />
 			</el-tooltip>
 		</div>
-		<DialogUrl  v-for="(app,index) in activeApps" v-if="app.isShowDialog" width="70%" @callBackFun="closeParentDialog" :appObj=app :key="`${app.name}`" :ref="'dialogUrl'+index"></DialogUrl>
-		
+		<!--弹框打开第三方应用-->
+		<DialogUrl  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 2" width="70%" @callBackFun="closeParentDialog" :appObj=app :key="`${app.name}`" :ref="'dialogUrl'+index"></DialogUrl>
+		<!--弹框打开组件-->
+		<DialogComponent  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 1" width="70%" @callBackFun="closeParentDialog" :appObj=app :key="`${app.name}`" :ref="'dialogComponent'+index"></DialogComponent>
 	</div>
 </template>
 
 <script>
 	import Vue from 'vue'
 	import DialogUrl from '../components/DialogUrl.vue';//弹框打开第三方应用
-	import SystemMenu from '../components/SystemMenu.vue';//系统菜单
+	import DialogComponent from '../components/DialogComponent.vue';//弹框打开系统组件
 	export default {
 		name: 'index',
 		components: {
 			DialogUrl,
-			SystemMenu
+			DialogComponent
 		},
 		data() {
 			return {
-				isMount:false,//是否挂载组件
 				searchApp:"",//搜索应用
-				dialogVisible:false,
-				systemMenuVisible:false,
-				appList:[
-					{ name:'智慧照明',icon:require("../assets/img/light.png"),isActive:true,webUrl:"http://www.baidu.com" },
-					{ name:'能源管理',icon:require("../assets/img/light.png"),isActive:true,webUrl:"http://192.168.2.41:8080/passport/login" },
-					{ name:'智慧空调',icon:require("../assets/img/light.png"),isActive:true,webUrl:"http://www.baidu.com" },
-					{ name:'设备OEE',icon:require("../assets/img/OEE.png"),isActive:true,webUrl:"http://www.baidu.com" },
-					{ name:'巡检管理',icon:require("../assets/img/light.png"),isActive:true,webUrl:"http://www.baidu.com" },
+				systemMenuVisible:false,//是否显示状态栏系统菜单
+				appList:[//桌面第三方应用
+					{ name:'智慧照明',icon:require("../assets/img/light.png"),isActive:true,path:"http://www.baidu.com" },
+					{ name:'能源管理',icon:require("../assets/img/light.png"),isActive:true,path:"http://192.168.2.41:8080/passport/login" },
+					{ name:'智慧空调',icon:require("../assets/img/light.png"),isActive:true,path:"http://www.baidu.com" },
+					{ name:'设备OEE',icon:require("../assets/img/OEE.png"),isActive:true,path:"http://www.baidu.com" },
+					{ name:'巡检管理',icon:require("../assets/img/light.png"),isActive:true,path:"http://www.baidu.com" },
 				],
-				activeApps: [],//点击打开的app数组			
+				systemMenus:[//系统菜单项目
+					{ name:'个人中心',path:'/gerenzhongxin',icon:require("../assets/img/yonghu.png")},
+					{ name:'设置中心',path:'/gerenzhongxin',icon:require("../assets/img/shezhi.png")},
+					{ name:'退出系统',path:'/logout',icon:require("../assets/img/tuichu.png")},
+				],
+				systemModules:[//系统功能模块
+					{ name:'用户中心',path:'/userCenterHome',icon:require("../assets/img/yonghuzhongxin.png")},
+					{ name:'物联网中心',path:'/baseForm',icon:require("../assets/img/wulianwang.png")},
+					{ name:'运维中心',path:'/gerenzhongxin',icon:require("../assets/img/yunweizhongxin.png")},
+				],	
+				activeApps: [],//状态栏显示打开的app数组			
 			}
+		},
+		computed:{
+
 		},
 		created() {
 			
 		},
 		mounted(){
         	if(this.$store.state.user && !this.$store.state.user.token){
-        		this.isMount = false;
         		this.$router.push('/login');  // 正常登录
         		return;
-        	}else{
-        		this.isMount = true;
         	}
 		},
 		methods: {
@@ -93,7 +115,7 @@
 						name:appObj.name,//APP名称
 						icon:chioceApp.icon,//app图标
 						webSource:2,//打开的网页来源  1=本项目；2=第三方项目
-						webUrl:chioceApp.webUrl,
+						path:chioceApp.path,
 						isActive:true,//状态栏中显示的app是否处于活动状态
 						isShowDialog:true,//是否显示弹框
 						isMinimize:false//是否缩小弹框
@@ -123,7 +145,7 @@
 						name:appObj.name,//APP名称
 						icon:appObj.icon,//app图标
 						webSource:1,//打开的网页来源  1=本项目；2=第三方项目
-						webUrl:appObj.path,
+						path:appObj.path,
 						isActive:true,//状态栏中显示的app是否处于活动状态
 						isShowDialog:true,//是否显示弹框
 						isMinimize:false//是否缩小弹框
@@ -131,10 +153,9 @@
 					let pushIndex = this.activeApps.length>0?this.activeApps.length:0;
 					this.$set(this.activeApps,pushIndex,appObject);
 				}
-				this.systemMenuVisible = false;
 			},
 			/**
-			 * 关闭桌面的第三方app
+			 * 关闭桌面的第三方应用和系统组件弹框
 			 */
 			closeParentDialog(appObj){
 				let searchIndex = -1;
@@ -160,8 +181,14 @@
 					if(searchIndex != -1){
 						let editApp = this.activeApps[searchIndex];
 						editApp.isMinimize = true;
-						this.$refs['dialogUrl'+searchIndex][0].isminimize= false;   
-						this.$refs['dialogUrl'+searchIndex][0].dialogVisible= true;   
+						if(appObj.webSource == 1){//显示本项目模块
+							this.$refs['dialogComponent'+searchIndex][0].isminimize= false; 
+							this.$refs['dialogComponent'+searchIndex][0].moduleDialogVisible= true; 
+						}else{//显示第三方应用
+							this.$refs['dialogUrl'+searchIndex][0].isminimize= false;   
+							this.$refs['dialogUrl'+searchIndex][0].dialogVisible= true;	
+						}
+						   
 					}
 				}
 			},
@@ -170,8 +197,28 @@
 			 */
 			clickSystemMenu(){
 				this.systemMenuVisible = !this.systemMenuVisible;
+			},
+			/**
+	         * 点击弹出组件
+	         */
+			alertComponent(menuObj) {
+				this.systemMenuVisible = false;
+				if(menuObj.name =="退出系统"){
+					this.$confirm('确定退出系统吗?', '操作提示', {
+			          confirmButtonText: '退出系统',
+			          cancelButtonText: '继续使用',
+			          type: 'warning'
+			        }).then(() => {//退出系统
+			          this.$store.commit('removeAllInfo');
+			          this.$router.push('/login');  // 正常登录
+			          
+			        }).catch(() => {//取消
+			                   
+			        });
+			        return;
+				}
+				this.statusBarData(menuObj);
 			}
-			
 		}
 	}
 </script>
@@ -215,6 +262,49 @@
 		    background-color: #31353f;
 		    position: fixed;
 		    z-index: 9999;
+			.systemMenu{
+				width: 346px;
+				height: 39vh;
+				background-color: #31353f;
+				box-shadow: 0px 1px 10px 0px rgba(0, 0, 0, 0.1);
+				position: absolute;
+				left: 0;
+				top:-39vh;
+				.leftMenus{
+					display: inline-block;
+				    height: 95%;
+				    padding-top: 5%;
+				    width: 16.76%;
+				    text-align: center;
+				    cursor: pointer;
+				    li{
+				    	height: 42px;
+				    }
+				    li:hover{
+				    	background-color: #4c5363;
+				    }
+				}
+				.rightMenus{
+					display: inline-block;
+					cursor: pointer;
+				    height: 95%;
+				    padding-top: 5%;
+				    width: 81.5%;
+				    text-align: left;
+				    border-left: 1px solid #4c5363;
+				    li{
+				    	padding-left: 8.5%;
+				    	height: 42px;
+				    	span{
+				    		margin-left: 10px;
+				    		color: #ffffff;
+				    	}
+				    }
+				    li:hover{
+				    	background-color: #4c5363;
+				    }
+				}
+			}
 			img.menuLogo{
 				width: 30px;
 			    height: 30px;
@@ -235,14 +325,17 @@
 			.el-tooltip{
 				cursor: pointer;
 				margin: 0 5px;
-				height: 40px;
+				height: 45px;
 				border: none;
-				border-bottom: 2px solid #a0a9b5;
-				img{
+				border-bottom: 3px solid #a0a9b5;
+				img.statusIcon{
 					cursor: pointer;
 					width: 40px;
 					height: 40px;
 				}
+			}
+			.el-tooltip:hover{
+				background-color: #4c5363;
 			}
 		}
 	}

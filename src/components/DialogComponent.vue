@@ -1,57 +1,42 @@
 <template>
-	<div class="systemMenu">
-		<ul class="leftMenus">
-			<li v-for="menus in systemMenus" @click="alertComponent(menus)">
-				<img :src="menus.icon" :tile="menus.name"/>
-			</li>
-		</ul><ul class="rightMenus">
-			<li v-for="menus in systemModules" @click="alertComponent(menus)">
-				<img :src="menus.icon" :tile="menus.name"/>
-				<span>{{menus.name}}</span>
-			</li>
-		</ul>
-		<el-dialog ref="systemModuleDialog" class="systemModuleDialog" :title="chioceMenus.name" :fullscreen="isfullscreen" :modal="false" :visible.sync="moduleDialogVisible"  :append-to-body="false" :close-on-click-modal="false" :destroy-on-close="true" :show-close="false"  :class="isminimize? 'isminimize': ''" center>
-			<div v-show="!isminimize" slot="title" class="medium">
-				<div></div>
-				<div class="centers"><span>{{chioceMenus.name}}</span></div>
-				<div class="icons">
-					<i class="el-icon-minus" style="font-size: 24px" @click="minimize"></i>
-					<i :class="isfullscreen? 'el-icon-remove-outline' : 'el-icon-circle-plus-outline' " style="font-size: 24px" @click="IsFullscreen"></i>
-					<i class="el-icon-close" style="font-size: 24px" @click="closeDialog"></i>
-				</div>
+	<el-dialog ref="systemModuleDialog" class="systemModuleDialog" :title="appObj.name" :fullscreen="isfullscreen" :modal="false" :visible.sync="moduleDialogVisible"  :append-to-body="false" :close-on-click-modal="false" :destroy-on-close="true" :show-close="false"  :class="isminimize? 'isminimize': ''" center>
+		<div v-show="!isminimize" slot="title" class="medium">
+			<div></div>
+			<div class="centers"><span>{{appObj.name}}</span></div>
+			<div class="icons">
+				<i class="el-icon-minus" style="font-size: 24px" @click="minimize"></i>
+				<i :class="isfullscreen? 'el-icon-remove-outline' : 'el-icon-circle-plus-outline' " style="font-size: 24px" @click="IsFullscreen"></i>
+				<i class="el-icon-close" style="font-size: 24px" @click="closeDialog"></i>
 			</div>
-			<div v-show="!isminimize" class="dialogBody">
-				<currComponent></currComponent>
-			</div>
-		</el-dialog>
-	</div>
-
+		</div>
+		<div v-show="!isminimize" class="dialogBody">
+			<currComponent></currComponent>
+		</div>
+	</el-dialog>
 </template>
 <script>
 	import Vue from 'vue';
 	export default {
-		name: 'SystemMenu', //状态栏系统菜单
+		name: 'DialogComponent', //弹框打开组件
+		props: {
+			width: {//显示宽度
+				type: String,
+				default: '70%'
+			},
+			appObj: {//选中的第三方应用对象
+				type: Object,
+				required:true
+			}
+		},
 		data() {
 			return {
 				isfullscreen: false, // 全屏
 				isminimize: false, // 最小化
-				moduleDialogVisible: false, // 隐藏弹窗
-				systemMenus:[//系统菜单项目
-					{ name:'个人中心',path:'/gerenzhongxin',icon:require("../assets/img/yonghu.png")},
-					{ name:'设置中心',path:'/gerenzhongxin',icon:require("../assets/img/shezhi.png")},
-					{ name:'退出系统',path:'/logout',icon:require("../assets/img/tuichu.png")},
-				],
-				systemModules:[//系统功能模块
-					{ name:'用户中心',path:'/userCenterIndex',icon:require("../assets/img/yonghuzhongxin.png")},
-					{ name:'物联网中心',path:'/baseForm',icon:require("../assets/img/wulianwang.png")},
-					{ name:'运维中心',path:'/gerenzhongxin',icon:require("../assets/img/yunweizhongxin.png")},
-				],	
-				chioceMenus:{
-					name:""
-				}//点击选中的菜单信息
+				moduleDialogVisible: false // 隐藏弹窗
 			}
 		},
 		created() {
+			this.openDialog();
 		},
 		watch: {
 			moduleDialogVisible(val) {
@@ -75,17 +60,8 @@
 			 * 关闭弹窗
 			 */
 			closeDialog() {
-				this.$emit('closeCallBack',this.chioceMenus);
+				this.$emit('callBackFun',this.appObj);
 				this.moduleDialogVisible = false
-			},
-			/**
-			 * 打开弹窗 
-			 */
-			openDialog() {
-				this.$emit("openCallBack",this.chioceMenus);
-				
-				this.moduleDialogVisible = true;
-				//this.$parent.statusBarData(this.chioceMenus);
 			},
 			/**
 			 * 全屏
@@ -95,28 +71,13 @@
 				if(this.isfullscreen) this.$emit('isfullscreen')
 			},
 			/**
-	         * 点击弹出组件
+	         * 加载组件,打开弹窗
 	         */
-			alertComponent(menuObj) {
-				if(menuObj.name =="退出系统"){
-					this.$confirm('确定退出系统吗?', '操作提示', {
-			          confirmButtonText: '退出系统',
-			          cancelButtonText: '继续使用',
-			          type: 'warning'
-			        }).then(() => {//退出系统
-			          this.$store.commit('removeAllInfo');
-			          this.$router.push('/login');  // 正常登录
-			          
-			        }).catch(() => {//取消
-			                   
-			        });
-			        return;
-				}
-				this.chioceMenus = menuObj;
+			openDialog() {
 				let routers = this.$router.options.routes;
 				let currComponent = '';
 				for(let i=0;i<routers.length;i++){
-					if(menuObj.path == routers[i].path){
+					if(this.appObj.path == routers[i].path){
 						currComponent = routers[i].component;
 						break;
 					}
@@ -125,8 +86,7 @@
 					this.$alert("该页面路径信息配置错误!");
 				}else{
 					Vue.component('currComponent',currComponent);
-					this.openDialog();
-					//this.moduleDialogVisible = true;
+					this.moduleDialogVisible = true;
 				}
 			},
 		},
@@ -139,49 +99,6 @@
 	}
 </script>
 <style lang="scss" type="text/css" scoped>
-	.systemMenu{
-		width: 346px;
-		height: 39vh;
-		background-color: #31353f;
-		box-shadow: 0px 1px 10px 0px rgba(0, 0, 0, 0.1);
-		position: absolute;
-		left: 0;
-		top: -39vh;
-		.leftMenus{
-			display: inline-block;
-		    height: 95%;
-		    padding-top: 5%;
-		    width: 16.76%;
-		    text-align: center;
-		    cursor: pointer;
-		    li{
-		    	height: 42px;
-		    }
-		    li:hover{
-		    	background-color: #4c5363;
-		    }
-		}
-		.rightMenus{
-			display: inline-block;
-			cursor: pointer;
-		    height: 95%;
-		    padding-top: 5%;
-		    width: 81.5%;
-		    text-align: left;
-		    border-left: 1px solid #4c5363;
-		    li{
-		    	padding-left: 8.5%;
-		    	height: 42px;
-		    	span{
-		    		margin-left: 10px;
-		    		color: #ffffff;
-		    	}
-		    }
-		    li:hover{
-		    	background-color: #4c5363;
-		    }
-		}
-	}
 	.el-dialog {
 		margin-top: 10vh!important;
 	}

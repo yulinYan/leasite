@@ -58,15 +58,7 @@ window.vm = new Vue({
   methods:{
   	created(){
   		//console.log("Vue.prototype.API"+Vue.prototype.API.URL);
-  	},
-  	directives: {
-		focus: {
-			// 指令的定义
-			inserted: function (el) {
-				el.focus();
-			}
-		}
-	}
+  	}
   }
   
 })

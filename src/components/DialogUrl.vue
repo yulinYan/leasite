@@ -1,5 +1,5 @@
 <template>
-	<el-dialog ref="xhzqDialog" class="xhzqDialog" :title="title" :fullscreen="isfullscreen" :modal="false" :visible.sync="dialogVisible"  :append-to-body="true" :close-on-click-modal="false" :destroy-on-close="true" :show-close="false" :width="width" :class="isminimize? 'isminimize': ''" center>
+	<el-dialog ref="xhzqDialog" class="xhzqDialog" :title="Object.name" :fullscreen="isfullscreen" :modal="false" :visible.sync="dialogVisible"  :append-to-body="false" :close-on-click-modal="false" :destroy-on-close="true" :show-close="false" :width="width" :class="isminimize? 'isminimize': ''" center>
 		<div v-show="!isminimize" slot="title" class="medium">
 			<div></div>
 			<div class="centers"><span>{{appObj.name}}</span></div>
@@ -15,30 +15,22 @@
 			<div class="rights"><i class="el-icon-close" style="font-size: 24px" @click="closeDialog"></i></div>
 		</div>-->
 		<div v-show="!isminimize" class="dialogBody">
-			<iframe :src="appObj.webUrl" id="mobsf" scrolling="no" frameborder="0" style="width: 100%;height: 100%;"></iframe>
+			<iframe :src="appObj.path" id="mobsf" scrolling="no" frameborder="0" style="width: 100%;height: 100%;"></iframe>
 		</div>
-		<!--<div v-show="!isminimize" v-if="isFooter" class="dialogFooter">
-			<slot name="footer" solt="footer"></slot>
-		</div>-->
 	</el-dialog>
 </template>
 <script>
 	export default {
 		name: 'DialogUrl', //弹框打开第三方应用
 		props: {
-			width: {
+			width: {//显示宽度
 				type: String,
 				default: '70%'
 			},
-			appObj: {
+			appObj: {//选中的第三方应用对象
 				type: Object,
 				required:true
 			}
-			/*,
-			isFooter: { // 是否显示脚部
-				type: Boolean,
-				default: true
-			}*/
 		},
 		data() {
 			return {
