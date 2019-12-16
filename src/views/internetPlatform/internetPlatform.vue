@@ -8,7 +8,7 @@
         <el-container class="platformContainer">
             <el-aside width="180px">
                 <ul>
-                    <li v-for="(item,index) in asideList" :key="index" :class="isactive == index ? 'active' : '' " @click='asideClick(index,item.route)'><img :src="item.icon" alt=""><span v-cloak>{{item.name}}</span></li>
+                    <li v-for="(item,index) in asideList" :key="index" :class="isactive == index ? 'active' : '' " @click='asideClick(index,item.route)'><img :src="isactive == index ? item.icon[1]:item.icon[0]" alt=""><span v-cloak>{{item.name}}</span></li>
                 </ul>
             </el-aside>
             <el-main>
@@ -28,15 +28,15 @@ export default {
         return {
             //侧边栏
             asideList: [{
-                icon: require('../../assets/img/internetPlatform/shouye1.png'),
+                icon: [require('../../assets/img/internetPlatform/shouye1.png'), require('../../assets/img/internetPlatform/shouye2.png')],
                 name: '信息总览',
                 route: 'Overview'
             }, {
-                icon: require('../../assets/img/internetPlatform/zichan1.png'),
+                icon: [require('../../assets/img/internetPlatform/zichan1.png'), require('../../assets/img/internetPlatform/zichan2.png')],
                 name: '资产中心',
                 route: 'Overview'
             }, {
-                icon: require('../../assets/img/internetPlatform/caijishebei1.png'),
+                icon: [require('../../assets/img/internetPlatform/caijishebei1.png'), require('../../assets/img/internetPlatform/caijishebei2.png')],
                 name: '采集设备',
                 route: 'Overview'
             }, ],
@@ -84,6 +84,8 @@ export default {
     }
     .el-aside {
         background-color: #ffffff;
+        overflow-x: hidden;
+        overflow-y: auto;
         li {
             width: 100%;
             height: 54px;
