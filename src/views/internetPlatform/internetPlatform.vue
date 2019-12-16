@@ -8,7 +8,9 @@
         <el-container class="platformContainer">
             <el-aside width="180px">
                 <ul>
-                    <li v-for="(item,index) in asideList" :key="index" :class="isactive == index ? 'active' : '' " @click='asideClick(index,item.route)'><img :src="isactive == index ? item.icon[1]:item.icon[0]" alt=""><span v-cloak>{{item.name}}</span></li>
+                    <li v-for="(item,index) in asideList" :key="index" :class="item.isactive ? 'active' : '' " @click='asideClick(index)'><img :src="item.isactive ? item.icon[1]:item.icon[0]" alt="">
+                        <router-link :to="item.route">{{item.name}}</router-link>
+                    </li>
                 </ul>
             </el-aside>
             <el-main>
@@ -30,43 +32,73 @@ export default {
             asideList: [{
                 icon: [require('../../assets/img/internetPlatform/shouye1.png'), require('../../assets/img/internetPlatform/shouye2.png')],
                 name: '信息总览',
-                route: 'Overview'
+                route: '/internetPlatform/Overview',
+                isactive: false
             }, {
                 icon: [require('../../assets/img/internetPlatform/zichan1.png'), require('../../assets/img/internetPlatform/zichan2.png')],
                 name: '资产中心',
-                route: 'Overview'
+                route: '/internetPlatform/Asset',
+                isactive: false
             }, {
                 icon: [require('../../assets/img/internetPlatform/caijishebei1.png'), require('../../assets/img/internetPlatform/caijishebei2.png')],
                 name: '采集设备',
-                route: 'Overview'
+                route: '/internetPlatform/Overview',
+                isactive: false
             }, ],
-            //点击当前元素的index
-            isactive: false
         }
     },
     created() {
 
     },
     mounted() {
-
+        this.asideClick();
     },
     computed: {
 
     },
     methods: {
         //点击侧边栏
-        asideClick(index, route) {
-            this.isactive = index;
-            this.$router.push({
-                path: route
+        asideClick(index) {
+            this.$nextTick(() => {
+                this.asideList.forEach((v, i) => {
+                    if (index === undefined) {
+                        if (location.hash.includes(v.route)) {
+                            v.isactive = true;
+                        } else {
+                            v.isactive = false;
+                        }
+                    } else {
+                        if (i == index) {
+                            v.isactive = true;
+                        } else {
+                            v.isactive = false;
+                        }
+                    }
+                })
             });
-        }
+        },
     }
 }
 </script>
 
 <style lang="scss" scoped type="text/css">
 .internetPlatform {
+    a:link {
+        text-decoration: none;
+        /* 指正常的未被访问过的链接*/
+    }
+    a:visited {
+        text-decoration: none;
+        /*指已经访问过的链接*/
+    }
+    a:hover {
+        text-decoration: none;
+        /*指鼠标在链接*/
+    }
+    a:active {
+        text-decoration: none;
+        /* 指正在点的链接*/
+    }
     height: 100%;
     header {
         height: 60px;

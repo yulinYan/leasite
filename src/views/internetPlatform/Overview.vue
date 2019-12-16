@@ -47,8 +47,9 @@ export default {
                 details: 'Device online time',
                 num: '10'
             }],
+            // 设备消息数echarts
             deviceMessageCharts: null,
-            // 设备消息数charts
+            // 设备消息数option
             deviceMessageOption: {
                 color: ['#3c70d7', '#7ea6f2', '#D4E8FF', '#7DE5D2', '#FEAE7B', '#003399', '#3366cc', '#0087cb', '#3399ff', '#017890', '#587498', '#74828f', '#666633', '#99cccc', '#a1bad0', '#c25b56', '#ff9933', '#d0a727', '#f9ca79', '#d9ccb9'],
                 tooltip: {
@@ -149,9 +150,91 @@ export default {
                     },
                 ],
             },
-            // 设备在线时长排行榜charts
+            // 设备在线时长排行榜echarts
+            deviceTimeCharts: null,
+            // 设备在线时长排行榜option
             deviceTimeOption: {
-
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(240, 244, 251, 0.8)',
+                    textStyle: {
+                        color: '#505050',
+                        fontFamily: 'Microsoft YaHei',
+                        align: 'left'
+                    },
+                    axisPointer: {
+                        type: 'line'
+                    }
+                },
+                grid: {
+                    left: '45px',
+                    right: '26px',
+                    // bottom: '60px',
+                    // top: '50px'
+                },
+                yAxis: {
+                    type: 'category',
+                    nameGap: 10,
+                    data: ['设备一', '设备二', '设备三', '设备四', '设备五'],
+                    axisLine: { //坐标轴轴线相关设置。
+                        lineStyle: {
+                            color: '#d8d8d8'
+                        }
+                    },
+                    axisLabel: { //坐标轴刻度标签的相关设置。
+                        color: '#505050'
+                    },
+                    axisTick: { //坐标轴刻度相关设置。
+                        show: false,
+                        alignWithLabel: false
+                    },
+                    splitLine: { //坐标轴在 grid 区域中的分隔线
+                        lineStyle: {
+                            color: '#eee'
+                        }
+                    },
+                    name: ''
+                },
+                xAxis: {
+                    name: 'h',
+                    nameTextStyle: {
+                        // align: 'left',
+                        fontFamily: 'Microsoft YaHei',
+                        align: 'right'
+                    },
+                    type: 'value',
+                    nameGap: 20,
+                    axisLine: { //坐标轴轴线相关设置。
+                        lineStyle: {
+                            color: '#d8d8d8'
+                        }
+                    },
+                    axisLabel: { //坐标轴刻度标签的相关设置。
+                        color: '#505050'
+                    },
+                    axisTick: { //坐标轴刻度相关设置。
+                        show: false,
+                        alignWithLabel: false
+                    },
+                    splitLine: { //坐标轴在 grid 区域中的分隔线
+                        lineStyle: {
+                            color: '#eee'
+                        }
+                    },
+                },
+                series: [{
+                    name: '数量',
+                    type: 'bar',
+                    itemStyle: {
+                        normal: {
+                            color: function(params) {
+                                var colorList = ['#3c70d7', '#7ea6f2', '#D4E8FF', '#7DE5D2', '#FEAE7B', '#003399', '#3366cc', '#0087cb', '#3399ff', '#017890', '#587498', '#74828f', '#666633', '#99cccc', '#a1bad0', '#c25b56', '#ff9933', '#d0a727', '#f9ca79', '#d9ccb9'];
+                                return colorList[params.dataIndex]
+                            }
+                        }
+                    },
+                    data: [620, 732, 701, 734, 1090, 1130, 1120]
+                }, ],
             },
         }
     },
@@ -161,6 +244,8 @@ export default {
     mounted() {
         // 获取设备消息数
         this.getDeviceMessage();
+        // 获取设备在线时长
+        this.getDeviceTime();
     },
     computed: {
 
@@ -173,6 +258,15 @@ export default {
             this.deviceMessageCharts && this.deviceMessageCharts.setOption(this.deviceMessageOption);
             window.addEventListener("resize", () => {
                 this.deviceMessageCharts.resize();
+            });
+        },
+        // 获取设备在线时长
+        getDeviceTime() {
+            this.deviceTimeCharts && this.deviceTimeCharts.clear();
+            this.deviceTimeCharts = this.$echarts.init(document.getElementById('deviceTime'));
+            this.deviceTimeCharts && this.deviceTimeCharts.setOption(this.deviceTimeOption);
+            window.addEventListener("resize", () => {
+                this.deviceTimeCharts.resize();
             });
         }
     }
