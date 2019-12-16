@@ -4,7 +4,7 @@
 			<!--<img v-if="logoImageUrl.length > 0" :src="logoImageUrl" alt="系统logo">-->
 			<!--<img v-else src="../assets/img/logo-bg-transparent.png" alt="系统logo">-->
 			<img  src="../assets/img/logo-bg-transparent.png" alt="系统logo">
-			<span class="systemName">干部档案管理信息系统 V4.0</span>
+			<span class="systemName">Leansite Paas 2.0</span>
 		</div>
 		<div class="header-right">
 			<div class="header-user-con">
