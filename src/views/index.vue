@@ -88,9 +88,9 @@
 			 * 获取列表数据
 			 */
 			getData() {
-				this.$axios({
+				this.$axios.leansite({
 					method: 'get',
-					url: this.API.getThirdApp,
+					url: this.API.leansite.getThirdApp,
 					params: {
 						'project_id':1,
 					}
@@ -242,9 +242,9 @@
              * 退出系统
              */
             logout(){
-				this.$axios({
+				this.$axios.leansite({
 					method: 'delete',
-					url: this.API.logout,
+					url: this.API.leansite.logout,
 					params: {
 						'id':this.$store.state.user.userId
 					}

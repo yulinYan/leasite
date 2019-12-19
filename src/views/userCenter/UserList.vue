@@ -55,9 +55,9 @@
                 tableData: [],
                 multipleSelection: [],//选中项
                 pageObj: {
-					pageIndex: this.API.constObj.pageIndex, //当前页码
+					pageIndex: this.API.leansite.constObj.pageIndex, //当前页码
 					total: 0, //数据总数
-					pageSize: this.API.constObj.pageSize, //页大小
+					pageSize: this.API.leansite.constObj.pageSize, //页大小
 				},
 				userDialogVisible:false,//是否显示用户信息弹框
 				searchText:'',//搜索字段
@@ -88,7 +88,7 @@
 	        UserCallBack(isRefresh){
 	            this.userDialogVisible = false;
 				if(isRefresh){
-			   		this.pageObj.pageIndex = this.API.constObj.pageIndex;
+			   		this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
 					this.getData();
 				}
 			},
@@ -128,7 +128,7 @@
             searchEnterFun(e){
 			   var keyCode = window.event? e.keyCode:e.which;
 			   if(keyCode == 13){
-			   		this.pageObj.pageIndex = this.API.constObj.pageIndex;
+			   		this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
 					this.getData();
 			   }
 			},
@@ -200,7 +200,7 @@
 							type: 'success',
 							message: '删除成功！'
 						});
-				   		this.pageObj.pageIndex = this.API.constObj.pageIndex;
+				   		this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
 						this.getData();
 					} else {
 						this.$message({

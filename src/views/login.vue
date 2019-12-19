@@ -72,8 +72,8 @@
              */
             login(){
             	let self = this;
-            	this.$axios({
-					url: this.API.login,//不需要再添加ip和端口
+				this.$axios.leansite({
+					url: this.API.leansite.login,//不需要再添加ip和端口
 					method: 'post',//提交方式：get和post，同 params 和 data配合使用
 					data: {
 						username: this.ruleForm.usersName.trim(),
@@ -83,10 +83,10 @@
 					var resData = res.data;
 					let resCode = parseInt(resData.status);
 					if(resCode == 200){
-						this.$store.commit('saveStoreByName',{name:this.API.constObj.loginInfo,storeName:'user',storeInfo:resData.data.user});
-						this.$store.commit('saveStoreByName',{name:this.API.constObj.token,storeName:'token',storeInfo:resData.data.token});
-						this.$store.commit('saveStoreByName',{name:this.API.constObj.operationAuthority,storeName:'operationAuthority',storeInfo:resData.data.permissions});
-						this.$store.commit('saveStoreByName',{name:this.API.constObj.roles,storeName:'roles',storeInfo:resData.data.roles});
+						this.$store.commit('saveStoreByName',{name:this.API.leansite.constObj.loginInfo,storeName:'user',storeInfo:resData.data.user});
+						this.$store.commit('saveStoreByName',{name:this.API.leansite.constObj.token,storeName:'token',storeInfo:resData.data.token});
+						this.$store.commit('saveStoreByName',{name:this.API.leansite.constObj.operationAuthority,storeName:'operationAuthority',storeInfo:resData.data.permissions});
+						this.$store.commit('saveStoreByName',{name:this.API.leansite.constObj.roles,storeName:'roles',storeInfo:resData.data.roles});
 						if (self.$route.query.redirect) {
 						  	self.$router.push(self.$route.query.redirect);  // 登录过期重新登录
 						} else {
@@ -98,6 +98,32 @@
 				}).catch(function(err) {
 					console.log("连接错误" + err);
 				})
+//          	this.$axios({
+//					url: this.API.api.login,//不需要再添加ip和端口
+//					method: 'post',//提交方式：get和post，同 params 和 data配合使用
+//					data: {
+//						username: this.ruleForm.usersName.trim(),
+//						password: this.ruleForm.password.trim()
+//					}
+//				}).then((res) => {
+//					var resData = res.data;
+//					let resCode = parseInt(resData.status);
+//					if(resCode == 200){
+//						this.$store.commit('saveStoreByName',{name:this.API.constObj.loginInfo,storeName:'user',storeInfo:resData.data.user});
+//						this.$store.commit('saveStoreByName',{name:this.API.constObj.token,storeName:'token',storeInfo:resData.data.token});
+//						this.$store.commit('saveStoreByName',{name:this.API.constObj.operationAuthority,storeName:'operationAuthority',storeInfo:resData.data.permissions});
+//						this.$store.commit('saveStoreByName',{name:this.API.constObj.roles,storeName:'roles',storeInfo:resData.data.roles});
+//						if (self.$route.query.redirect) {
+//						  	self.$router.push(self.$route.query.redirect);  // 登录过期重新登录
+//						} else {
+//						  	self.$router.push('/index');  // 正常登录
+//						}
+//					}else{
+//						self.$alert(resData.message);	
+//					}	
+//				}).catch(function(err) {
+//					console.log("连接错误" + err);
+//				})
 			}
         }
     }

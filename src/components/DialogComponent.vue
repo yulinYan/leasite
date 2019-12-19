@@ -9,7 +9,7 @@
 			</div>
 		</div>
 		<div v-show="!isminimize" class="dialogBody">
-			<currComponent></currComponent>
+			<currComponent :username="username" :leansiteToken="leansiteToken"></currComponent>
 		</div>
 	</el-dialog>
 </template>
@@ -31,7 +31,9 @@
 			return {
 				isfullscreen: false, // 全屏
 				isminimize: false, // 最小化
-				moduleDialogVisible: false // 隐藏弹窗
+				moduleDialogVisible: false, // 隐藏弹窗
+				username:this.$store.state.user.username,
+				leansiteToken:this.$store.state.token,
 			}
 		},
 		created() {

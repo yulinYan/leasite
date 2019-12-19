@@ -62,11 +62,6 @@ const routes = [
 		}
 	},
 	{
-		name: 'home',
-		path: '/home',
-		component: resolve => require(['../views/home.vue'], resolve),
-	},
-	{
 		path: '/404',
 		component: error404
 	},

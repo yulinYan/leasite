@@ -7,7 +7,8 @@ let store = new Vuex.Store({
 		user:JSON.parse(sessionStorage.getItem(api.constObj.loginInfo))?JSON.parse(sessionStorage.getItem(api.constObj.loginInfo)):'',//存储用户信息
 		operationAuthority:JSON.parse(sessionStorage.getItem(api.constObj.operationAuthority))?JSON.parse(sessionStorage.getItem(api.constObj.operationAuthority)):'',//功能操作权限
 		roles:JSON.parse(sessionStorage.getItem(api.constObj.roles))?JSON.parse(sessionStorage.getItem(api.constObj.roles)):'',//角色列表
-		token:JSON.parse(sessionStorage.getItem(api.constObj.token))?JSON.parse(sessionStorage.getItem(api.constObj.token)):''//请求令牌
+		token:JSON.parse(sessionStorage.getItem(api.constObj.token))?JSON.parse(sessionStorage.getItem(api.constObj.token)):'',//请求令牌
+		internetToken:JSON.parse(sessionStorage.getItem(api.constObj.internetToken))?JSON.parse(sessionStorage.getItem(api.constObj.internetToken)):''//物联网中心token
 	},
 	//操作数据。注意mutations只能进行同步操作。
 	mutations: {

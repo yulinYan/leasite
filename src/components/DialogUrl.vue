@@ -30,10 +30,13 @@
 			return {
 				isfullscreen: false, // 全屏
 				isminimize: false, // 最小化
-				dialogVisible: false // 隐藏弹窗
+				dialogVisible: false, // 隐藏弹窗
+				username:this.$store.state.user.username,
+				leansiteToken:this.$store.state.token,
 			}
 		},
 		created() {
+			this.appObj.path +="?username="+this.username+"&leansiteToken="+this.leansiteToken;
 			this.openDialog();
 		},
 		watch: {

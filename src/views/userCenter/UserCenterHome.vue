@@ -37,6 +37,16 @@
 	import RoleList from '../../views/userCenter/RoleList.vue';
 export default {
     name: 'UserCenterHome', //用户中心首页
+    props:{
+    	username:{//用户名
+    		type:String,
+    		required:true
+    	},
+    	leansiteToken:{//token信息
+    		type:String,
+    		required:true
+    	}
+    },
     components:{
     	UserList,//用户列表
     	RoleList//角色列表
@@ -77,7 +87,8 @@ export default {
 
     },
     mounted() {
-
+		console.log("测试动态传值:"+this.username+"=="+this.leansiteToken);
+		this.loginCheck();
     },
     computed: {
 
@@ -102,7 +113,28 @@ export default {
          */
 		alertUserComponent(path) {
 
-		}
+		},
+        loginCheck(){
+        	let self = this;
+			this.$axios.internet({
+				url: this.API.internet.login,//不需要再添加ip和端口
+				method: 'post',//提交方式：get和post，同 params 和 data配合使用
+				data: {
+					"username": this.username,
+					"password": "",
+					"leansitetoken":this.leansiteToken
+				}
+			}).then((res) => {
+				var resData = res.data;
+				if(resData.token && resData.token.length > 0){
+					this.$store.commit('saveStoreByName',{name:this.API.internet.constObj.internetToken,storeName:'internetToken',storeInfo:token});
+				}else{
+					self.$alert("打开物联网中心失败,请关闭重新打开!");	
+				}
+			}).catch(function(err) {
+				console.log("连接错误" + err);
+			})
+        }
     }
 }
 </script>

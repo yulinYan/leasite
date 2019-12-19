@@ -4,21 +4,18 @@
 import axios from 'axios'
 const instanceInternet = axios.create();
 instanceInternet.defaults.headers = {
-	'Content-Type':'application/x-www-form-urlencoded'
+	'Content-Type':'application/json'
 };
 instanceInternet.interceptors.request.use(config => {
-    config.baseURL = window.vm.API.baseURL;
-	if(config.method.toUpperCase() =="POST"){//post方式时，提交的参数转成string类型
-		config.data = window.vm.qs.stringify(config.data);
-	}
+    config.baseURL = window.vm.API.internet.baseURL;
 	//过滤拦截路径
-	if(window.vm.API.constObj.requestFilter.indexOf(config.url) === -1){//拦截的请求
+	if(window.vm.API.internet.constObj.requestFilter.indexOf(config.url) === -1){//拦截的请求
 		let stateObj = window.vm.$store.state;
-		if(stateObj.token && stateObj.token.length >0 ) {//token验证
+		if(stateObj.internetToken && stateObj.internetToken.length >0 ) {//token验证
 			//token 转码
 			//let submitToken = encodeURIComponent(stateObj.token);
-			let submitToken = stateObj.token;
-			config.headers.Authentication = encodeURIComponent(submitToken);
+			let submitToken = stateObj.internetToken;
+			config.headers.leansiteToken = encodeURIComponent(submitToken);
 			return config;
 	    }else{
 	      	//清除登录信息并跳转到登录页面
@@ -36,18 +33,18 @@ instanceInternet.interceptors.request.use(config => {
 });
 // http响应拦截器
 instanceInternet.interceptors.response.use(response => {
-	if (response.data.status) {
-        switch (response.data.status) {
-            case 300://token过期
-                window.vm.$message({
-		            type: 'error',
-		            message: '登录信息过期，请重新登录!'
-	          	});  
-	           //清除token信息并跳转到登录页面
-	           window.vm.commonFun.againLogin();
-	        break;
-        }
-    }
+//	if (response.data.status) {
+//      switch (response.data.status) {
+//          case 300://token过期
+//              window.vm.$message({
+//		            type: 'error',
+//		            message: '登录信息过期，请重新登录!'
+//	          	});  
+//	           //清除token信息并跳转到登录页面
+//	           window.vm.commonFun.againLogin();
+//	        break;
+//      }
+//  }
 	return response;
 }, error => {
 	Message.error({

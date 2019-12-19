@@ -1,6 +1,6 @@
 import axios from 'axios'
 /**
- * 接口api
+ * Leansite Paas平台和用户中心接口api
  */
 const interface_s = {
 	baseURL: 'http://192.168.2.41:9527/',//非生产环境
