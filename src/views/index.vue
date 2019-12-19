@@ -58,7 +58,7 @@
 				thirdAppList:[],//桌面第三方应用
 				systemMenus:[//系统菜单项目
 					{ name:'个人中心',path:'/gerenzhongxin',icon:require("../assets/img/yonghu.png")},
-					{ name:'设置中心',path:'/gerenzhongxin',icon:require("../assets/img/shezhi.png")},
+//					{ name:'设置中心',path:'/gerenzhongxin',icon:require("../assets/img/shezhi.png")},
 					{ name:'退出系统',path:'/logout',icon:require("../assets/img/tuichu.png")},
 				],
 				systemModules:[//系统功能模块

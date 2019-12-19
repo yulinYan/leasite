@@ -21,7 +21,7 @@
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="roleName" label="角色名称" align="center" min-width="200"></el-table-column>
                 <el-table-column prop="remark" label="角色描述"  align="left" min-width="300"></el-table-column>
-                <el-table-column prop="userIds" label="用户列表" align="left" min-width="300"></el-table-column>
+                <el-table-column prop="userId" label="用户列表" align="left" min-width="300"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑权限</el-button>
@@ -93,18 +93,18 @@
 			 * 获取列表数据
 			 */
 			getData() {
-				this.$axios({
+				this.$axios.leansite({
 					method: 'get',
-					url: this.API.roleListByRoleName,
+					url: this.API.leansite.roleListByRoleName,
 					params: {
-						'param':this.searchText,
+						'roleName':this.searchText,
 						'pageNum': this.pageObj.pageIndex,
 						'pageSize': this.pageObj.pageSize
 					}
 				}).then((res) => {
 					var resData = res.data;
 					if(resData.status == 200) {
-						this.tableData = resData.data.list;
+						this.tableData = resData.data.rows;
 						this.pageObj.total = resData.data.total;
 					} else {
 						this.$message({
@@ -145,10 +145,9 @@
 		          cancelButtonText: '取消',
 		          type: 'warning'
 		        }).then(() => {
-
 	            	let delRoles = [];
 	            	this.multipleSelection.forEach(function(item,index){
-	            		delRoles.push(item.id);
+	            		delRoles.push(item.roleId);
 	            	});
 		          this.deleteRequest(delRoles.toString());//批量删除请求
 		        }).catch(() => {});
@@ -176,22 +175,19 @@
 		          cancelButtonText: '取消',
 		          type: 'warning'
 		        }).then(() => {
-		          this.deleteRequest(row.id);//批量删除请求
+		          this.deleteRequest(row.roleId);//批量删除请求
 		        }).catch(() => {});
             },
             /**
              * 批量删除请求
              */
             deleteRequest(delRoleText){
-				this.$axios({
+				this.$axios.leansite({
 					method: 'delete',
-					url: this.API.deleteRoles,
-					params: {
-						'roleIds':delRoleText
-					}
+					url: this.API.leansite.deleteRoles+"/"+delRoleText,
 				}).then((res) => {
 					var resData = res.data;
-					if(resData.code == 200) {
+					if(resData.status == 200) {
 						this.multipleSelection = [];
 						this.$message({
 							type: 'success',
