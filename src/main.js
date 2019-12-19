@@ -36,7 +36,6 @@ Vue.use(ElementUI, {
     size: 'medium'
 });
 Vue.use(md5); 
-Vue.prototype.API = api;
 Vue.prototype.API = {
 	leansite:api,//Leansite Paas平台
 	internet:apiInternet//物联网平台

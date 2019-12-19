@@ -19,10 +19,10 @@
         <div class="container">
             <el-table stripe :data="tableData" class="table" ref="multipleTable" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="员工姓名" align="center" width="120"></el-table-column>
+                <el-table-column prop="nickname" label="员工姓名" align="center" width="120"></el-table-column>
                 <el-table-column prop="username" label="用户" align="center" width="120"></el-table-column>
                 <el-table-column prop="roleName" label="角色名称" align="center" width="150"></el-table-column>
-                <el-table-column prop="phone" label="电话"  align="center" width="120"></el-table-column>
+                <el-table-column prop="mobile" label="电话"  align="center" width="120"></el-table-column>
                 <el-table-column prop="email" label="邮箱" align="center" min-width="200"></el-table-column>
                 <el-table-column prop="lastLoginTime" label="最后登录时间" align="center" min-width="180" ></el-table-column>
                 <el-table-column label="操作" width="160" align="center">
@@ -96,9 +96,9 @@
 			 * 获取列表数据
 			 */
 			getData() {
-				this.$axios({
+				this.$axios.leansite({
 					method: 'get',
-					url: this.API.userListByNameOrUserName,
+					url: this.API.leansite.userListByNameOrUserName,
 					params: {
 						'param':this.searchText,
 						'pageNum': this.pageObj.pageIndex,
@@ -107,7 +107,7 @@
 				}).then((res) => {
 					var resData = res.data;
 					if(resData.status == 200) {
-						this.tableData = resData.data.list;
+						this.tableData = resData.data.rows;
 						this.pageObj.total = resData.data.total;
 					} else {
 						this.$message({
@@ -160,6 +160,7 @@
             	this.dialogTitle = "添加用户";
             	this.userObj = {};
                 this.userDialogVisible = true;
+                
             },
             /**
              * 用户编辑
@@ -179,22 +180,20 @@
 		          cancelButtonText: '取消',
 		          type: 'warning'
 		        }).then(() => {
-		          this.deleteRequest(row.id);//批量删除请求
+		          this.deleteRequest(row.userIds);//批量删除请求
 		        }).catch(() => {});
             },
             /**
              * 批量删除请求
              */
             deleteRequest(delUserText){
-				this.$axios({
+				this.$axios.leansite({
 					method: 'delete',
-					url: this.API.deleteUsers,
-					params: {
-						'userIds':delUserText
-					}
+					url: this.API.leansite.deleteUsers+'/'+delUserText,
+
 				}).then((res) => {
 					var resData = res.data;
-					if(resData.code == 200) {
+					if(resData.status == 200) {
 						this.multipleSelection = [];
 						this.$message({
 							type: 'success',

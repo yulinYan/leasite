@@ -11,11 +11,11 @@ const interface_s = {
 	//公共模块
 	getThirdApp: 'app/getAll', //获取主页第三方应用菜单
 	//用户中心
-	userListByNameOrUserName:'user/userList',//用户列表
-	deleteUsers:'user/deleteUsers',//批量删除用户
-	addUsers:'user/addUsers',//新增用户
+	userListByNameOrUserName:'user',//用户列表
+	deleteUsers:'user',//批量删除用户
+	addUsers:'user',//新增用户
 	updateUser:'user/updateUser',//修改用户
-	roleListByRoleName:'role/roleList',//用户列表
+	roleListByRoleName:'role',//用户列表
 	deleteRoles:'role/deleteRoles',//批量删除角色
 	addRole:'role/addRole',//新增角色
 	//常量对象
