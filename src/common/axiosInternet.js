@@ -2,11 +2,11 @@
  * http请求拦截处理
  */
 import axios from 'axios'
-const instance = axios.create();
-instance.defaults.headers = {
+const instanceInternet = axios.create();
+instanceInternet.defaults.headers = {
 	'Content-Type':'application/x-www-form-urlencoded'
 };
-instance.interceptors.request.use(config => {
+instanceInternet.interceptors.request.use(config => {
     config.baseURL = window.vm.API.baseURL;
 	if(config.method.toUpperCase() =="POST"){//post方式时，提交的参数转成string类型
 		config.data = window.vm.qs.stringify(config.data);
@@ -35,7 +35,7 @@ instance.interceptors.request.use(config => {
 	return Promise.reject(error);
 });
 // http响应拦截器
-instance.interceptors.response.use(response => {
+instanceInternet.interceptors.response.use(response => {
 	if (response.data.status) {
         switch (response.data.status) {
             case 300://token过期
@@ -55,4 +55,4 @@ instance.interceptors.response.use(response => {
 	})
 	return Promise.reject(error);
 })
-export default instance;
+export default instanceInternet;

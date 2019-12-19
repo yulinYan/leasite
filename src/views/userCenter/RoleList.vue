@@ -1,14 +1,14 @@
 <template>
-    <div class="userList">
+    <div class="roleList">
         <el-header>
             <el-row>
 			  <el-col :span="8" class="leftHeader">
-			  	<span>用户管理</span>
+			  	<span>角色管理</span>
 			  </el-col>
 			  <el-col :span="16" class="rightHeader">
-			  	<el-button type="text" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增用户</el-button><el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button><el-input
+			  	<el-button type="text" icon="el-icon-plus" class="addRole" @click="handleAddRole">新增角色</el-button><el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button><el-input
 			  		style="width:200px;"
-				   placeholder="输入姓名或用户名搜索"
+				   placeholder="输入角色名搜索"
 				   suffix-icon="el-icon-search"
 				   v-model="searchText"
 				   @keyup.enter.native="searchEnterFun">
@@ -19,36 +19,33 @@
         <div class="container">
             <el-table stripe :data="tableData" class="table" ref="multipleTable" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="员工姓名" align="center" width="120"></el-table-column>
-                <el-table-column prop="username" label="用户" align="center" width="120"></el-table-column>
-                <el-table-column prop="roleName" label="角色名称" align="center" width="150"></el-table-column>
-                <el-table-column prop="phone" label="电话"  align="center" width="120"></el-table-column>
-                <el-table-column prop="email" label="邮箱" align="center" min-width="200"></el-table-column>
-                <el-table-column prop="lastLoginTime" label="最后登录时间" align="center" min-width="180" ></el-table-column>
-                <el-table-column label="操作" width="160" align="center">
+                <el-table-column prop="roleName" label="角色名称" align="center" min-width="200"></el-table-column>
+                <el-table-column prop="remark" label="角色描述"  align="left" min-width="300"></el-table-column>
+                <el-table-column prop="userIds" label="用户列表" align="left" min-width="300"></el-table-column>
+                <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑权限</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <Pagination :pageIndex="pageObj.pageIndex" :total="pageObj.total" :pageSize="pageObj.pageSize" @PageTurning="PageTurning"></Pagination>
         </div>
-        <el-dialog class="outDialog" key="userDialog"  :title='dialogTitle' :visible.sync="userDialogVisible" v-if="userDialogVisible" width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
+        <el-dialog class="outDialog" key="roleDialog"  :title='dialogTitle' :visible.sync="roleDialogVisible" v-if="roleDialogVisible" width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
        		<!-- 新增/编辑弹出框 -->
-       		<UserListAddAndEdit :userObj="userObj" @UserCallBack="UserCallBack" ></UserListAddAndEdit>
+       		<RoleListAdd :roleObj="roleObj" @RoleCallBack="RoleCallBack" ></RoleListAdd>
        	</el-dialog>
     </div>
 </template>
 
 <script>
 	import Pagination from '../../components/Pagination.vue';
-	import UserListAddAndEdit from '../../views/userCenter/UserListAddAndEdit.vue';
+	import RoleListAdd from '../../views/userCenter/RoleListAdd.vue';
     export default {
-        name: 'UserList',
+        name: 'RoleList',//角色列表
         components: {
 			Pagination, //分页组件
-			UserListAddAndEdit//用户新增和编辑组件
+			RoleListAdd//新增角色
 		},
         data() {
             return {
@@ -59,10 +56,10 @@
 					total: 0, //数据总数
 					pageSize: this.API.constObj.pageSize, //页大小
 				},
-				userDialogVisible:false,//是否显示用户信息弹框
+				roleDialogVisible:false,//是否显示角色信息弹框
 				searchText:'',//搜索字段
-				userObj:{},//添加和编辑时的用户信息
-				dialogTitle:'添加用户'
+				roleObj:{},//添加和编辑时的角色信息
+				dialogTitle:'添加角色'
             }
         },
 
@@ -82,11 +79,11 @@
 				this.getData();
 			},
 	        /*
-	         * 用户信息组件回调方法--子组件回调数据的方法
+	         * 角色信息组件回调方法--子组件回调数据的方法
 	         * @param {Boolean} isRefresh是否需要刷新数据 true=刷新；false=不刷新
 	         */
-	        UserCallBack(isRefresh){
-	            this.userDialogVisible = false;
+	        RoleCallBack(isRefresh){
+	            this.roleDialogVisible = false;
 				if(isRefresh){
 			   		this.pageObj.pageIndex = this.API.constObj.pageIndex;
 					this.getData();
@@ -98,7 +95,7 @@
 			getData() {
 				this.$axios({
 					method: 'get',
-					url: this.API.userListByNameOrUserName,
+					url: this.API.roleListByRoleName,
 					params: {
 						'param':this.searchText,
 						'pageNum': this.pageObj.pageIndex,
@@ -133,48 +130,48 @@
 			   }
 			},
             /**
-             * 批量删除用户
+             * 批量删除角色
              */
             datchDel(){
         		if(this.multipleSelection.length <= 0){
             		this.$message({
 						type: 'warning',
-						message: '请先选择需要删除的用户！'
+						message: '请先选择需要删除的角色！'
 					});
 					return;
             	}
-            	this.$confirm('确定删除选中的用户', '提示', {
+            	this.$confirm('确定删除选中的角色', '提示', {
 		          confirmButtonText: '确定',
 		          cancelButtonText: '取消',
 		          type: 'warning'
 		        }).then(() => {
 
-	            	let delUsers = [];
+	            	let delRoles = [];
 	            	this.multipleSelection.forEach(function(item,index){
-	            		delUsers.push(item.id);
+	            		delRoles.push(item.id);
 	            	});
-		          this.deleteRequest(delUsers.toString());//批量删除请求
+		          this.deleteRequest(delRoles.toString());//批量删除请求
 		        }).catch(() => {});
             },
-            handleAddUser() {
-            	this.dialogTitle = "添加用户";
-            	this.userObj = {};
-                this.userDialogVisible = true;
+            handleAddRole() {
+            	this.dialogTitle = "添加角色";
+            	this.roleObj = {};
+                this.roleDialogVisible = true;
             },
             /**
-             * 用户编辑
+             * 角色编辑
              */
             handleEdit(index, row) {
-            	this.dialogTitle = "编辑用户";
-				this.userObj = this.tableData[index];
-                this.userDialogVisible = true;
+            	this.dialogTitle = "编辑角色";
+				this.roleObj = this.tableData[index];
+                this.roleDialogVisible = true;
             },
             /**
-             * 删除单个用户
+             * 删除单个角色
              */
             handleDelete(index, row) {
                 this.idx = index;
-            	this.$confirm('确定删除该用户', '提示', {
+            	this.$confirm('确定删除该角色', '提示', {
 		          confirmButtonText: '确定',
 		          cancelButtonText: '取消',
 		          type: 'warning'
@@ -185,12 +182,12 @@
             /**
              * 批量删除请求
              */
-            deleteRequest(delUserText){
+            deleteRequest(delRoleText){
 				this.$axios({
 					method: 'delete',
-					url: this.API.deleteUsers,
+					url: this.API.deleteRoles,
 					params: {
-						'userIds':delUserText
+						'roleIds':delRoleText
 					}
 				}).then((res) => {
 					var resData = res.data;
@@ -227,9 +224,9 @@
 </script>
 
 <style lang="scss" scoped type="text/css">
-    .userList {
+    .roleList {
 	    height: 100%;
-	    .el-header {
+	    .el-header{
 	        height: 60px;
 	        line-height: 60px;
 	        background-color: #ffffff;
@@ -243,7 +240,7 @@
     		}
 	        .el-col.rightHeader{
 	        	text-align: right !important;
-	        	.addUser{
+	        	.addRole{
 	        		margin-right: 23px;
 	        		font-size: 16px;
 	        		color: #2c5ac2;

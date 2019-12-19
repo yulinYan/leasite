@@ -2,9 +2,9 @@
 	<div class="index">
 		<!--桌面-->
 		<div class="main-block" >
-			<div class="block-item" v-for="app in appList" @click="openDialog(app)">
-			    <img v-bind:src="app.icon"/>
-			    <span class="demonstration">{{app.name}}</span>
+			<div class="block-item" v-for="app in thirdAppList" @click="openDialog(app)">
+			    <img :src="app.appIcon"/>
+			    <span class="demonstration">{{app.appName}}</span>
 			</div>
 		</div>
 		<!--状态栏-->
@@ -35,9 +35,9 @@
 			</el-tooltip>
 		</div>
 		<!--弹框打开第三方应用-->
-		<DialogUrl  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 2" width="70%" @callBackFun="closeParentDialog" :appObj=app :key="`${app.name}`" :ref="'dialogUrl'+index"></DialogUrl>
+		<DialogUrl  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 2" width="1500px" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.name}`" :ref="'dialogUrl'+index"></DialogUrl>
 		<!--弹框打开组件-->
-		<DialogComponent  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 1" width="70%" @callBackFun="closeParentDialog" :appObj=app :key="`${app.name}`" :ref="'dialogComponent'+index"></DialogComponent>
+		<DialogComponent  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 1" width="1500px" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.name}`" :ref="'dialogComponent'+index"></DialogComponent>
 	</div>
 </template>
 
@@ -55,13 +55,7 @@
 			return {
 				searchApp:"",//搜索应用
 				systemMenuVisible:false,//是否显示状态栏系统菜单
-				appList:[//桌面第三方应用
-					{ name:'智慧照明',icon:require("../assets/img/light.png"),isActive:true,path:"http://www.baidu.com" },
-					{ name:'能源管理',icon:require("../assets/img/light.png"),isActive:true,path:"http://192.168.2.41:8080/passport/login" },
-					{ name:'智慧空调',icon:require("../assets/img/light.png"),isActive:true,path:"http://www.baidu.com" },
-					{ name:'设备OEE',icon:require("../assets/img/OEE.png"),isActive:true,path:"http://www.baidu.com" },
-					{ name:'巡检管理',icon:require("../assets/img/light.png"),isActive:true,path:"http://www.baidu.com" },
-				],
+				thirdAppList:[],//桌面第三方应用
 				systemMenus:[//系统菜单项目
 					{ name:'个人中心',path:'/gerenzhongxin',icon:require("../assets/img/yonghu.png")},
 					{ name:'设置中心',path:'/gerenzhongxin',icon:require("../assets/img/shezhi.png")},
@@ -69,7 +63,7 @@
 				],
 				systemModules:[//系统功能模块
 					{ name:'用户中心',path:'/userCenterHome',icon:require("../assets/img/yonghuzhongxin.png")},
-					{ name:'物联网中心',path:'/baseForm',icon:require("../assets/img/wulianwang.png")},
+					{ name:'物联网中心',path:'/userCenterHome',icon:require("../assets/img/wulianwang.png")},
 					{ name:'运维中心',path:'/gerenzhongxin',icon:require("../assets/img/yunweizhongxin.png")},
 				],	
 				activeApps: [],//状态栏显示打开的app数组			
@@ -79,15 +73,44 @@
 
 		},
 		created() {
-			
-		},
-		mounted(){
-        	if(this.$store.state.user && !this.$store.state.user.token){
+			if(!this.$store.state.token && this.$store.state.token.length <=0){
         		this.$router.push('/login');  // 正常登录
         		return;
+        	}else{
+        		this.getData();
         	}
 		},
+		mounted(){
+
+		},
 		methods: {
+			/**
+			 * 获取列表数据
+			 */
+			getData() {
+				this.$axios({
+					method: 'get',
+					url: this.API.getThirdApp,
+					params: {
+						'project_id':1,
+					}
+				}).then((res) => {
+					var resData = res.data;
+					if(resData.status == 200) {
+						this.thirdAppList = resData.data;
+					} else {
+						this.$message({
+							type: 'error',
+							message: '查询失败，请刷新重试！'
+						});
+					}
+				}).catch((err) => {
+					this.$message({
+						type: 'error',
+						message: '请求异常，请检查网络！'
+					});
+				})
+			},
 			/**
 			 * 打开桌面的第三方app 
 			 */
@@ -105,17 +128,17 @@
 			            return;
 					}
 					let chioceApp = {};
-					for(let i=0;i<this.appList.length;i++){
-						if(this.appList[i].name == appObj.name){
-							chioceApp = this.appList[i];
+					for(let i=0;i<this.thirdAppList.length;i++){
+						if(this.thirdAppList[i].appName == appObj.appName){
+							chioceApp = this.thirdAppList[i];
 							break;
 						}
 					}	
 					let appObject = {
-						name:appObj.name,//APP名称
-						icon:chioceApp.icon,//app图标
+						name:appObj.appName,//APP名称
+						icon:chioceApp.appIcon,//app图标
 						webSource:2,//打开的网页来源  1=本项目；2=第三方项目
-						path:chioceApp.path,
+						path:chioceApp.appUrl,
 						isActive:true,//状态栏中显示的app是否处于活动状态
 						isShowDialog:true,//是否显示弹框
 						isMinimize:false//是否缩小弹框
@@ -209,16 +232,29 @@
 			          cancelButtonText: '继续使用',
 			          type: 'warning'
 			        }).then(() => {//退出系统
-			          this.$store.commit('removeAllInfo');
-			          this.$router.push('/login');  // 正常登录
-			          
-			        }).catch(() => {//取消
-			                   
+			          this.logout();
 			        });
 			        return;
 				}
 				this.statusBarData(menuObj);
-			}
+			},
+           /**
+             * 退出系统
+             */
+            logout(){
+				this.$axios({
+					method: 'delete',
+					url: this.API.logout,
+					params: {
+						'id':this.$store.state.user.userId
+					}
+				}).then((res) => {
+					var resData = res.data;
+					this.commonFun.againLogin();
+				}).catch((err) => {
+					this.commonFun.againLogin();
+				});
+            },
 		}
 	}
 </script>

@@ -42,7 +42,7 @@
 					{ name:'退出系统',path:'/logout',icon:require("../assets/img/tuichu.png")},
 				],
 				systemModules:[//系统功能模块
-					{ name:'用户中心',path:'/userCenterIndex',icon:require("../assets/img/yonghuzhongxin.png")},
+					{ name:'用户中心',path:'/userCenterHome',icon:require("../assets/img/yonghuzhongxin.png")},
 					{ name:'物联网中心',path:'/baseForm',icon:require("../assets/img/wulianwang.png")},
 					{ name:'运维中心',path:'/gerenzhongxin',icon:require("../assets/img/yunweizhongxin.png")},
 				],	

@@ -3,6 +3,7 @@ import App from './App'
 import vuescroll from 'vuescroll';  //自定义滚动条
 import 'vuescroll/dist/vuescroll.css';
 import axios from './common/axios';//http 请求拦截
+import axiosInternet from './common/axiosInternet';//http 请求拦截
 import qs from 'qs';
 import store from './store/index';
 import ElementUI from 'element-ui';
@@ -25,8 +26,8 @@ Vue.prototype.$echarts = echarts;
 Vue.use(ZkTable); 
 Vue.use(TreeTable);
 //TODO mock单元测试
-import UserCenter from './mock/user.js' //用户信息模块
-UserCenter.bootstrap();
+//import UserCenter from './mock/user.js' //用户信息模块
+//UserCenter.bootstrap();
 
 Vue.use(vuescroll); // install the vuescroll first
 Vue.config.productionTip = false
@@ -39,6 +40,7 @@ Vue.prototype.qs = qs
 Vue.prototype.commonFun = commonFun;
 Vue.prototype.$store = store
 Vue.prototype.$axios = axios; //全局注册，使用方法为:this.$axios
+Vue.prototype.$axiosInternet = axiosInternet; //全局注册，使用方法为:this.$axios
 
 // 注册一个全局自定义指令 `v-focus`
 Vue.directive('focus', {
