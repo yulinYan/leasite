@@ -93,7 +93,12 @@ export default {
                 },
                 xAxis: {
                     type: 'category',
-                    nameGap: 10,
+                    nameTextStyle: {
+                        color: '#505050',
+                        fontFamily: 'Microsoft YaHei',
+                        align: 'right'
+                    },
+                    nameGap: 20,
                     data: [],
                     axisLine: { //坐标轴轴线相关设置。
                         lineStyle: {
@@ -196,7 +201,7 @@ export default {
                     name: ''
                 },
                 xAxis: {
-                    name: 'h',
+                    name: '时',
                     nameTextStyle: {
                         // align: 'left',
                         color: '#505050',
@@ -314,7 +319,7 @@ export default {
                     'X-Authorization': this.ajaxMsg.Authorization
                 }
             }).then(res => {
-                this.deviceMessageOption.xAxis.name = this.deviceMessageModel === 'month' ? '日' : 'h';
+                this.deviceMessageOption.xAxis.name = this.deviceMessageModel === 'month' ? '日' : '时';
                 this.deviceMessageOption.xAxis.data = [];
                 this.deviceMessageOption.series = [];
                 res.data.forEach((v, i) => {
