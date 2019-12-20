@@ -374,7 +374,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/timeseries?interval=&limit=100&agg=NONE&keys=${name}&startTs=${(new Date()).getTime() - 86400000}&endTs=${(new Date()).getTime()}`,
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/timeseries?interval=&limit=100&agg=NONE&keys=${name}&startTs=${(new Date()).getTime() - 86400000}&endTs=${(new Date()).getTime()}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -398,7 +398,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/timeseries?keys=`,
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/timeseries?keys=`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -436,7 +436,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/device/types`,
+                url: `${this.ajaxMsg.url}api/device/types`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -452,9 +452,9 @@ export default {
             let url = '';
             // console.log(this.currentTableData.credentialsId)
             if (this.addAttributeSel === 'CLIENT_SCOPE') {
-                url = `api/v1/${this.currentTableData.credentialsId}/attributes`;
+                url = `${this.ajaxMsg.url}api/v1/${this.currentTableData.credentialsId}/attributes`;
             } else {
-                url = `api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/${this.addAttributeSel}`;
+                url = `${this.ajaxMsg.url}api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/${this.addAttributeSel}`;
             }
             this.$axios.internet({
                 loading: {
@@ -500,7 +500,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/attributes/${this.addAttributeSel}`,
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/attributes/${this.addAttributeSel}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -541,7 +541,7 @@ export default {
                     isShow: false,
                 },
                 method: 'post',
-                url: `api/device`,
+                url: `${this.ajaxMsg.url}api/device`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization,
@@ -565,7 +565,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/tenant/devices?limit=1000&textSearch=${this.searchInp}`,
+                url: `${this.ajaxMsg.url}api/tenant/devices?limit=1000&textSearch=${this.searchInp}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -620,7 +620,7 @@ export default {
                             isShow: false,
                         },
                         method: 'delete',
-                        url: `api/device/${row.id.id}`,
+                        url: `${this.ajaxMsg.url}api/device/${row.id.id}`,
                         //请求头配置
                         headers: {
                             'X-Authorization': this.ajaxMsg.Authorization
@@ -649,7 +649,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/tenant/devices?limit=1000&textSearch=`,
+                url: `${this.ajaxMsg.url}api/tenant/devices?limit=1000&textSearch=`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization

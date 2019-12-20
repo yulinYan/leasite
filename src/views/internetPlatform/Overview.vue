@@ -278,7 +278,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/plugins/telemetry/online/devicesNumber`,
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/online/devicesNumber`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -294,7 +294,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/plugins/telemetry/online/devicesHours`,
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/online/devicesHours`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -313,7 +313,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/plugins/telemetry/${this.deviceMessageModel}/Number`,
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/${this.deviceMessageModel}/Number`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization

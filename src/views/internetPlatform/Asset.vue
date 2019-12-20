@@ -337,7 +337,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/timeseries?interval=&limit=100&agg=NONE&keys=${name}&startTs=${(new Date()).getTime() - 86400000}&endTs=${(new Date()).getTime()}`,
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/timeseries?interval=&limit=100&agg=NONE&keys=${name}&startTs=${(new Date()).getTime() - 86400000}&endTs=${(new Date()).getTime()}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -361,7 +361,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/timeseries?keys=`,
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/timeseries?keys=`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -399,7 +399,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/asset/types`,
+                url: `${this.ajaxMsg.url}api/asset/types`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -417,7 +417,7 @@ export default {
                     isShow: false,
                 },
                 method: 'post',
-                url: `api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/${this.addAttributeSel}`,
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/${this.addAttributeSel}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization,
@@ -456,7 +456,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/attributes/${this.addAttributeSel}`,
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/attributes/${this.addAttributeSel}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -497,7 +497,7 @@ export default {
                     isShow: false,
                 },
                 method: 'post',
-                url: `api/asset`,
+                url: `${this.ajaxMsg.url}api/asset`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization,
@@ -521,7 +521,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/tenant/assets?limit=1000&textSearch=${this.searchInp}`,
+                url: `${this.ajaxMsg.url}api/tenant/assets?limit=1000&textSearch=${this.searchInp}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -576,7 +576,7 @@ export default {
                             isShow: false,
                         },
                         method: 'delete',
-                        url: `api/asset/${row.id.id}`,
+                        url: `${this.ajaxMsg.url}api/asset/${row.id.id}`,
                         //请求头配置
                         headers: {
                             'X-Authorization': this.ajaxMsg.Authorization
@@ -605,7 +605,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `api/tenant/assets?limit=1000&textSearch=`,
+                url: `${this.ajaxMsg.url}api/tenant/assets?limit=1000&textSearch=`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
