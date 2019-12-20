@@ -91,35 +91,28 @@ export default {
         },
         loginCheck() {
             let self = this;
-            // self.$store.commit('saveStoreByName', {
-            //     name: self.API.internet.constObj.internetToken,
-            //     storeName: 'internetToken',
-            //     storeInfo: 'Bearer ' + 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5d3hmZGo5OTk5QGxlYW5zaXRlLmNuIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiJhMTY1NWU2MC0yMGExLTExZWEtOGY2Ni0yNTQzMjcxOTY2OWQiLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiYTE0OGQ1YjAtMjBhMS0xMWVhLThmNjYtMjU0MzI3MTk2NjlkIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCIsImlzcyI6InRoaW5nc2JvYXJkLmlvIiwiaWF0IjoxNTc2OTE1MDQ3LCJleHAiOjE1NzY5MjQwNDd9.VTV0PvcSzAPmSh6JESprOvIxJsAuKZLmf2fFBj_r7BccCFIsEM71Gf7fu2Sz8Z9nRSUxxi40oD_CjNRZrSJQ6w'
-            // });
-            // self.ajaxMsg.Authorization = 'Bearer ' + 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5d3hmZGo5OTk5QGxlYW5zaXRlLmNuIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiJhMTY1NWU2MC0yMGExLTExZWEtOGY2Ni0yNTQzMjcxOTY2OWQiLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiYTE0OGQ1YjAtMjBhMS0xMWVhLThmNjYtMjU0MzI3MTk2NjlkIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCIsImlzcyI6InRoaW5nc2JvYXJkLmlvIiwiaWF0IjoxNTc2OTE1MDQ3LCJleHAiOjE1NzY5MjQwNDd9.VTV0PvcSzAPmSh6JESprOvIxJsAuKZLmf2fFBj_r7BccCFIsEM71Gf7fu2Sz8Z9nRSUxxi40oD_CjNRZrSJQ6w'; //接口令牌
+            console.log(this.API.internet.login)
             this.$axios.internet({
                 url: this.API.internet.login, //不需要再添加ip和端口
                 method: 'post', //提交方式：get和post，同 params 和 data配合使用
                 data: {
-                    "username": "",
+                    "username": '',
                     "password": "",
                     "leansitetoken": this.leansiteToken
                 }
             }).then((res) => {
                 var resData = res.data;
                 if (resData.token && resData.token.length > 0) {
-                    self.$store.commit('saveStoreByName', {
-                        name: self.API.internet.constObj.internetToken,
+                    this.$store.commit('saveStoreByName', {
+                        name: this.API.internet.constObj.internetToken,
                         storeName: 'internetToken',
                         storeInfo: 'Bearer ' + resData.token
                     });
-                    self.ajaxMsg.Authorization = 'Bearer ' + resData.token; //接口令牌
                 } else {
                     self.$alert("打开物联网中心失败,请关闭重新打开!");
                 }
             }).catch(function(err) {
-                console.log(err.response)
-                console.log("连接错误" + err);
+                console.log(err);
             })
         }
     }
