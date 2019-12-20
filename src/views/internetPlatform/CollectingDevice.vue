@@ -96,7 +96,7 @@
                         <el-option  label="客户端属性" value="CLIENT_SCOPE"></el-option>
                         <el-option  label="共享属性" value="SHARED_SCOPE"></el-option>
                     </el-select>
-                    <span class="addAttribute" @click="addAttribute">+新增属性</span>
+                    <span class="addAttribute" @click="addAttribute" :style="{visibility:addAttributeSel=='CLIENT_SCOPE'?'hidden':''}">+新增属性</span>
                     <el-table :data="tableDataAttribute" stripe highlight-current-row style="width: 100%;" :cell-style="cellStyle" :header-cell-style="headerStyle" :height="attrTableHeight">
                         <el-table-column prop="key" label="键">
                         </el-table-column>
@@ -121,7 +121,7 @@
                         <div v-for="(item, index) in telemetryList" :key="index" :class="{'active':item.active,'empty':item.empty}">
                             <p><em :title="item.name">{{item.name}}</em><span>{{item.time}}</span></p>
                             <div>{{item.num}}</div>
-                            <span @click="telemetryDetails(index,item.time)">数据详情</span>
+                            <span @click="telemetryDetails(index,item.name)">数据详情</span>
                         </div>
                     </div>
                 </el-tab-pane>
@@ -317,7 +317,15 @@ export default {
                 },
                 series: [{
                     name: 'part1',
-                    type: 'bar',
+                    type: 'line',
+                    smooth: true,
+                    symbol: 'none',
+                    areaStyle: {
+                        color: '#CEDBF5'
+                    },
+                    lineStyle:{
+                        color: '#5884DD'
+                    },
                     // barWidth: 43,
                     stack: 'device',
                     data: [620, 732, 701, 734, 1090, 1130, 1120]
@@ -329,9 +337,14 @@ export default {
     mounted() {
         //获取所有设备
         this.getDevice();
+        window.addEventListener('resize', this.resize)
     },
     computed: {},
     methods: {
+        resize() {
+            this.tableDataHeight = document.querySelector('.con').offsetHeight - 56;
+            this.attrTableHeight = document.querySelector('.el-tabs').offsetHeight - 170;
+        },
         //遥测详情
         telemetryDetails(index, name) {
             this.telemetryList.forEach((v, i) => {
@@ -361,7 +374,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/timeseries?interval=&limit=100&agg=NONE&keys=${name}&startTs=${(new Date()).getTime() - 86400000}&endTs=${(new Date()).getTime()}`,
+                url: `api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/timeseries?interval=&limit=100&agg=NONE&keys=${name}&startTs=${(new Date()).getTime() - 86400000}&endTs=${(new Date()).getTime()}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -369,6 +382,10 @@ export default {
             }).then(res => {
                 this.telemetryDetailsOption.xAxis.data = [];
                 this.telemetryDetailsOption.series[0].data = [];
+                Object.values(res.data)[0].forEach((v, i) => {
+                    this.telemetryDetailsOption.xAxis.data.push(this.$moment(v.ts).format('YYYY-MM-DD HH:mm:ss'));
+                    this.telemetryDetailsOption.series[0].data.push(v.value);
+                })
                 this.telemetryDetailsCharts.setOption(this.telemetryDetailsOption, true);
             }).catch(function(err) {
                 console.log(err.response);
@@ -381,7 +398,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/timeseries?keys=`,
+                url: `api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/timeseries?keys=`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -419,7 +436,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/device/types`,
+                url: `api/device/types`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -432,12 +449,19 @@ export default {
         },
         //保存属性
         saveAttribute() {
+            let url = '';
+            // console.log(this.currentTableData.credentialsId)
+            if (this.addAttributeSel === 'CLIENT_SCOPE') {
+                url = `api/v1/${this.currentTableData.credentialsId}/attributes`;
+            } else {
+                url = `api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/${this.addAttributeSel}`;
+            }
             this.$axios.internet({
                 loading: {
                     isShow: false,
                 },
                 method: 'post',
-                url: `${this.ajaxMsg.url}api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/${this.addAttributeSel}`,
+                url: url,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization,
@@ -471,18 +495,12 @@ export default {
         },
         //切换属性
         changeAttribute() {
-            let url = '';
-            if (this.addAttributeSel === '') {
-                url = `${this.ajaxMsg.url}api/v1/${this.currentTableData.id.id}/attributes?clientKeys=attribute1,attribute2&sharedKeys=shared1,shared2`;
-            } else {
-                url = `${this.ajaxMsg.url}api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/attributes/${this.addAttributeSel}`;
-            }
             this.$axios.internet({
                 loading: {
                     isShow: false,
                 },
                 method: 'get',
-                url: url,
+                url: `api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/attributes/${this.addAttributeSel}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -523,7 +541,7 @@ export default {
                     isShow: false,
                 },
                 method: 'post',
-                url: `${this.ajaxMsg.url}api/device`,
+                url: `api/device`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization,
@@ -547,7 +565,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/tenant/devices?limit=1000&textSearch=${this.searchInp}`,
+                url: `api/tenant/devices?limit=1000&textSearch=${this.searchInp}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -602,7 +620,7 @@ export default {
                             isShow: false,
                         },
                         method: 'delete',
-                        url: `${this.ajaxMsg.url}api/device/${row.id.id}`,
+                        url: `api/device/${row.id.id}`,
                         //请求头配置
                         headers: {
                             'X-Authorization': this.ajaxMsg.Authorization
@@ -631,7 +649,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/tenant/devices?limit=1000&textSearch=`,
+                url: `api/tenant/devices?limit=1000&textSearch=`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
