@@ -7,13 +7,7 @@ const interface_s = {
 	//prodBaseURL:window.configs.internetAPI,//生产环境
 	//登录模块
 	login: "api/auth/login", //登录
-<<<<<<< HEAD
-=======
     devicesNumber: "api/plugins/telemetry", //overview
-
-	//公共模块
-
->>>>>>> 609e4b6c5bb19ca3e9e79451fb71429726525dfb
 	//常量对象
 	constObj: {
 		pageIndex:0,
