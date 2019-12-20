@@ -7,12 +7,29 @@ const interface_s = {
 	//prodBaseURL:window.configs.internetAPI,//生产环境
 	//登录模块
 	login: "api/auth/login", //登录
+<<<<<<< HEAD
+=======
+    devicesNumber: "api/plugins/telemetry", //overview
+
+	//公共模块
+
+>>>>>>> 609e4b6c5bb19ca3e9e79451fb71429726525dfb
 	//常量对象
 	constObj: {
 		pageIndex:0,
 		pageSize:10,
 		requestFilter: [ //拦截器不拦截的请求集合
-			"api/auth/login"
+            "api/auth/login",
+            "api/plugins/telemetry",
+            "api/asset/types",//资产类型，
+            "api/device/types",//设备类型，
+            "api/v1/",//保存设备属性
+            "api/asset",//保存资产
+            "api/device",//保存设备
+            "api/tenant/assets",//搜索资产
+            "api/tenant/devices",//搜索设备
+            "api/assets",//删除资产
+            "api/devices",//删除设备
 		],
 		vueFilter: [ //拦截器不拦截的vue界面集合
 		],
