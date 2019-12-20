@@ -27,7 +27,7 @@
                 <el-table-column prop="mobile" label="电话"  align="center" width="120"></el-table-column>
                 <el-table-column prop="email" label="邮箱" align="center" min-width="200"></el-table-column>
                 <el-table-column prop="lastLoginTime" label="最后登录时间" align="center" min-width="180" ></el-table-column>
-                <el-table-column label="操作" width="160" align="center">
+                <el-table-column label="操作" width="200" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" class="edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                         <el-button type="text" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -293,6 +293,9 @@
 	    	color: #6ecd8b;
 	    	font-size: 12px;
 			padding: 9px 7px;
+			width: 80px;
+			height: 30px;
+			padding-top: 8px;
 	    	}
     		.delete{
     			border-radius: 4px;
@@ -300,6 +303,9 @@
 				color: #ed5151;
 				font-size: 12px;
 				padding: 9px 7px;
+				width: 80px;
+				height: 30px;
+				padding-top: 8px;
     		}
 	    	}
 	    }
