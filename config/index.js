@@ -13,12 +13,12 @@ module.exports = {
     proxyTable: {},
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: '0.0.0.0', // can be overwritten by process.env.HOST
     port: 8000, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
-    
+
     /**
      * Source Maps
      */
@@ -37,8 +37,8 @@ module.exports = {
     proxyTable: {
         '/api': {
             target: '', //配置地址
-            changeOrigin: true, //允许跨域  
-            pathRewrite: { //需要rewrite重写的, 如果在服务器端做了处理则可以不要这段  
+            changeOrigin: true, //允许跨域
+            pathRewrite: { //需要rewrite重写的, 如果在服务器端做了处理则可以不要这段
                 '^/api': '/'
             }
         }

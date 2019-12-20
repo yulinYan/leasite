@@ -4,20 +4,26 @@ import axios from 'axios'
  */
 const interface_s = {
 	baseURL: 'http://192.168.2.31:8070/',//非生产环境
-	//prodBaseURL:window.configs.API_ROOT,//生产环境
+	//prodBaseURL:window.configs.internetAPI,//生产环境
 	//登录模块
 	login: "api/auth/login", //登录
-
-
-
-	//公共模块
-
+    devicesNumber: "api/plugins/telemetry", //overview
 	//常量对象
 	constObj: {
 		pageIndex:0,
 		pageSize:10,
 		requestFilter: [ //拦截器不拦截的请求集合
-			"api/auth/login"
+            "api/auth/login",
+            "api/plugins/telemetry",
+            "api/asset/types",//资产类型，
+            "api/device/types",//设备类型，
+            "api/v1/",//保存设备属性
+            "api/asset",//保存资产
+            "api/device",//保存设备
+            "api/tenant/assets",//搜索资产
+            "api/tenant/devices",//搜索设备
+            "api/assets",//删除资产
+            "api/devices",//删除设备
 		],
 		vueFilter: [ //拦截器不拦截的vue界面集合
 		],

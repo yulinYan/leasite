@@ -151,7 +151,7 @@
 			 * 新增状态栏数据处理
 			 * SystemMenu组件回调
 			 */
-			statusBarData(appObj){
+			openComponent(appObj){
 				let searchIndex = -1;
 				if(this.activeApps.length > 0){
 					searchIndex = this.activeApps.findIndex((value)=>value.name==appObj.name);
@@ -226,22 +226,34 @@
 	         */
 			alertComponent(menuObj) {
 				this.systemMenuVisible = false;
-				if(menuObj.name =="退出系统"){
-					this.$confirm('确定退出系统吗?', '操作提示', {
-			          confirmButtonText: '退出系统',
-			          cancelButtonText: '继续使用',
-			          type: 'warning'
-			        }).then(() => {//退出系统
-			          this.logout();
-			        });
-			        return;
+				switch (menuObj.name){
+					case "退出系统":
+						this.logout();
+						break;
+					case "运维中心":
+						this.openDialog(menuObj);
+						break;
+					default:
+						this.openComponent(menuObj);
+						break;
 				}
-				this.statusBarData(menuObj);
+			},
+			/**
+			 * 退出系统
+			 */
+			logout(){
+				this.$confirm('确定退出系统吗?', '操作提示', {
+		          confirmButtonText: '退出系统',
+		          cancelButtonText: '继续使用',
+		          type: 'warning'
+		        }).then(() => {//退出系统
+		          this.logout();
+		        });
 			},
            /**
-             * 退出系统
+             * 退出系统请求
              */
-            logout(){
+            logoutRequest(){
 				this.$axios.leansite({
 					method: 'delete',
 					url: this.API.leansite.logout,

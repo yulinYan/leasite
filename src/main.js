@@ -8,7 +8,6 @@ import qs from 'qs';
 import store from './store/index';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import './assets/theme/theme-369FDD/index.css';       // 蓝色主题
 import '@/assets/css/global.css';   //全局样式
 import router from "./router/router.js" // 引入全局的路由
 import api from "./common/api.js" //引入接口
@@ -45,7 +44,6 @@ Vue.prototype.API = {
 Vue.prototype.qs = qs
 Vue.prototype.commonFun = commonFun;
 Vue.prototype.$store = store
-//Vue.prototype.$axios = axios;
 Vue.prototype.$axios = {
 	leansite:axios, //Leansite Paas axios
 	internet:axiosInternet //物联网 axios

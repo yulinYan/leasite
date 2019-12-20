@@ -15,8 +15,6 @@ instance.interceptors.request.use(config => {
 	if(window.vm.API.leansite.constObj.requestFilter.indexOf(config.url) === -1){//拦截的请求
 		let stateObj = window.vm.$store.state;
 		if(stateObj.token && stateObj.token.length >0 ) {//token验证
-			//token 转码
-			//let submitToken = encodeURIComponent(stateObj.token);
 			let submitToken = stateObj.token;
 			config.headers.Authentication = encodeURIComponent(submitToken);
 			return config;
@@ -37,12 +35,12 @@ instance.interceptors.request.use(config => {
 // http响应拦截器
 instance.interceptors.response.use(response => {
 	if (response.data.status) {
-        switch (response.data.status) {
-            case 300://token过期
+        switch (response.data.message) {
+            case "token已经过期"://token过期
                 window.vm.$message({
 		            type: 'error',
 		            message: '登录信息过期，请重新登录!'
-	          	});  
+	          	});
 	           //清除token信息并跳转到登录页面
 	           window.vm.commonFun.againLogin();
 	        break;

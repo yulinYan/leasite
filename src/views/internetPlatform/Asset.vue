@@ -284,7 +284,15 @@ export default {
                 },
                 series: [{
                     name: 'part1',
-                    type: 'bar',
+                    type: 'line',
+                    smooth: true,
+                    symbol: 'none',
+                    areaStyle: {
+                        color: '#CEDBF5'
+                    },
+                    lineStyle:{
+                        color: '#5884DD'
+                    },
                     // barWidth: 43,
                     stack: 'Assets',
                     data: []
@@ -296,6 +304,7 @@ export default {
     mounted() {
         //获取所有资产
         this.getAssets();
+        window.addEventListener('resize', this.resize)
     },
     computed: {},
     methods: {
@@ -328,7 +337,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/timeseries?interval=&limit=100&agg=NONE&keys=${name}&startTs=${(new Date()).getTime() - 86400000}&endTs=${(new Date()).getTime()}`,
+                url: `api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/timeseries?interval=&limit=100&agg=NONE&keys=${name}&startTs=${(new Date()).getTime() - 86400000}&endTs=${(new Date()).getTime()}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -336,6 +345,10 @@ export default {
             }).then(res => {
                 this.telemetryDetailsOption.xAxis.data = [];
                 this.telemetryDetailsOption.series[0].data = [];
+                Object.values(res.data)[0].forEach((v, i) => {
+                    this.telemetryDetailsOption.xAxis.data.push(this.$moment(v.ts).format('YYYY-MM-DD HH:mm:ss'));
+                    this.telemetryDetailsOption.series[0].data.push(v.value);
+                })
                 this.telemetryDetailsCharts.setOption(this.telemetryDetailsOption, true);
             }).catch(function(err) {
                 console.log(err.response);
@@ -348,7 +361,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/timeseries?keys=`,
+                url: `api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/timeseries?keys=`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -386,7 +399,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/asset/types`,
+                url: `api/asset/types`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -404,7 +417,7 @@ export default {
                     isShow: false,
                 },
                 method: 'post',
-                url: `${this.ajaxMsg.url}api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/${this.addAttributeSel}`,
+                url: `api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/${this.addAttributeSel}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization,
@@ -443,7 +456,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/attributes/${this.addAttributeSel}`,
+                url: `api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/attributes/${this.addAttributeSel}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -484,7 +497,7 @@ export default {
                     isShow: false,
                 },
                 method: 'post',
-                url: `${this.ajaxMsg.url}api/asset`,
+                url: `api/asset`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization,
@@ -508,7 +521,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/tenant/assets?limit=1000&textSearch=${this.searchInp}`,
+                url: `api/tenant/assets?limit=1000&textSearch=${this.searchInp}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -563,7 +576,7 @@ export default {
                             isShow: false,
                         },
                         method: 'delete',
-                        url: `${this.ajaxMsg.url}api/asset/${row.id.id}`,
+                        url: `api/asset/${row.id.id}`,
                         //请求头配置
                         headers: {
                             'X-Authorization': this.ajaxMsg.Authorization
@@ -592,7 +605,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/tenant/assets?limit=1000&textSearch=`,
+                url: `api/tenant/assets?limit=1000&textSearch=`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -662,6 +675,10 @@ export default {
             }
             return style;
         },
+        resize() {
+            this.tableDataHeight = document.querySelector('.con').offsetHeight - 56;
+            this.attrTableHeight = document.querySelector('.el-tabs').offsetHeight - 170;
+        }
     }
 }
 </script>

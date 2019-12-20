@@ -3,9 +3,9 @@
 		<div v-show="!isminimize" slot="title" class="medium">
 			<div class="centers"><span>{{appObj.name}}</span></div>
 			<div class="icons">
-				<i class="el-icon-minus" style="font-size: 24px" @click="minimize"></i>
-				<i :class="isfullscreen? 'el-icon-remove-outline' : 'el-icon-circle-plus-outline' " style="font-size: 24px" @click="IsFullscreen"></i>
-				<i class="el-icon-close" style="font-size: 24px" @click="closeDialog"></i>
+				<i class="el-icon-minus"  @click="minimize"></i>
+				<i :class="isfullscreen? 'iconfont leansite-suoxiao' : 'iconfont leansite-fangda' " style="font-size: 24px" @click="IsFullscreen"></i>
+				<i class="el-icon-close"  @click="closeDialog"></i>
 			</div>
 		</div>
 		<div v-show="!isminimize" class="dialogBody">
@@ -193,6 +193,7 @@
 						display: flex;
 						justify-content: flex-end;
 						i{
+							font-size: 24px;
 							color: #5f6368;
 							font-size: 18px!important;
 							display: block;

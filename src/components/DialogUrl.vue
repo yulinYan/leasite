@@ -4,7 +4,7 @@
 			<div class="centers"><span>{{appObj.name}}</span></div>
 			<div class="icons">
 				<i class="el-icon-minus" style="font-size: 24px" @click="minimize"></i>
-				<i :class="isfullscreen? 'el-icon-remove-outline' : 'el-icon-circle-plus-outline' " style="font-size: 24px" @click="IsFullscreen"></i>
+				<i :class="isfullscreen? 'iconfont leansite-suoxiao' : 'iconfont leansite-fangda' " style="font-size: 24px" @click="IsFullscreen"></i>
 				<i class="el-icon-close" style="font-size: 24px" @click="closeDialog"></i>
 			</div>
 		</div>
@@ -36,7 +36,7 @@
 			}
 		},
 		created() {
-			this.appObj.path +="?username="+this.username+"&leansiteToken="+this.leansiteToken;
+			this.appObj.path +="?username="+this.username+"&token="+this.leansiteToken;
 			this.openDialog();
 		},
 		watch: {

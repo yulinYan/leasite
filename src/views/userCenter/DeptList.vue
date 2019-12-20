@@ -1,14 +1,12 @@
 <template>
-    <div class="userList">
+    <div class="deptList">
         <el-header>
             <el-row>
 			  <el-col :span="8" class="leftHeader">
 			  	<span>用户管理</span>
 			  </el-col>
 			  <el-col :span="16" class="rightHeader">
-			  	<el-button type="text" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增用户</el-button>
-			  	<el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button>
-			  	<el-input
+			  	<el-button type="text" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增用户</el-button><el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button><el-input
 			  		style="width:200px;"
 				   placeholder="输入姓名或用户名搜索"
 				   suffix-icon="el-icon-search"
@@ -19,9 +17,9 @@
 			</el-row>
         </el-header>
         <div class="container">
-            <el-table stripe :data="tableData" :row-class-name="tableRowClassName"   class="table" ref="multipleTable" @selection-change="handleSelectionChange" :header-cell-style="{background:'#f2f4f6',color:'#101010'}" >
+            <el-table stripe :data="tableData" class="table" ref="multipleTable" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="nickname"  label="员工姓名" align="center" width="120"></el-table-column>
+                <el-table-column prop="nickname" label="员工姓名" align="center" width="120"></el-table-column>
                 <el-table-column prop="username" label="用户" align="center" width="120"></el-table-column>
                 <el-table-column prop="roleName" label="角色名称" align="center" width="150"></el-table-column>
                 <el-table-column prop="mobile" label="电话"  align="center" width="120"></el-table-column>
@@ -29,15 +27,15 @@
                 <el-table-column prop="lastLoginTime" label="最后登录时间" align="center" min-width="180" ></el-table-column>
                 <el-table-column label="操作" width="160" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" class="edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <Pagination :pageIndex="pageObj.pageIndex" :total="pageObj.total" :pageSize="pageObj.pageSize" @PageTurning="PageTurning"></Pagination>
         </div>
-        <el-dialog class="outDialog" key="userDialog"  :title='dialogTitle' :visible.sync="userDialogVisible" v-if="userDialogVisible"  width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
-       		<!-- 新增/编辑弹出框 --> 
+        <el-dialog class="outDialog" key="userDialog"  :title='dialogTitle' :visible.sync="userDialogVisible" v-if="userDialogVisible" width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
+       		<!-- 新增/编辑弹出框 -->
        		<UserListAddAndEdit :userObj="userObj" @UserCallBack="UserCallBack" ></UserListAddAndEdit>
        	</el-dialog>
     </div>
@@ -47,7 +45,7 @@
 	import Pagination from '../../components/Pagination.vue';
 	import UserListAddAndEdit from '../../views/userCenter/UserListAddAndEdit.vue';
     export default {
-        name: 'UserList',
+        name: 'DeptList',//部门管理列表
         components: {
 			Pagination, //分页组件
 			UserListAddAndEdit//用户新增和编辑组件
@@ -221,26 +219,14 @@
              */
             handleSelectionChange(val) {
                 this.multipleSelection = val;
-            },
-		    /**
-		     * 改变隔行变色 颜色
-		     */
-			tableRowClassName(row, rowIndex) {
-		        let index = rowIndex + 1;
-					if(index %2 == 1){
-					    return 'warning-row'
-					}
-
-			      }  
-      		}
-        
-        
+            }
+        }
     }
 
 </script>
 
 <style lang="scss" scoped type="text/css">
-    .userList {
+    .deptList {
 	    height: 100%;
 	    .el-header {
 	        height: 60px;
@@ -268,11 +254,8 @@
 	        	.el-input{
 	        		margin-left: 23px;
 	        		width: 200px;
-	        		outline: none;
-	        		color: #6ecd8b;
 	        		.el-icon-search{
-	        			color: #6ecd8b;
-	        			outline: none;
+	        			color: #68c161;
 	        		}
 	        	}
 	        }
@@ -281,36 +264,15 @@
 	    	background-color: #FFFFFF;
 	        height: 100%;
 	        padding: 27px 40px 0;
-	    .el-table{
-	    	color: #303030;
-	    	font-size: 14px;
-	    	.warning-row{
-	    		background: #f2f4f6;
-	    	}
-	    	
-	    .edit{
-	    	border: solid 1px #68c161;
-	    	color: #6ecd8b;
-	    	font-size: 12px;
-			padding: 9px 7px;
-	    	}
-    		.delete{
-    			border-radius: 4px;
-				border: solid 1px #ec5555;
-				color: #ed5151;
-				font-size: 12px;
-				padding: 9px 7px;
-    		}
-	    	}
 	    }
 	    .el-main {
 	        padding: 30px;
 	    }
 	     .el-dialog{
 	    	background-color: #ffffff;
-	    	border-radius: 16px!important;
 			box-shadow: 0px 1px 20px 0px 
 				rgba(0, 0, 0, 0.2);
+			border-radius: 16px;
 			 /deep/ .el-dialog__header{
 				padding: 12px 40px;
 				border-bottom: 1px solid #d9e3f3;
