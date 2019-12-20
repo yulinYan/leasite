@@ -247,7 +247,7 @@
 		          cancelButtonText: '继续使用',
 		          type: 'warning'
 		        }).then(() => {//退出系统
-		          this.logout();
+		          this.logoutRequest();
 		        });
 			},
            /**

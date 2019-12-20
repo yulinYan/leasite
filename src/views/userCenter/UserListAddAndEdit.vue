@@ -193,7 +193,9 @@
 				this.userForm.userId=this.userObj.userId;
 				this.userForm.nickname=this.userObj.nickname;
 				this.userForm.username=this.userObj.username;
-				this.userForm.roleId=this.userObj.roleId*1;
+				if(this.userObj.roleId*1 != 0){
+					this.userForm.roleId=this.userObj.roleId*1;	
+				}
 				this.userForm.roleName=this.userObj.roleName;
 				this.userForm.email=this.userObj.email;
 				this.userForm.mobile=this.userObj.mobile;
