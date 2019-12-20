@@ -42,7 +42,7 @@ export default {
         return {
             ajaxMsg: {
                 url: this.API.internet.baseURL, //接口ip
-                Authorization: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtcmJpcmRAbGVhbnNpdGUuY24iLCJzY29wZXMiOlsiVEVOQU5UX0FETUlOIl0sInVzZXJJZCI6IjlkMzM4NTcwLTIzMWItMTFlYS04MDE3LTI1YmJlMzdkYmU3OCIsImVuYWJsZWQiOnRydWUsImlzUHVibGljIjpmYWxzZSwidGVuYW50SWQiOiJhMTQ4ZDViMC0yMGExLTExZWEtOGY2Ni0yNTQzMjcxOTY2OWQiLCJjdXN0b21lcklkIjoiMTM4MTQwMDAtMWRkMi0xMWIyLTgwODAtODA4MDgwODA4MDgwIiwiaXNzIjoidGhpbmdzYm9hcmQuaW8iLCJpYXQiOjE1NzY4OTIwODYsImV4cCI6MTU3NjkwMTA4Nn0.U6Z4MrBgzIoWjj_l-k3dL_Mn8GrjtjxPsfjlPbjGLyeIqWz4eNkLi43hQEZHcQXt1QhQGJlg4vtGN65-oiqDEw', //接口令牌
+                Authorization: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5d3hmZGo5OTk5QGxlYW5zaXRlLmNuIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiJhMTY1NWU2MC0yMGExLTExZWEtOGY2Ni0yNTQzMjcxOTY2OWQiLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiYTE0OGQ1YjAtMjBhMS0xMWVhLThmNjYtMjU0MzI3MTk2NjlkIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCIsImlzcyI6InRoaW5nc2JvYXJkLmlvIiwiaWF0IjoxNTc2OTA4OTgxLCJleHAiOjE1NzY5MTc5ODF9.tO5Zs4FD-xbqe-Dph_85kFdMoupSwLfnF_afnmLOFWrayaxnWw5WJ-0JroeoHQhLsMibYx_lP3sNfYYG2UXyBg', //接口令牌
             },
             activeName: '信息总览', //当前侧边栏
             //侧边栏
@@ -91,6 +91,12 @@ export default {
         },
         loginCheck() {
             let self = this;
+            // this.$store.commit('saveStoreByName', {
+            //     name: self.API.internet.constObj.internetToken,
+            //     storeName: 'internetToken',
+            //     storeInfo: ''
+            // });
+            // this.ajaxMsg.Authorization = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5d3hmZGo5OTk5QGxlYW5zaXRlLmNuIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiJhMTY1NWU2MC0yMGExLTExZWEtOGY2Ni0yNTQzMjcxOTY2OWQiLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiYTE0OGQ1YjAtMjBhMS0xMWVhLThmNjYtMjU0MzI3MTk2NjlkIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCIsImlzcyI6InRoaW5nc2JvYXJkLmlvIiwiaWF0IjoxNTc2OTA4OTgxLCJleHAiOjE1NzY5MTc5ODF9.tO5Zs4FD-xbqe-Dph_85kFdMoupSwLfnF_afnmLOFWrayaxnWw5WJ-0JroeoHQhLsMibYx_lP3sNfYYG2UXyBg'; //接口令牌
             this.$axios.internet({
                 url: this.API.internet.login, //不需要再添加ip和端口
                 method: 'post', //提交方式：get和post，同 params 和 data配合使用
@@ -102,12 +108,12 @@ export default {
             }).then((res) => {
                 var resData = res.data;
                 if (resData.token && resData.token.length > 0) {
-                    this.$store.commit('saveStoreByName', {
+                    self.$store.commit('saveStoreByName', {
                         name: self.API.internet.constObj.internetToken,
                         storeName: 'internetToken',
                         storeInfo: 'Bearer '+resData.token
                     });
-                    this.ajaxMsg.Authorization = resData.token; //接口令牌
+                    self.ajaxMsg.Authorization = resData.token; //接口令牌
                 } else {
                     self.$alert("打开物联网中心失败,请关闭重新打开!");
                 }

@@ -49,6 +49,7 @@
         :with-header="false"
         size="900px"
         :modal-append-to-body="false"
+        :destroy-on-close = 'true'
         direction = "rtl">
         <div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
