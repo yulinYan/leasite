@@ -14,6 +14,7 @@ const error404 = () => import('@/views/404.vue');
 const userCenterHome = () => import('@/views/userCenter/UserCenterHome.vue');
 const userList = () => import('@/views/userCenter/UserList.vue');
 const roleList = () => import('@/views/userCenter/RoleList.vue');
+const internetPlatform = () => import('@/views/internetPlatform/internetPlatform.vue');
 const routes = [
 	{
 		name: 'login',
@@ -43,6 +44,16 @@ const routes = [
 			requiresAuth: true
 		}
 	},
+    //物联网模块
+    {
+        name: 'internetPlatform',
+        path: '/internetPlatform',
+        component: internetPlatform,
+        meta: {
+            title: '物联网主页',
+			requiresAuth: true
+        },
+    },
 	{
 		name: 'userList',
 		path: '/userList',

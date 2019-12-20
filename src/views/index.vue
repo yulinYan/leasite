@@ -63,10 +63,10 @@
 				],
 				systemModules:[//系统功能模块
 					{ name:'用户中心',path:'/userCenterHome',icon:require("../assets/img/yonghuzhongxin.png")},
-					{ name:'物联网中心',path:'/userCenterHome',icon:require("../assets/img/wulianwang.png")},
+					{ name:'物联网中心',path:'/internetPlatform',icon:require("../assets/img/wulianwang.png")},
 					{ name:'运维中心',path:'/gerenzhongxin',icon:require("../assets/img/yunweizhongxin.png")},
-				],	
-				activeApps: [],//状态栏显示打开的app数组			
+				],
+				activeApps: [],//状态栏显示打开的app数组
 			}
 		},
 		computed:{
@@ -112,7 +112,7 @@
 				})
 			},
 			/**
-			 * 打开桌面的第三方app 
+			 * 打开桌面的第三方app
 			 */
 			openDialog(appObj){
 				let searchIndex = -1;
@@ -133,7 +133,7 @@
 							chioceApp = this.thirdAppList[i];
 							break;
 						}
-					}	
+					}
 					let appObject = {
 						name:appObj.appName,//APP名称
 						icon:chioceApp.appIcon,//app图标
@@ -200,18 +200,18 @@
 							searchIndex = i;
 							break;
 						}
-					}	
+					}
 					if(searchIndex != -1){
 						let editApp = this.activeApps[searchIndex];
 						editApp.isMinimize = true;
 						if(appObj.webSource == 1){//显示本项目模块
-							this.$refs['dialogComponent'+searchIndex][0].isminimize= false; 
-							this.$refs['dialogComponent'+searchIndex][0].moduleDialogVisible= true; 
+							this.$refs['dialogComponent'+searchIndex][0].isminimize= false;
+							this.$refs['dialogComponent'+searchIndex][0].moduleDialogVisible= true;
 						}else{//显示第三方应用
-							this.$refs['dialogUrl'+searchIndex][0].isminimize= false;   
-							this.$refs['dialogUrl'+searchIndex][0].dialogVisible= true;	
+							this.$refs['dialogUrl'+searchIndex][0].isminimize= false;
+							this.$refs['dialogUrl'+searchIndex][0].dialogVisible= true;
 						}
-						   
+
 					}
 				}
 			},
@@ -277,7 +277,7 @@
 			background-size: cover;
 			.block-item{
 				display: flex;
-				justify-content: center;	
+				justify-content: center;
 				align-items: center;
 				flex-direction: column;
 				width:10vh;
@@ -380,8 +380,8 @@
 			}
 		}
 	}
-	::-webkit-scrollbar{  
+	::-webkit-scrollbar{
 		width: 1px;
-    	background-color: transparent;  
-}  
+    	background-color: transparent;
+}
 </style>

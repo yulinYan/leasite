@@ -6,14 +6,12 @@
             <span>物联网平台</span>
         </el-header>
         <el-container class="platformContainer">
-            <el-aside width="180px">
-                <ul>
-                    <li v-for="(item,index) in asideList" :key="index" :class="isactive == index ? 'active' : '' " @click='asideClick(index,item.route)'><img :src="item.icon" alt=""><span v-cloak>{{item.name}}</span></li>
-                </ul>
-            </el-aside>
-            <el-main>
-                <router-view></router-view>
-            </el-main>
+            <el-tabs tab-position="left" style="width: 100%;" v-model="activeName" @tab-click="asideClick" :lazy="true" class="plantFormClass">
+                <el-tab-pane label="信息总览" v-for="(item,index) in asideList" :key="index" :name="item.name" class="plantFormClassItem">
+                    <span slot="label"><img style="margin-right: 15px;" :src="item.isactive ? item.icon[1]:item.icon[0]" alt="" >{{item.name}}</span>
+                    <component v-if="activeName === item.name" :is="item.com" :ajaxMsg="ajaxMsg" />
+                </el-tab-pane>
+            </el-tabs>
         </el-container>
     </el-container>
 </div>
@@ -22,44 +20,107 @@
 <script>
 export default {
     name: 'internetPlatform', //物联网平台
-    components: {},
-    props: [],
+    components: {
+        Overview: () =>
+            import ('@/views/internetPlatform/Overview.vue'), //
+        Asset: () =>
+            import ('@/views/internetPlatform/Asset.vue'), //
+        CollectingDevice: () =>
+            import ('@/views/internetPlatform/CollectingDevice.vue'), //
+    },
+    props: {
+        username: { //用户名
+            type: String,
+            required: true
+        },
+        leansiteToken: { //token信息
+            type: String,
+            required: true
+        }
+    },
     data() {
         return {
+            ajaxMsg: {
+                url: this.API.internet.baseURL, //接口ip
+                Authorization: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5d3hmZGo5OTk5QGxlYW5zaXRlLmNuIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiJhMTY1NWU2MC0yMGExLTExZWEtOGY2Ni0yNTQzMjcxOTY2OWQiLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiYTE0OGQ1YjAtMjBhMS0xMWVhLThmNjYtMjU0MzI3MTk2NjlkIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCIsImlzcyI6InRoaW5nc2JvYXJkLmlvIiwiaWF0IjoxNTc2OTA4OTgxLCJleHAiOjE1NzY5MTc5ODF9.tO5Zs4FD-xbqe-Dph_85kFdMoupSwLfnF_afnmLOFWrayaxnWw5WJ-0JroeoHQhLsMibYx_lP3sNfYYG2UXyBg', //接口令牌
+            },
+            activeName: '信息总览', //当前侧边栏
             //侧边栏
             asideList: [{
-                icon: require('../../assets/img/internetPlatform/shouye1.png'),
-                name: '信息总览',
-                route: 'Overview'
-            }, {
-                icon: require('../../assets/img/internetPlatform/zichan1.png'),
-                name: '资产中心',
-                route: 'Overview'
-            }, {
-                icon: require('../../assets/img/internetPlatform/caijishebei1.png'),
-                name: '采集设备',
-                route: 'Overview'
-            }, ],
-            //点击当前元素的index
-            isactive: false
+                    icon: [require('../../assets/img/internetPlatform/shouye1.png'), require('../../assets/img/internetPlatform/shouye2.png')],
+                    name: '信息总览',
+                    com: 'Overview',
+                    isactive: true
+                }, {
+                    icon: [require('../../assets/img/internetPlatform/zichan1.png'), require('../../assets/img/internetPlatform/zichan2.png')],
+                    name: '资产中心',
+                    com: 'Asset',
+                    isactive: false
+                },
+                {
+                    icon: [require('../../assets/img/internetPlatform/caijishebei1.png'), require('../../assets/img/internetPlatform/caijishebei2.png')],
+                    name: '采集设备',
+                    com: 'CollectingDevice',
+                    isactive: false
+                },
+            ],
         }
     },
     created() {
 
     },
     mounted() {
-
+        this.loginCheck()
     },
     computed: {
 
     },
     methods: {
         //点击侧边栏
-        asideClick(index, route) {
-            this.isactive = index;
-            this.$router.push({
-                path: route
+        asideClick(index) {
+            this.$nextTick(() => {
+                this.asideList.forEach((v, i) => {
+                    if (this.activeName == v.name) {
+                        v.isactive = true;
+                    } else {
+                        v.isactive = false;
+                    }
+                })
+
             });
+        },
+        loginCheck() {
+            let self = this;
+            // this.$store.commit('saveStoreByName', {
+            //     name: self.API.internet.constObj.internetToken,
+            //     storeName: 'internetToken',
+            //     storeInfo: ''
+            // });
+            // this.ajaxMsg.Authorization = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5d3hmZGo5OTk5QGxlYW5zaXRlLmNuIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiJhMTY1NWU2MC0yMGExLTExZWEtOGY2Ni0yNTQzMjcxOTY2OWQiLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiYTE0OGQ1YjAtMjBhMS0xMWVhLThmNjYtMjU0MzI3MTk2NjlkIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCIsImlzcyI6InRoaW5nc2JvYXJkLmlvIiwiaWF0IjoxNTc2OTA4OTgxLCJleHAiOjE1NzY5MTc5ODF9.tO5Zs4FD-xbqe-Dph_85kFdMoupSwLfnF_afnmLOFWrayaxnWw5WJ-0JroeoHQhLsMibYx_lP3sNfYYG2UXyBg'; //接口令牌
+            this.$axios.internet({
+                url: this.API.internet.login, //不需要再添加ip和端口
+                method: 'post', //提交方式：get和post，同 params 和 data配合使用
+                data: {
+                    "username": "",
+                    "password": "",
+                    "leansitetoken": this.leansiteToken
+                }
+            }).then((res) => {
+                var resData = res.data;
+                if (resData.token && resData.token.length > 0) {
+                    self.$store.commit('saveStoreByName', {
+                        name: self.API.internet.constObj.internetToken,
+                        storeName: 'internetToken',
+                        storeInfo: 'Bearer '+resData.token
+                    });
+                    self.ajaxMsg.Authorization = resData.token; //接口令牌
+                } else {
+                    self.$alert("打开物联网中心失败,请关闭重新打开!");
+                }
+            }).catch(function(err) {
+                console.log(err.response)
+                console.log("连接错误" + err);
+            })
         }
     }
 }
@@ -67,6 +128,25 @@ export default {
 
 <style lang="scss" scoped type="text/css">
 .internetPlatform {
+    min-width: 900px;
+    min-height: 570px;
+    position: relative;
+    a:link {
+        text-decoration: none;
+        /* 指正常的未被访问过的链接*/
+    }
+    a:visited {
+        text-decoration: none;
+        /*指已经访问过的链接*/
+    }
+    a:hover {
+        text-decoration: none;
+        /*指鼠标在链接*/
+    }
+    a:active {
+        text-decoration: none;
+        /* 指正在点的链接*/
+    }
     height: 100%;
     header {
         height: 60px;
@@ -82,41 +162,52 @@ export default {
             vertical-align: -webkit-baseline-middle;
         }
     }
-    .el-aside {
-        background-color: #ffffff;
-        li {
-            width: 100%;
-            height: 54px;
-            line-height: 54px;
-            background-color: #fff;
-            border-left: 3px solid #fff;
-            img {
-                margin: 0 15px 0 43px;
-            }
-            span {
-                font-family: 'MicrosoftYaHei';
-                font-size: 14px;
-                color: #101010;
-                cursor: pointer;
-            }
-            &.active {
-                background-color: #eef1f7;
-                border-left: 3px solid #61adf8;
-                span {
-                    color: #3f78f6;
-                }
-            }
-        }
-    }
     .el-container {
         height: 100%;
+        min-height: 570px;
     }
     .platformContainer {
         background-color: #eef1f7;
         height: calc(100% - 60px);
+        width: 100%;
     }
-    .el-main {
+    /deep/ .plantFormClass>.el-tabs__header.is-left {
+        width: 180px;
+        margin-right: 0px;
+        background-color: #ffffff;
+        overflow: hidden;
+    }
+    /deep/ .el-tabs--left .el-tabs__item.is-left {
+        text-align: center;
+        width: 100%;
+        height: 54px;
+        line-height: 54px;
+        background-color: #fff;
+        border-left: 3px solid #fff;
+    }
+    /deep/ .el-tabs--left .el-tabs__active-bar.is-left,
+    /deep/ .el-tabs--left .el-tabs__nav-wrap.is-left::after {
+        left: 0px;
+        right: auto;
+        height: 54px;
+        background-color: #61adf8;
+        width: 3px;
+        float: left;
+    }
+    /deep/ .plantFormClass>div>div>div>div>.el-tabs__item.is-active {
+        color: #3f78f6;
+        background-color: #eef1f7 !important;
+    }
+    /deep/ .plantFormClass>.el-tabs__content {
+        float: right;
         padding: 30px;
+        width: calc(100% - 180px);
+        height: 100%;
+        box-sizing: border-box;
+        overflow: auto;
+    }
+    /deep/ .el-tab-pane {
+        height: 100%;
     }
 }
 </style>

@@ -7,9 +7,11 @@ const interface_s = {
 	//prodBaseURL:window.configs.API_ROOT,//生产环境
 	//登录模块
 	login: "api/auth/login", //登录
-	
+
+
+
 	//公共模块
-	
+
 	//常量对象
 	constObj: {
 		pageIndex:0,
