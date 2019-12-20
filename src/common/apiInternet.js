@@ -4,14 +4,9 @@ import axios from 'axios'
  */
 const interface_s = {
 	baseURL: 'http://192.168.2.31:8070/',//非生产环境
-	//prodBaseURL:window.configs.API_ROOT,//生产环境
+	//prodBaseURL:window.configs.internetAPI,//生产环境
 	//登录模块
 	login: "api/auth/login", //登录
-
-
-
-	//公共模块
-
 	//常量对象
 	constObj: {
 		pageIndex:0,

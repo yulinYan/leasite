@@ -29,7 +29,7 @@
       return {
   			isSmall:this.enableSmall || false,//是否启用small模式
       	pageObj:{
-	        pageIndex:this.pageIndex*1+1,//当前页下标
+	        pageIndex:this.pageIndex*1,//当前页下标
 	        pageSize:this.pageSize*1,//页大小
 	        total:this.total*1//数据总条数
 	      },
@@ -45,7 +45,7 @@
         this.pageObj.pageIndex = 1;
         //值传回给父组件
         this.$emit('PageTurning',{
-        	page_index:this.pageObj.pageIndex*1-1,//当前页下标
+        	page_index:this.pageObj.pageIndex*1,//当前页下标
         	page_size:this.pageObj.pageSize//页大小
         });
       },
@@ -56,7 +56,7 @@
         this.pageObj.pageIndex = curr_page;
          //值传回给父组件
         this.$emit('PageTurning',{
-        	page_index:this.pageObj.pageIndex*1-1,
+        	page_index:this.pageObj.pageIndex*1,
         	page_size:this.pageObj.pageSize
         });
       }
@@ -86,7 +86,7 @@
         pageIndex:{
         	  deep:true,
             handler:function(currVal,prevVal){
-                this.pageObj.pageIndex = currVal*1+1;
+                this.pageObj.pageIndex = currVal*1;
             }
         }
     }

@@ -3,16 +3,21 @@
 		<el-form :model="userForm" label-position="left" :rules="rules" ref="userForm" label-width="100px" class="demo-userForm" size="small">
 			<el-row :gutter="15">
 				<el-col :span="23">
+					<el-form-item label="员工姓名" prop="nickname">
+						<el-input v-model="userForm.nickname" minLength="2" maxLength="50" placeholder="请输入员工姓名"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="23">
 					<el-form-item label="用户名" prop="username">
 						<el-input v-model="userForm.username" minLength="3" maxLength="50" placeholder="请输入用户名"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="23">
 					<el-form-item label="角色名称" prop="roleId">
-						<el-select v-model="userForm.roleId" placeholder="请选择角色状态" @change="handleRoleChange">
+						<el-select v-model="userForm.roleId" value-key="roleId" placeholder="请选择角色状态" @change="handleRoleChange">
 						    <el-option
 						      v-for="item in roleList"
-						      :key="item.value"
+						      :key="item.roleId"
 						      :label="item.roleName"
 						      :value="item.roleId">
 						    </el-option>
@@ -20,8 +25,8 @@
 					</el-form-item>
 				</el-col>
 				<el-col :span="23">
-					<el-form-item label="密码" prop="password">
-						<el-input v-model="userForm.password" minLength="6" maxLength="15" placeholder="请输入密码"></el-input>
+					<el-form-item label="密码" :prop="pageType=='add'?'password':'passwordEdit'">
+						<el-input v-model="userForm.password" show-password minLength="6" maxLength="15" placeholder="请输入密码"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="23">
@@ -57,6 +62,7 @@
 			return {
 				userForm: {
 					userId:'',//用户id  编辑提交时使用
+					nickname:'',//员工姓名
 					username: '', //用户名
 					roleId: '', //角色id
 					password:'',//密码
@@ -66,11 +72,22 @@
 					ssex:'',//性别
 					status:'1',//账号状态，默认为1  0锁定  1是正常
 				},
-				roleList:[//角色列表
-					
-				],
+				roleList:[],//角色列表
+				isCheckPassword:true,
 				pageType:'add',//页面类型 pageType=add 新增/pageType=edit 修改
 				rules: {
+					nickname: [{
+							required: true,
+							message: '请输入员工姓名',
+							trigger: 'blur'
+						},
+						{
+							min: 2,
+							max: 50,
+							message: '员工姓名2-50 个字符',
+							trigger: 'blur'
+						}
+					],
 					username: [{
 							required: true,
 							message: '请输入用户名',
@@ -101,29 +118,50 @@
 							trigger: 'blur'
 						}
 					],
+					passwordEdit: [{
+							required: false,
+							message: '请输入密码',
+							trigger: 'blur'
+						},
+						{
+							min: 6,
+							max: 15,
+							message: '密码 6-15 个字符',
+							trigger: 'blur'
+						}
+					],
 					email: [{
 							required: true,
 							message: '请输入邮箱',
 							trigger: 'blur'
 						},
 						{
-							min: 3,
-							max: 50,
-							message: '邮箱3-50 个字符',
-							trigger: 'blur'
-						}
+							validator:function(rule,value,callback){
+					            if(/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(value) == false){
+					                callback(new Error("邮箱无效!"));
+					            }else{
+					                callback();
+					            }
+					        }, 
+					    	trigger: 'blur'
+					    }
 					],
-					mobile: [{
+					mobile: [
+						{
 							required: true,
-							message: '请输入手机号',
+							message: '请输入手机号码',
 							trigger: 'blur'
 						},
 						{
-							min: 11,
-							max: 11,
-							message: '手机号3-50 个字符',
-							trigger: 'blur'
-						}
+							validator:function(rule,value,callback){
+					            if(/^1[3456789]\d{9}$/.test(value) == false){
+					                callback(new Error("手机号码无效!"));
+					            }else{
+					                callback();
+					            }
+					        }, 
+					    	trigger: 'blur'
+					    }
 					]
 				}
 			}
@@ -134,10 +172,12 @@
 		mounted() {
 			this.getRoleList();
 			if(this.userObj.userId){
+				this.isCheckPassword = false;
 				this.pageType = 'edit';
 				this.setFormData();//表单赋值
 				
 			}else{
+				this.isCheckPassword = true;
 				this.pageType ='add';
 				
 			}
@@ -150,23 +190,23 @@
 			 * 表单赋值
 			 */
 			setFormData(){
-				this.userForm.id=this.userObj.id;
+				this.userForm.userId=this.userObj.userId;
+				this.userForm.nickname=this.userObj.nickname;
 				this.userForm.username=this.userObj.username;
-				this.userForm.password=this.userObj.password;
-				this.userForm.roleId=this.userObj.roleId;
+				this.userForm.roleId=this.userObj.roleId*1;
 				this.userForm.roleName=this.userObj.roleName;
 				this.userForm.email=this.userObj.email;
 				this.userForm.mobile=this.userObj.mobile;
+				this.userForm.status=this.userObj.status;
 			},
 			/**
 			 * 角色改变时 
 			 */
 			handleRoleChange(value){
 				let filtedList = this.roleList.filter(function(currentValue, index,arr){
-					return currentValue.id == value;
+					return currentValue.roleId == value;
 				});
 				this.userForm.roleName = filtedList[0].roleName;
-				console.log(filtedList);
 			},
 			/**
 			 * 添加用户
@@ -215,9 +255,9 @@
 				let self = this;
 				this.$refs[formName].validate((valid) => {
 					if(valid) {
-		                self.$axios({
+		                self.$axios.leansite({
 		            		method:'post',
-		                	url:self.API.updateUsers, 
+		                	url:self.API.leansite.updateUser, 
 		                	data:self.userForm
 		                }).then((res) => {
 		                    var resData = res.data;
@@ -259,7 +299,18 @@
 			 */
 			resetForm(){
 				this.pageType ='add';
-				this.$refs['userForm'].resetFields();
+				this.userForm={
+					userId:'',//用户id  编辑提交时使用
+					nickname:'',//员工姓名
+					username: '', //用户名
+					roleId: '', //角色id
+					password:'',//密码
+					roleName:'',//角色名
+					email:'',//邮箱
+					mobile:'',//手机号
+					ssex:'',//性别
+					status:'1',//账号状态，默认为1  0锁定  1是正常
+				};
 			},
 			getRoleList() {
 			    this.$axios.leansite({

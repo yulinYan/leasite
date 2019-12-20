@@ -9,7 +9,19 @@
 				</el-col>
 				<el-col :span="23">
 					<el-form-item label="角色描述" prop="remark">
-						<el-input v-model="roleForm.remark" minLength="2" maxLength="50" placeholder="请输入角色描述"></el-input>
+						<el-input v-model="roleForm.remark" minLength="2" maxLength="100" placeholder="请输入角色描述"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="23">
+					<el-form-item label="用户"  prop="userId">
+						<el-cascader
+							style="width: 100%;"
+					
+					    placeholder="请选择或搜索用户"
+					    :options="deptUserList"
+					    :props=treeProps 
+					    @change="handleChange"
+					    filterable></el-cascader>
 					</el-form-item>
 				</el-col>
 			</el-row>
@@ -37,26 +49,39 @@
 					id:'',//角色id  编辑提交时使用
 					remark: '', //角色id
 					roleName:'',//角色名
-					userIds:'张三,里斯,王五',//用户id 以逗号分隔
+					userId:'',//用户id 以逗号分隔
 				},
+				treeProps:{
+					value:'deptId',
+					label:'deptName',
+					children:'deptUserTobeanList',
+					multiple: true
+				},
+				deptUserList: [],
 				pageType:'add',//页面类型 pageType=add 新增/pageType=edit 修改
 				rules: {
-					rolename: [{
+					roleName: [{
 							required: true,
 							message: '请输入角色名称',
 							trigger: 'blur'
 						},
 						{
-							min: 3,
+							min: 2,
 							max: 50,
-							message: '用户名 3-50 个字符',
+							message: '角色名称必须在 2-50 个字符',
 							trigger: 'blur'
 						}
 					],
 					remark: [{
 							required: true,
-							message: '请输入请输入角色描述',
+							message: '请输入角色描述',
 							trigger: 'blur'
+						}
+					],
+					userId: [{
+							required: true,
+							message: '请选择用户',
+							trigger: 'change'
 						}
 					]
 				}
@@ -68,11 +93,10 @@
 			if(this.roleObj.id){
 				this.pageType = 'edit';
 				this.setFormData();//表单赋值
-				
 			}else{
 				this.pageType ='add';
-				
 			}
+			this.getDeptAndUser();
 		},
 		computed: {
 			
@@ -85,7 +109,19 @@
 				this.roleForm.id=this.roleObj.id;
 				this.roleForm.roleName=this.roleObj.roleName;
 				this.roleForm.remark=this.roleObj.remark;
-				this.roleForm.userIds=this.roleObj.userIds;
+				this.roleForm.userId=this.roleObj.userId;
+			},
+			/**
+			 * 选择用户级联框 change事件 
+			 * @param {Array} valArray 选中的值
+			 */
+			handleChange(chioceArray){
+				let aUserId = [];
+				chioceArray.forEach(function(item,index){
+					aUserId.push(item[item.length-1]);
+				});
+				this.roleForm.userId = aUserId.toString();
+				console.log(this.roleForm.userId);
 			},
 			/**
 			 * 添加用户
@@ -95,16 +131,16 @@
 				let self = this;
 				this.$refs[formName].validate((valid) => {
 					if(valid) {
-		                self.$axios({
+		                self.$axios.leansite({
 		            		method:'post',
-		                	url:self.API.addRole, 
+		                	url:self.API.leansite.addRoleAndUser, 
 		                	data:self.roleForm
 		                }).then((res) => {
 		                    var resData = res.data;
 		                    if(resData.status == "200"){
 		                    	self.$message({
 						            type: 'success',
-						            message: '添加用户成功!'
+						            message: '添加角色成功!'
 						        });
 						        self.resetForm();//重置表单
 						        //调用父组件方法--isRefresh=true需要刷新父组件的数据
@@ -112,7 +148,7 @@
 		                    }else{
 					          	self.$message({
 						            type: 'error',
-						            message: '添加用户失败，请退出重试！'
+						            message: '添加角色失败，请退出重试！'
 					          	});
 		                    }
 		                }).catch((err) => {
@@ -179,6 +215,24 @@
 			resetForm(){
 				this.pageType ='add';
 				this.$refs['roleForm'].resetFields();
+			},
+			getDeptAndUser() {
+			    this.$axios.leansite({
+			     method: 'get',
+			     url: this.API.leansite.getDeptAndUser,
+			    }).then((res) => {
+			     var resData = res.data;
+			     if(resData.status == 200) {
+			      this.deptUserList = resData.data;
+			     } else {
+			      this.$message({
+			       type: 'error',
+			       message: '获取角色列表失败，请退出重新打开！'
+			      });
+			     }
+			    }).catch((err) => {
+			     console.log('请求异常，请检查网络!');
+			    });
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 <template>
-    <div class="userList">
+    <div class="deptList">
         <el-header>
             <el-row>
 			  <el-col :span="8" class="leftHeader">
@@ -45,7 +45,7 @@
 	import Pagination from '../../components/Pagination.vue';
 	import UserListAddAndEdit from '../../views/userCenter/UserListAddAndEdit.vue';
     export default {
-        name: 'UserList',
+        name: 'DeptList',//部门管理列表
         components: {
 			Pagination, //分页组件
 			UserListAddAndEdit//用户新增和编辑组件
@@ -226,7 +226,7 @@
 </script>
 
 <style lang="scss" scoped type="text/css">
-    .userList {
+    .deptList {
 	    height: 100%;
 	    .el-header {
 	        height: 60px;

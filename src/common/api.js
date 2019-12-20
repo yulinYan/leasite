@@ -4,7 +4,7 @@ import axios from 'axios'
  */
 const interface_s = {
 	baseURL: 'http://192.168.2.41:9527/',//非生产环境
-	//prodBaseURL:window.configs.API_ROOT,//生产环境
+	//prodBaseURL:window.configs.leansiteAPI,//生产环境
 	//登录模块
 	login: "login", //登录
 	logout:"kickout",//退出系统
@@ -14,13 +14,14 @@ const interface_s = {
 	userListByNameOrUserName:'user',//用户列表
 	deleteUsers:'user',//批量删除用户
 	addUsers:'user',//新增用户
-	updateUser:'user/updateUser',//修改用户
+	updateUser:'user/update',//修改用户
 	roleListByRoleName:'role',//用户列表
-	deleteRoles:'role/deleteRoles',//批量删除角色
-	addRole:'role/addRole',//新增角色
+	deleteRoles:'role',//批量删除角色
+	addRoleAndUser:'role/addRoleAndUser',//新增角色并添加用户
+	getDeptAndUser:'/dept/getListAndUser',//获取部门和用户
 	//常量对象
 	constObj: {
-		pageIndex:0,
+		pageIndex:1,
 		pageSize:10,
 		requestFilter: [ //拦截器不拦截的请求集合
 			'login', //登录
