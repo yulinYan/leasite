@@ -1,5 +1,6 @@
 <template>
 	<div class="systemMenu">
+		
 		<ul class="leftMenus">
 			<li v-for="menus in systemMenus" @click="alertComponent(menus)">
 				<img :src="menus.icon" :tile="menus.name"/>
@@ -45,7 +46,7 @@
 					{ name:'用户中心',path:'/userCenterHome',icon:require("../assets/img/yonghuzhongxin.png")},
 					{ name:'物联网中心',path:'/baseForm',icon:require("../assets/img/wulianwang.png")},
 					{ name:'运维中心',path:'/gerenzhongxin',icon:require("../assets/img/yunweizhongxin.png")},
-				],	
+				],
 				chioceMenus:{
 					name:""
 				}//点击选中的菜单信息
@@ -79,11 +80,11 @@
 				this.moduleDialogVisible = false
 			},
 			/**
-			 * 打开弹窗 
+			 * 打开弹窗
 			 */
 			openDialog() {
 				this.$emit("openCallBack",this.chioceMenus);
-				
+
 				this.moduleDialogVisible = true;
 				//this.$parent.statusBarData(this.chioceMenus);
 			},
@@ -106,9 +107,9 @@
 			        }).then(() => {//退出系统
 			          this.$store.commit('removeAllInfo');
 			          this.$router.push('/login');  // 正常登录
-			          
+
 			        }).catch(() => {//取消
-			                   
+
 			        });
 			        return;
 				}
@@ -154,8 +155,10 @@
 		    width: 16.76%;
 		    text-align: center;
 		    cursor: pointer;
+           
 		    li{
 		    	height: 42px;
+               
 		    }
 		    li:hover{
 		    	background-color: #4c5363;
@@ -185,7 +188,7 @@
 	.el-dialog {
 		margin-top: 10vh!important;
 	}
-	
+
 	.no_select {
 		-webkit-touch-callout: none;
 		/* iOS Safari */
@@ -200,7 +203,7 @@
 		user-select: none;
 		/* Non-prefixed version, currently */
 	}
-	
+
 	.isminimize {
 		left: 20px;
 		bottom: 20px;
@@ -225,7 +228,7 @@
 			bottom: 0;
 		}
 	}
-	
+
 	.systemModuleDialog {
 		.is-fullscreen {
 			width: 100% !important;

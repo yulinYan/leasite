@@ -306,13 +306,17 @@
 				position: absolute;
 				left: 0;
 				top:-39vh;
+				
 				.leftMenus{
 					display: inline-block;
-				    height: 95%;
+				    /*height: 95%;*/
+				   
 				    padding-top: 5%;
 				    width: 16.76%;
 				    text-align: center;
 				    cursor: pointer;
+				    position: absolute;
+				    bottom: 5%;
 				    li{
 				    	height: 42px;
 				    }
@@ -328,6 +332,7 @@
 				    width: 81.5%;
 				    text-align: left;
 				    border-left: 1px solid #4c5363;
+				    float: right;
 				    li{
 				    	padding-left: 8.5%;
 				    	height: 42px;

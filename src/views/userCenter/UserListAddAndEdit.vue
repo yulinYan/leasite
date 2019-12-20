@@ -37,7 +37,7 @@
 			</el-row>
 		</el-form>
 		<div slot="footer" class="dialog-footer">
-			<el-button @click="cancelOpt">取 消</el-button>
+			<el-button class="cancel" @click="cancelOpt">取 消</el-button>
 			<el-button v-if="pageType == 'add'" type="primary" @click="addUser('userForm')">保存</el-button>
 			<el-button v-else-if="pageType == 'edit'" type="primary" @click="editUser('userForm')">保存</el-button>
 		</div>
@@ -291,10 +291,12 @@
 	.userListAddAndEdit {
 		.el-form{
 			padding:0 48px 0;
+			border-radius: 16px;
 		}
 		.dialog-footer{
 			margin-top:15px;
 			text-align: center;
+			
 			.el-button{
 				width: 130px;
 			}

@@ -6,7 +6,9 @@
 			  	<span>角色管理</span>
 			  </el-col>
 			  <el-col :span="16" class="rightHeader">
-			  	<el-button type="text" icon="el-icon-plus" class="addRole" @click="handleAddRole">新增角色</el-button><el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button><el-input
+			  	<el-button type="text" icon="el-icon-plus" class="addRole" @click="handleAddRole">新增角色</el-button>
+			  	<el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button>
+			  	<el-input
 			  		style="width:200px;"
 				   placeholder="输入角色名搜索"
 				   suffix-icon="el-icon-search"
@@ -17,15 +19,15 @@
 			</el-row>
         </el-header>
         <div class="container">
-            <el-table stripe :data="tableData" class="table" ref="multipleTable" @selection-change="handleSelectionChange">
+            <el-table stripe :data="tableData" class="table" :row-class-name="tableRowClassName" ref="multipleTable" @selection-change="handleSelectionChange" :header-cell-style="{background:'#f2f4f6',color:'#101010'}">
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="roleName" label="角色名称" align="center" min-width="200"></el-table-column>
                 <el-table-column prop="remark" label="角色描述"  align="left" min-width="300"></el-table-column>
                 <el-table-column prop="userId" label="用户列表" align="left" min-width="300"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑权限</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        <el-button type="text" icon="el-icon-edit" class="edit" @click="handleEdit(scope.$index, scope.row)">编辑权限</el-button>
+                        <el-button type="text" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -213,7 +215,14 @@
              */
             handleSelectionChange(val) {
                 this.multipleSelection = val;
-            }
+            },
+            tableRowClassName(row, rowIndex) {
+		        let index = rowIndex + 1;
+					if(index %2 == 1){
+					    return 'warning-row'
+					}
+
+			      }  
         }
     }
 
@@ -258,6 +267,27 @@
 	    	background-color: #FFFFFF;
 	        height: 100%;
 	        padding: 27px 40px 0;
+	        .el-table{
+	    	color: #303030;
+	    	font-size: 14px;
+	    	.warning-row{
+	    		background: #f2f4f6;
+	    	}
+	    	
+	    .edit{
+	    	border: solid 1px #68c161;
+	    	color: #6ecd8b;
+	    	font-size: 12px;
+			padding: 9px 7px;
+	    	}
+    		.delete{
+    			border-radius: 4px;
+				border: solid 1px #ec5555;
+				color: #ed5151;
+				font-size: 12px;
+				padding: 9px 7px;
+    		}
+	    	}
 	    }
 	    .el-main {
 	        padding: 30px;
