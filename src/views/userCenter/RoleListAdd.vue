@@ -52,7 +52,7 @@
 					userId:'',//用户id 以逗号分隔
 				},
 				treeProps:{
-					value:'deptId',
+					value:'userId',
 					label:'deptName',
 					children:'deptUserTobeanList',
 					multiple: true
@@ -118,7 +118,9 @@
 			handleChange(chioceArray){
 				let aUserId = [];
 				chioceArray.forEach(function(item,index){
-					aUserId.push(item[item.length-1]);
+					if(item[item.length-1] && typeof item[item.length-1] == "number"){
+						aUserId.push(item[item.length-1]);	
+					}
 				});
 				this.roleForm.userId = aUserId.toString();
 				console.log(this.roleForm.userId);

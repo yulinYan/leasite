@@ -10,7 +10,7 @@
 			  	<el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button>
 			  	<el-input
 			  		style="width:200px;"
-				   placeholder="输入姓名或用户名搜索"
+				   placeholder="输入用户名搜索"
 				   suffix-icon="el-icon-search"
 				   v-model="searchText"
 				   @keyup.enter.native="searchEnterFun">
