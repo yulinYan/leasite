@@ -1,56 +1,69 @@
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+const routerPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+return routerPush.call(this, location).catch(error=> error)
+}
 import api from "../common/api.js"
 import store from '../store/index.js';
-Vue.use(VueRouter)
-
+Vue.use(VueRouter);
+const login = () => import('@/views/login.vue');
+const index = () => import('@/views/index.vue');
+const error404 = () => import('@/views/404.vue');
+const userCenterHome = () => import('@/views/userCenter/UserCenterHome.vue');
+const userList = () => import('@/views/userCenter/UserList.vue');
+const roleList = () => import('@/views/userCenter/RoleList.vue');
 const routes = [
 	{
 		name: 'login',
 		path: "/login",
-		component: resolve => require(['../views/login.vue'], resolve),
+		component: login,
+		meta: {
+			title: '登录',
+			requiresAuth: false//是否登录验证
+		}
 	},
 	{
 		name: 'index',
 		path: '/index',
-		component: resolve => require(['../views/index.vue'], resolve),
+		component:index,
 		meta: {
-			title: '首页'
+			title: '首页',
+			requiresAuth: true
 		}
 	},
 	//用户中心模块
 	{
 		name: 'userCenterHome',
 		path: '/userCenterHome',
-		component: resolve => require(['../views/userCenter/Home.vue'], resolve),
+		component: userCenterHome,
 		meta: {
-			title: '用户中心主页'
-		},
-		children:[
-			{
-				name: 'userList',
-				path: 'userList',
-				component:resolve => require(['../views/userCenter/UserList.vue'], resolve),
-
-				meta: {
-					title: '用户管理'
-				}
-			},
-		]
-	},
-	{
-		name: 'baseForm',
-		path: '/baseForm',
-		component: resolve => require(['../views/BaseForm.vue'], resolve),
-		meta: {
-			title: '用户中心首页'
+			title: '用户中心主页',
+			requiresAuth: true
 		}
 	},
 	{
-		name: 'home',
-		path: '/home',
-		component: resolve => require(['../views/home.vue'], resolve),
+		name: 'userList',
+		path: '/userList',
+		component:userList,
+		meta: {
+			title: '用户管理',
+			requiresAuth: true
+		}
+	},
+	{
+		name: 'roleList',
+		path: '/roleList',
+		component:roleList,
+		meta: {
+			title: '权限管理',
+			requiresAuth: true
+		}
+	},
+	{
+		path: '/404',
+		component: error404
 	},
 	{
 		path: '*',
@@ -59,6 +72,7 @@ const routes = [
 		}
 	},
 ]
+
 // 实例化
 let router = new VueRouter({
 	mode:'hash',//hash模式

@@ -1,4 +1,4 @@
-# 干部档案管理信息系统V4.0上海版#
+# Leansite Paas 2.0#
 
 #### 介绍
 Leansite Paas

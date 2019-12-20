@@ -1,7 +1,6 @@
 <template>
-	<el-dialog ref="systemModuleDialog" class="systemModuleDialog" :title="appObj.name" :fullscreen="isfullscreen" :modal="false" :visible.sync="moduleDialogVisible"  :append-to-body="false" :close-on-click-modal="false" :destroy-on-close="true" :show-close="false"  :class="isminimize? 'isminimize': ''" center>
+	<el-dialog ref="systemModuleDialog" :width="width" class="systemModuleDialog" :title="appObj.name" :fullscreen="isfullscreen" :modal="false" :visible.sync="moduleDialogVisible"  :append-to-body="false" :close-on-click-modal="false" :destroy-on-close="true" :show-close="false"  :class="isminimize? 'isminimize': ''" center>
 		<div v-show="!isminimize" slot="title" class="medium">
-			<div></div>
 			<div class="centers"><span>{{appObj.name}}</span></div>
 			<div class="icons">
 				<i class="el-icon-minus" style="font-size: 24px" @click="minimize"></i>
@@ -10,7 +9,7 @@
 			</div>
 		</div>
 		<div v-show="!isminimize" class="dialogBody">
-			<currComponent></currComponent>
+			<currComponent :username="username" :leansiteToken="leansiteToken"></currComponent>
 		</div>
 	</el-dialog>
 </template>
@@ -32,7 +31,9 @@
 			return {
 				isfullscreen: false, // 全屏
 				isminimize: false, // 最小化
-				moduleDialogVisible: false // 隐藏弹窗
+				moduleDialogVisible: false, // 隐藏弹窗
+				username:this.$store.state.user.username,
+				leansiteToken:this.$store.state.token,
 			}
 		},
 		created() {
@@ -82,12 +83,9 @@
 						break;
 					}
 				}
-				if(currComponent.length == 0){
-					this.$alert("该页面路径信息配置错误!");
-				}else{
-					Vue.component('currComponent',currComponent);
-					this.moduleDialogVisible = true;
-				}
+				Vue.component('currComponent',currComponent);
+				this.moduleDialogVisible = true;
+				
 			},
 		},
 		mounted() {
@@ -99,10 +97,6 @@
 	}
 </script>
 <style lang="scss" type="text/css" scoped>
-	.el-dialog {
-		margin-top: 10vh!important;
-	}
-	
 	.no_select {
 		-webkit-touch-callout: none;
 		/* iOS Safari */
@@ -144,19 +138,20 @@
 	}
 	
 	.systemModuleDialog {
-		.is-fullscreen {
+		min-height: 600px;
+		.is-fullscreen{
 			width: 100% !important;
 			left: 0 !important;
 			top: 0 !important;
 			margin-top: 0 !important;
 			overflow: hidden;
 			position: relative;
-			.el-dialog__header {
+			.el-dialog__header{
 				cursor: auto!important;
 			}
 			.el-dialog__body {
 				height: 100%;
-				.dialogBody {
+				.dialogBody{
 					height: 100%!important;
 					max-height: none!important;
 					padding-bottom: 120px!important;
@@ -170,31 +165,34 @@
 			}
 		}
 		.el-dialog {
-			.el-dialog__header {
+			.el-dialog__header{
 				width: 100%;
-				padding: 5px 20px 5px !important;
+				height: 48px;
+			    line-height: 48px;
+			    padding: 0 20px !important;
+			    color: #303030;
+			    border-bottom: solid 1px #d9e3f3 !important;
 				display: flex;
-				border-bottom: 1px solid #ccc;
 				@extend .no_select;
 				cursor: auto;
-				.medium {
+				.medium{
 					width: 100%;
 					height: 100%;
 					display: flex;
-					div {
-						flex: 1;
-					}
-					.centers {
-						span {
-							text-align: center;
+					justify-content: space-between;
+					align-items: center;
+					.centers{
+						span{
+							text-align: left;
 							font-size: 16px;
 							color: #606266;
 						}
 					}
 					.icons {
+						height: 21px;
 						display: flex;
 						justify-content: flex-end;
-						i {
+						i{
 							color: #5f6368;
 							font-size: 18px!important;
 							display: block;
@@ -210,13 +208,13 @@
 						}
 					}
 				}
-				.horn {
+				.horn{
 					width: 100%;
 					height: 100%;
 					display: flex;
 					justify-content: space-between;
-					div {
-						i {
+					div{
+						i{
 							color: #5f6368;
 							font-size: 20px!important;
 						}
@@ -248,13 +246,13 @@
 					font-size: 24px;
 				}
 			}
+
 			.el-dialog__body {
 				padding: 1px !important;
 				.dialogBody {
 					max-height: calc(80vh - 50px);
-					box-shadow: inset 0px -2px 10px 1px #b0b3b2;
 					overflow: auto;
-					padding: 20px 25px 20px;
+					padding: 0 !important;
 					background: #f7f9fc;
 					&::-webkit-scrollbar {
 						width: 4px;
@@ -287,6 +285,17 @@
 			}
 			.el-date-editor {
 				width: 100%;
+			}
+		}
+		/deep/ .el-dialog--center{
+			.el-dialog__header{
+					height: 48px;
+				    padding: 0 20px !important;
+				    color: #303030;
+				    border-bottom: solid 1px #d9e3f3 !important;
+				}
+			.el-dialog__body{
+				padding: 0;
 			}
 		}
 	}

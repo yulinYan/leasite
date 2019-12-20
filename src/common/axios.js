@@ -2,25 +2,27 @@
  * http请求拦截处理
  */
 import axios from 'axios'
-axios.defaults.headers = {
+const instance = axios.create();
+instance.defaults.headers = {
 	'Content-Type':'application/x-www-form-urlencoded'
 };
-axios.interceptors.request.use(config => {
-    config.baseURL = window.vm.API.baseURL;
+instance.interceptors.request.use(config => {
+    config.baseURL = window.vm.API.leansite.baseURL;
 	if(config.method.toUpperCase() =="POST"){//post方式时，提交的参数转成string类型
 		config.data = window.vm.qs.stringify(config.data);
 	}
 	//过滤拦截路径
-	if(window.vm.API.constObj.requestFilter.indexOf(config.url) === -1){//拦截的请求
+	if(window.vm.API.leansite.constObj.requestFilter.indexOf(config.url) === -1){//拦截的请求
 		let stateObj = window.vm.$store.state;
-		if(stateObj.user && stateObj.user.token) {//token验证
+		if(stateObj.token && stateObj.token.length >0 ) {//token验证
 			//token 转码
-			let submitToken = encodeURIComponent(stateObj.user.token);
-			config.headers.token = encodeURIComponent(submitToken);
+			//let submitToken = encodeURIComponent(stateObj.token);
+			let submitToken = stateObj.token;
+			config.headers.Authentication = encodeURIComponent(submitToken);
 			return config;
 	    }else{
 	      	//清除登录信息并跳转到登录页面
-	        window.vm.commonFun.againLogin(true);
+	        window.vm.commonFun.againLogin();
 	        return;
 	    }
 	}else{
@@ -33,7 +35,7 @@ axios.interceptors.request.use(config => {
 	return Promise.reject(error);
 });
 // http响应拦截器
-axios.interceptors.response.use(response => {
+instance.interceptors.response.use(response => {
 	if (response.data.status) {
         switch (response.data.status) {
             case 300://token过期
@@ -42,7 +44,7 @@ axios.interceptors.response.use(response => {
 		            message: '登录信息过期，请重新登录!'
 	          	});  
 	           //清除token信息并跳转到登录页面
-	           window.vm.commonFun.againLogin(true);
+	           window.vm.commonFun.againLogin();
 	        break;
         }
     }
@@ -53,4 +55,4 @@ axios.interceptors.response.use(response => {
 	})
 	return Promise.reject(error);
 })
-export default axios;
+export default instance;

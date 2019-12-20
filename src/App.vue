@@ -8,7 +8,7 @@
 	var vm;
     export default {
         beforeCreate(){
-        	if(this.$store.state.user && !this.$store.state.user.token){
+        	if(!this.$store.state.token && this.$store.state.token.length <=0){
         		this.$router.push('/login');  // 正常登录
         		return;
         	}

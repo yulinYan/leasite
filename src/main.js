@@ -3,6 +3,7 @@ import App from './App'
 import vuescroll from 'vuescroll';  //自定义滚动条
 import 'vuescroll/dist/vuescroll.css';
 import axios from './common/axios';//http 请求拦截
+import axiosInternet from './common/axiosInternet';//http 请求拦截
 import qs from 'qs';
 import store from './store/index';
 import ElementUI from 'element-ui';
@@ -11,6 +12,7 @@ import './assets/theme/theme-369FDD/index.css';       // 蓝色主题
 import '@/assets/css/global.css';   //全局样式
 import router from "./router/router.js" // 引入全局的路由
 import api from "./common/api.js" //引入接口
+import apiInternet from "./common/apiInternet.js" //引入接口
 import commonFun from "./common/commonFun.js" //引入接口
 import ZkTable from 'vue-table-with-tree-grid'
 import TreeTable from 'tree-table-vue'
@@ -25,8 +27,8 @@ Vue.prototype.$echarts = echarts;
 Vue.use(ZkTable); 
 Vue.use(TreeTable);
 //TODO mock单元测试
-import UserCenter from './mock/user.js' //用户信息模块
-UserCenter.bootstrap();
+//import UserCenter from './mock/user.js' //用户信息模块
+//UserCenter.bootstrap();
 
 Vue.use(vuescroll); // install the vuescroll first
 Vue.config.productionTip = false
@@ -35,10 +37,18 @@ Vue.use(ElementUI, {
 });
 Vue.use(md5); 
 Vue.prototype.API = api;
+Vue.prototype.API = {
+	leansite:api,//Leansite Paas平台
+	internet:apiInternet//物联网平台
+};
 Vue.prototype.qs = qs
 Vue.prototype.commonFun = commonFun;
 Vue.prototype.$store = store
-Vue.prototype.$axios = axios; //全局注册，使用方法为:this.$axios
+//Vue.prototype.$axios = axios;
+Vue.prototype.$axios = {
+	leansite:axios, //Leansite Paas axios
+	internet:axiosInternet //物联网 axios
+};
 
 // 注册一个全局自定义指令 `v-focus`
 Vue.directive('focus', {

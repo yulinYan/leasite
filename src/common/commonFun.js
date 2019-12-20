@@ -202,11 +202,9 @@ const commonFun = {
 	},
 	/**
 	 * 清除token信息并跳转到登录页面
-	 * @param {Boolean} isRedirect 是否重定向 
 	 */
-	againLogin(isRedirect) {
-		let aDelStorage = [api.constObj.loginInfo,api.constObj.menuInfo,api.constObj.mainInfo,api.constObj.applyInfo,api.constObj.areaOrgInfo,api.constObj.printList,api.constObj.settingsList];
-		window.vm.$store.commit("removeInfoByArray",aDelStorage);
+	againLogin() {
+		window.vm.$store.commit("removeAllInfo");
 		window.vm.$router.push({
 			path: '/login'
 		});
