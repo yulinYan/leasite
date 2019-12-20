@@ -1,26 +1,32 @@
 <template>
-<div class="Asset">
+<div class="CollectingDevice">
     <div class="overview">
         <div class="header">
-            <span class="fl">资产信息</span>
+            <span class="fl">设备信息</span>
             <div class="fr">
-                <span class="el-icon-plus" @click="addAssets()">新增资产</span>
-                <!-- <span><img :src="require('../../assets/img/internetPlatform/shanchu.png')" alt=""> 批量删除</span> -->
+                <span class="el-icon-plus" @click="addDevice()">新增设备</span>
                 <div>
                     <input type="text" v-model="searchInp">
-                    <img @click="searchAssets" :src="require('../../assets/img/internetPlatform/sousuo.png')" alt="">
+                    <img @click="searchDevice" :src="require('../../assets/img/internetPlatform/sousuo.png')" alt="">
                 </div>
             </div>
         </div>
         <div class="con">
-            <el-table class="assetsTable" :height="tableDataHeight" :data="tableData" stripe highlight-current-row style="width: 100%;" :cell-style="cellStyle" :header-cell-style="headerStyle">
-                <el-table-column prop="name" label="资产名称">
+            <el-table class="deviceTable" :height="tableDataHeight" :data="tableData" stripe highlight-current-row style="width: 100%;" :cell-style="cellStyle" :header-cell-style="headerStyle">
+                <el-table-column prop="name" label="设备名称">
                 </el-table-column>
-                <el-table-column prop="type" label="资产分组">
+                <el-table-column prop="type" label="设备分组">
                 </el-table-column>
-                <el-table-column prop="name" label="资产ID">
+                <el-table-column prop="name" label="设备ID">
                     <template slot-scope="scope">
                         {{scope.row.id.id}}
+</template>
+                </el-table-column>
+                <el-table-column prop="credentialsId" label="访问令牌">
+                </el-table-column>
+                <el-table-column prop="name" label="设备类型">
+<template slot-scope="scope">
+ {{scope.row.additionalInfo==null?'不是网关':scope.row.additionalInfo.gateway?'是网关':'不是网关'}}
 </template>
                 </el-table-column>
                 <el-table-column prop="createdTime" label="创建时间">
@@ -28,6 +34,8 @@
  {{scope.row.createdTime | momentDate}}
 </template>
                 </el-table-column>
+                <!-- <el-table-column prop="name" label="最后上线时间" min-width="110">
+                </el-table-column> -->
                 <el-table-column prop="name" label="说明">
 <template slot-scope="scope">
  {{scope.row.additionalInfo==null?'':scope.row.additionalInfo.description}}
@@ -35,9 +43,9 @@
                 </el-table-column>
                 <el-table-column label="操作" width="240">
 <template slot-scope="scope">
-<el-button type="text" @click="addAssets(scope.row)" size="small" class="detailsBtn">
+<el-button type="text" @click="addDevice(scope.row)" size="small" class="detailsBtn">
     <img :src="require('../../assets/img/internetPlatform/bianji.png')" alt="">编辑</el-button>
-<el-button type="text" size="small" @click="delAssets(scope.row)" class="delBtn"><i class="el-icon-error"></i>删除</el-button>
+<el-button type="text" size="small" @click="delDevice(scope.row)" class="delBtn"><i class="el-icon-error"></i>删除</el-button>
 </template>
                 </el-table-column>
             </el-table>
@@ -52,29 +60,40 @@
         direction = "rtl">
         <div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="资产详情" name="first">
+                <el-tab-pane label="设备详情" name="first">
                     <el-form label-position="left" label-width="110px" :model="currentTableData">
-                        <el-form-item label="资产名称：">
+                        <el-form-item label="设备名称：">
                             <el-input v-model="currentTableData.name"></el-input>
                         </el-form-item>
-                        <el-form-item label="资产类型：">
+                        <el-form-item label="设备分组：">
                             <el-input v-model="currentTableData.type"></el-input>
                         </el-form-item>
-                        <el-form-item label="资产ID：">
+                        <el-form-item label="设备ID：">
                             <el-input readonly v-model="currentTableData.id==null?'':currentTableData.id.id"></el-input>
+                        </el-form-item>
+                        <el-form-item label="访问令牌：">
+                            <el-input v-model="currentTableData.credentialsId"></el-input>
+                        </el-form-item>
+                        <!-- <el-form-item label="设备状态：">
+                            <el-input v-model="currentTableData.type"></el-input>
+                        </el-form-item> -->
+                        <el-form-item label="设备类型：">
+                            <el-checkbox v-model="currentTableData.additionalInfo==null?'false':currentTableData.additionalInfo.gateway">{{currentTableData.additionalInfo==null?'不是网关':currentTableData.additionalInfo.gateway?'是网关':'不是网关'}}</el-checkbox>
                         </el-form-item>
                         <el-form-item label="说明：">
                             <el-input v-model="currentTableData.additionalInfo==null?'':currentTableData.additionalInfo.description"></el-input>
                         </el-form-item>
                     </el-form>
-                    <div class="saveAssets">
-                        <button @click="cancelAssets">取消</button>
-                        <button @click="saveAssets">保存</button>
+                    <div class="saveDevice">
+                        <button @click="cancelDevice">取消</button>
+                        <button @click="saveDevice">保存</button>
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="属性" name="second">
                     <el-select v-model="addAttributeSel" placeholder="请选择" @change="changeAttribute">
                         <el-option  label="服务端属性" value="SERVER_SCOPE"></el-option>
+                        <el-option  label="客户端属性" value="CLIENT_SCOPE"></el-option>
+                        <el-option  label="共享属性" value="SHARED_SCOPE"></el-option>
                     </el-select>
                     <span class="addAttribute" @click="addAttribute">+新增属性</span>
                     <el-table :data="tableDataAttribute" stripe highlight-current-row style="width: 100%;" :cell-style="cellStyle" :header-cell-style="headerStyle" :height="attrTableHeight">
@@ -101,7 +120,7 @@
                         <div v-for="(item, index) in telemetryList" :key="index" :class="{'active':item.active,'empty':item.empty}">
                             <p><em :title="item.name">{{item.name}}</em><span>{{item.time}}</span></p>
                             <div>{{item.num}}</div>
-                            <span @click="telemetryDetails(index,item.name)">数据详情</span>
+                            <span @click="telemetryDetails(index,item.time)">数据详情</span>
                         </div>
                     </div>
                 </el-tab-pane>
@@ -113,6 +132,14 @@
             <el-form-item label="键">
                 <el-input v-model="currentAttribute.key" :disabled="editAttrFlag"></el-input>
             </el-form-item>
+            <!-- <el-form-item label="值类型">
+                <el-select v-model="currentAttribute.type" placeholder="请选择">
+                    <el-option label="字符串" value="字符串"></el-option>
+                    <el-option label="数字" value="数字"></el-option>
+                    <el-option label="双精度小数" value="双精度小数"></el-option>
+                    <el-option label="布尔" value="布尔"></el-option>
+                </el-select>
+            </el-form-item> -->
             <el-form-item label="值">
                 <el-input v-model="currentAttribute.value"></el-input>
             </el-form-item>
@@ -122,16 +149,22 @@
             <el-button type="primary" @click="saveAttribute">确 定</el-button>
         </div>
     </el-dialog>
-    <el-dialog title="添加资产" :visible.sync="dialogFormVisible" width="500px" :modal="false">
+    <el-dialog title="添加设备" :visible.sync="dialogFormVisible" width="500px" :modal="false">
         <el-form :rules="rules" :model="currentTableData" label-position="left" label-width="110px" size="small" style="margin:25px auto 0">
             <el-form-item label="名称" prop="name">
                 <el-input v-model="currentTableData.name" maxlength="6" placeholder="请输入六位以内字符"></el-input>
             </el-form-item>
-            <el-form-item label="资产类型" prop="type">
+            <el-form-item label="设备类型" prop="type">
                 <el-select v-model="currentTableData.type"  filterable allow-create default-first-option style="width:100%">
                     <el-option v-for="(item,index) in currentTableDataType" :key="index" :label="item.type" :value="item.type">
                     </el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="标签">
+                <el-input v-model="currentTableData.label"></el-input>
+            </el-form-item>
+            <el-form-item label="是网关">
+                <el-checkbox v-model="currentTableData.additionalInfo==null?'false':currentTableData.additionalInfo.gateway"></el-checkbox>
             </el-form-item>
             <el-form-item label="说明">
                 <el-input v-model="currentTableData.additionalInfo==null?'':currentTableData.additionalInfo.description"></el-input>
@@ -139,7 +172,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="saveAssets">确 定</el-button>
+            <el-button type="primary" @click="saveDevice">确 定</el-button>
         </div>
     </el-dialog>
     <el-dialog title="数据详情" :visible.sync="centerDialogVisible" center width="1004px" :modal="false">
@@ -150,12 +183,12 @@
 
 <script>
 export default {
-    name: 'Asset', //资产中心
+    name: 'CollectingDevice', //资产中心
     components: {},
     props: ['ajaxMsg'],
     data() {
         return {
-            tableData: [], //资产列表
+            tableData: [], //设备列表
             currentTableData: {
                 name: "",
                 type: "",
@@ -164,23 +197,23 @@ export default {
                     description: "",
                     gateway: false
                 }
-            }, //当前资产
-            tableDataHeight: 0, //资产列表高度
-            currentTableDataType: [], //资产类型
-            searchInp: '', //资产搜索
+            }, //当前设备
+            tableDataHeight: 0, //设备列表高度
+            currentTableDataType: [], //设备类型
+            searchInp: '', //设备搜索
             rules: {
                 name: [{
                     required: true,
-                    message: '请填写资产名称',
+                    message: '请填写设备名称',
                     trigger: 'blur'
                 }],
                 type: [{
                     required: true,
-                    message: '请填写资产类型',
+                    message: '请填写设备类型',
                     trigger: 'blur'
                 }],
-            }, //添加资产规则
-            dialogFormVisible: false, //添加资产,
+            }, //添加设备规则
+            dialogFormVisible: false, //添加设备,
             attributeVisible: false, //添加属性,
             editAttrFlag: false, //是否编辑属性,
             attrTableHeight: 0, //属性列表高度
@@ -232,7 +265,7 @@ export default {
                 xAxis: {
                     type: 'category',
                     nameGap: 10,
-                    data: [],
+                    data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
                     axisLine: { //坐标轴轴线相关设置。
                         lineStyle: {
                             color: '#d8d8d8'
@@ -285,16 +318,16 @@ export default {
                     name: 'part1',
                     type: 'bar',
                     // barWidth: 43,
-                    stack: 'Assets',
-                    data: []
+                    stack: 'device',
+                    data: [620, 732, 701, 734, 1090, 1130, 1120]
                 }],
             },
         }
     },
     created() {},
     mounted() {
-        //获取所有资产
-        this.getAssets();
+        //获取所有设备
+        this.getDevice();
     },
     computed: {},
     methods: {
@@ -327,7 +360,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/timeseries?interval=&limit=100&agg=NONE&keys=${name}&startTs=${(new Date()).getTime() - 86400000}&endTs=${(new Date()).getTime()}`,
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/timeseries?interval=&limit=100&agg=NONE&keys=${name}&startTs=${(new Date()).getTime() - 86400000}&endTs=${(new Date()).getTime()}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -347,7 +380,7 @@ export default {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/timeseries?keys=`,
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/timeseries?keys=`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -378,14 +411,14 @@ export default {
                 console.log(err.response);
             })
         },
-        //获取资产类型
+        //获取设备类型
         getCurrentTableDataType() {
             this.$axios.internet({
                 loading: {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/asset/types`,
+                url: `${this.ajaxMsg.url}api/device/types`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -403,7 +436,7 @@ export default {
                     isShow: false,
                 },
                 method: 'post',
-                url: `${this.ajaxMsg.url}api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/${this.addAttributeSel}`,
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/${this.addAttributeSel}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization,
@@ -437,12 +470,18 @@ export default {
         },
         //切换属性
         changeAttribute() {
+            let url = '';
+            if (this.addAttributeSel === '') {
+                url = `${this.ajaxMsg.url}api/v1/${this.currentTableData.id.id}/attributes?clientKeys=attribute1,attribute2&sharedKeys=shared1,shared2`;
+            } else {
+                url = `${this.ajaxMsg.url}api/plugins/telemetry/DEVICE/${this.currentTableData.id.id}/values/attributes/${this.addAttributeSel}`;
+            }
             this.$axios.internet({
                 loading: {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/plugins/telemetry/ASSET/${this.currentTableData.id.id}/values/attributes/${this.addAttributeSel}`,
+                url: url,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -466,11 +505,11 @@ export default {
             }
         },
         //取消保存
-        cancelAssets() {
+        cancelDevice() {
             this.drawer = false;
         },
-        //保存资产
-        saveAssets() {
+        //保存设备
+        saveDevice() {
             if (this.currentTableData.name === '' || this.currentTableData.type === '') {
                 this.$message({
                     type: 'info',
@@ -483,7 +522,7 @@ export default {
                     isShow: false,
                 },
                 method: 'post',
-                url: `${this.ajaxMsg.url}api/asset`,
+                url: `${this.ajaxMsg.url}api/device`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization,
@@ -495,19 +534,19 @@ export default {
                     type: 'success',
                     message: '成功'
                 });
-                this.getAssets();
+                this.getDevice();
             }).catch(function(err) {
                 console.log(err.response);
             })
         },
-        //搜索资产
-        searchAssets() {
+        //搜索设备
+        searchDevice() {
             this.$axios.internet({
                 loading: {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/tenant/assets?limit=1000&textSearch=${this.searchInp}`,
+                url: `${this.ajaxMsg.url}api/tenant/devices?limit=1000&textSearch=${this.searchInp}`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -522,8 +561,8 @@ export default {
                 console.log(err.response);
             })
         },
-        //新增资产
-        addAssets(row) {
+        //新增设备
+        addDevice(row) {
             if (row !== undefined) {
                 this.currentTableData = row;
                 this.currentTableData.additionalInfo = this.currentTableData.additionalInfo == null ? {
@@ -550,10 +589,10 @@ export default {
                 this.dialogFormVisible = true;
             }
         },
-        //删除资产
-        delAssets(row) {
+        //删除设备
+        delDevice(row) {
             if (row.id.id) {
-                this.$confirm('删除此资产?', '提示', {
+                this.$confirm('删除此设备?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                 }).then(() => {
@@ -562,13 +601,13 @@ export default {
                             isShow: false,
                         },
                         method: 'delete',
-                        url: `${this.ajaxMsg.url}api/asset/${row.id.id}`,
+                        url: `${this.ajaxMsg.url}api/device/${row.id.id}`,
                         //请求头配置
                         headers: {
                             'X-Authorization': this.ajaxMsg.Authorization
                         }
                     }).then(res => {
-                        this.getAssets();
+                        this.getDevice();
                         this.$message({
                             type: 'success',
                             message: '删除成功'
@@ -584,14 +623,14 @@ export default {
                 });
             }
         },
-        //获取所有资产
-        getAssets() {
+        //获取所有设备
+        getDevice() {
             this.$axios.internet({
                 loading: {
                     isShow: false,
                 },
                 method: 'get',
-                url: `${this.ajaxMsg.url}api/tenant/assets?limit=1000&textSearch=`,
+                url: `${this.ajaxMsg.url}api/tenant/devices?limit=1000&textSearch=`,
                 //请求头配置
                 headers: {
                     'X-Authorization': this.ajaxMsg.Authorization
@@ -670,7 +709,7 @@ export default {
     background-color: #fff;
 }
 
-.Asset {
+.CollectingDevice {
     height: 100%;
     .overview {
         width: 100%;
@@ -775,11 +814,11 @@ export default {
         position: absolute;
     }
     /deep/ .el-drawer {
-        top: 0px;
-        height: 100%;
         @media screen and (max-width: 900px) {
             width: 600px !important;
         }
+        top: 0px;
+        height: 100%;
         >section>div {
             height: 100%;
             >div {
@@ -817,7 +856,7 @@ export default {
         width: 410px;
         margin: 10px 0 0 32px;
     }
-    .saveAssets {
+    .saveDevice {
         position: absolute;
         bottom: 12%;
         display: flex;

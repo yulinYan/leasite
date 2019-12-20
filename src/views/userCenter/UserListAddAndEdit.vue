@@ -14,7 +14,7 @@
 						      v-for="item in roleList"
 						      :key="item.value"
 						      :label="item.roleName"
-						      :value="item.id">
+						      :value="item.roleId">
 						    </el-option>
 						</el-select>
 					</el-form-item>
@@ -30,8 +30,8 @@
 					</el-form-item>
 				</el-col>
 				<el-col :span="23">
-					<el-form-item label="电话" prop="phone">
-						<el-input v-model="userForm.phone" minLength="11" maxLength="11" placeholder="请输入手机号"></el-input>
+					<el-form-item label="电话" prop="mobile">
+						<el-input v-model="userForm.mobile" minLength="11" maxLength="11" placeholder="请输入手机号"></el-input>
 					</el-form-item>
 				</el-col>
 			</el-row>
@@ -56,18 +56,18 @@
 		data() {
 			return {
 				userForm: {
-					id:'',//用户id  编辑提交时使用
+					userId:'',//用户id  编辑提交时使用
 					username: '', //用户名
 					roleId: '', //角色id
 					password:'',//密码
 					roleName:'',//角色名
 					email:'',//邮箱
-					phone:'',//手机号
+					mobile:'',//手机号
+					ssex:'',//性别
+					status:'1',//账号状态，默认为1  0锁定  1是正常
 				},
-				roleList:[//用户组状态
-					{id:"1010",roleName:"超级管理员"},
-					{id:"1011",roleName:"主管"},
-					{id:"1012",roleName:"普通用户"},
+				roleList:[//角色列表
+					
 				],
 				pageType:'add',//页面类型 pageType=add 新增/pageType=edit 修改
 				rules: {
@@ -113,7 +113,7 @@
 							trigger: 'blur'
 						}
 					],
-					phone: [{
+					mobile: [{
 							required: true,
 							message: '请输入手机号',
 							trigger: 'blur'
@@ -132,7 +132,8 @@
 
 		},
 		mounted() {
-			if(this.userObj.id){
+			this.getRoleList();
+			if(this.userObj.userId){
 				this.pageType = 'edit';
 				this.setFormData();//表单赋值
 				
@@ -155,7 +156,7 @@
 				this.userForm.roleId=this.userObj.roleId;
 				this.userForm.roleName=this.userObj.roleName;
 				this.userForm.email=this.userObj.email;
-				this.userForm.phone=this.userObj.phone;
+				this.userForm.mobile=this.userObj.mobile;
 			},
 			/**
 			 * 角色改变时 
@@ -175,9 +176,9 @@
 				let self = this;
 				this.$refs[formName].validate((valid) => {
 					if(valid) {
-		                self.$axios({
+		                self.$axios.leansite({
 		            		method:'post',
-		                	url:self.API.addUsers, 
+		                	url:self.API.leansite.addUsers, 
 		                	data:self.userForm
 		                }).then((res) => {
 		                    var resData = res.data;
@@ -259,7 +260,30 @@
 			resetForm(){
 				this.pageType ='add';
 				this.$refs['userForm'].resetFields();
-			}
+			},
+			getRoleList() {
+			    this.$axios.leansite({
+			     method: 'get',
+			     url: this.API.leansite.roleListByRoleName,
+			     params: {
+			      'roleName':'',
+			      'pageNum': 0,
+			      'pageSize': 1000
+			     }
+			    }).then((res) => {
+			     var resData = res.data;
+			     if(resData.status == 200) {
+			      this.roleList = resData.data.rows;
+			     } else {
+			      this.$message({
+			       type: 'error',
+			       message: '获取角色列表失败，请退出重新打开！'
+			      });
+			     }
+			    }).catch((err) => {
+			     console.log('请求异常，请检查网络!');
+			    });
+			},
 		}
 	}
 </script>

@@ -87,8 +87,7 @@ export default {
 
     },
     mounted() {
-		console.log("测试动态传值:"+this.username+"=="+this.leansiteToken);
-		this.loginCheck();
+		
     },
     computed: {
 

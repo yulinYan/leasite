@@ -6,12 +6,19 @@
                 <img :src="item.icon" alt="">
                 <div class="deviceOverviewName" v-cloak>{{item.name}}</div>
                 <span v-cloak>{{item.details}}</span>
-                <div class="deviceOverviewNum" v-cloak>{{item.num}}</div>
+                <div class="deviceOverviewNum" v-cloak v-if="index === 1">{{item.num.split('/')[0]}}<em>/{{item.num.split('/')[1]}}</em></div>
+                <div class="deviceOverviewNum" v-cloak v-else-if="index === 2">{{item.num.split('/')[0]}}<em style="margin-left: 10px;">{{item.num.split('/')[1]}}</em></div>
+                <div class="deviceOverviewNum" v-cloak v-else>{{item.num}}</div>
             </li>
         </ul>
     </div>
     <div class="overview">
-        <p class="header"><span>设备消息数</span></p>
+        <p class="header"><span>设备消息数</span>
+            <el-select v-model="deviceMessageModel" placeholder="请选择" class="fr" @change="getDeviceMessage">
+                <el-option label="月" value="month"></el-option>
+                <el-option label="天" value="day"></el-option>
+            </el-select>
+        </p>
         <div id="deviceMessage">
         </div>
     </div>
@@ -27,7 +34,7 @@
 export default {
     name: 'Overview', //物联网平台
     components: {},
-    props: [],
+    props: ['ajaxMsg'],
     data() {
         return {
             //资产总数 设备在线数 设备在线时长
@@ -35,18 +42,19 @@ export default {
                 icon: require('../../assets/img/internetPlatform/zichanzongshu.png'),
                 name: '资产总数',
                 details: 'The total number of assets',
-                num: '265'
+                num: '0'
             }, {
                 icon: require('../../assets/img/internetPlatform/shebei.png'),
                 name: '设备在线数',
                 details: 'Device on line number',
-                num: '237/50'
+                num: '0/0'
             }, {
                 icon: require('../../assets/img/internetPlatform/shijian.png'),
                 name: '设备在线时长',
                 details: 'Device online time',
-                num: '10'
+                num: '0/h'
             }],
+            deviceMessageModel: 'month',
             // 设备消息数echarts
             deviceMessageCharts: null,
             // 设备消息数option
@@ -86,7 +94,7 @@ export default {
                 xAxis: {
                     type: 'category',
                     nameGap: 10,
-                    data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+                    data: [],
                     axisLine: { //坐标轴轴线相关设置。
                         lineStyle: {
                             color: '#d8d8d8'
@@ -136,19 +144,11 @@ export default {
                     }
                 },
                 series: [{
-                        name: 'part1',
-                        type: 'bar',
-                        // barWidth: 43,
-                        stack: 'device',
-                        data: [620, 732, 701, 734, 1090, 1130, 1120]
-                    },
-                    {
-                        name: 'part2',
-                        type: 'bar',
-                        stack: 'device',
-                        data: [120, 132, 101, 134, 290, 230, 220]
-                    },
-                ],
+                    name: 'part1',
+                    type: 'bar',
+                    stack: 'device',
+                    data: []
+                }, ],
             },
             // 设备在线时长排行榜echarts
             deviceTimeCharts: null,
@@ -167,7 +167,7 @@ export default {
                     }
                 },
                 grid: {
-                    left: '45px',
+                    left: '40px',
                     right: '26px',
                     // bottom: '60px',
                     // top: '50px'
@@ -175,7 +175,7 @@ export default {
                 yAxis: {
                     type: 'category',
                     nameGap: 10,
-                    data: ['设备一', '设备二', '设备三', '设备四', '设备五'],
+                    data: [],
                     axisLine: { //坐标轴轴线相关设置。
                         lineStyle: {
                             color: '#d8d8d8'
@@ -199,6 +199,7 @@ export default {
                     name: 'h',
                     nameTextStyle: {
                         // align: 'left',
+                        color: '#505050',
                         fontFamily: 'Microsoft YaHei',
                         align: 'right'
                     },
@@ -233,7 +234,8 @@ export default {
                             }
                         }
                     },
-                    data: [620, 732, 701, 734, 1090, 1130, 1120]
+                    barWidth: 20,
+                    data: []
                 }, ],
             },
         }
@@ -242,32 +244,119 @@ export default {
 
     },
     mounted() {
+        //获取上面三个块 设备在线时长
+        this.getDeviceOverviewList();
         // 获取设备消息数
         this.getDeviceMessage();
-        // 获取设备在线时长
-        this.getDeviceTime();
+        //画图设备消息数
+        this.deviceMessageCharts && this.deviceMessageCharts.clear();
+        this.deviceMessageCharts = this.$echarts.init(document.getElementById('deviceMessage'));
+        this.deviceMessageCharts && this.deviceMessageCharts.setOption(this.deviceMessageOption);
+        //画图在线时辰
+        this.deviceTimeCharts && this.deviceTimeCharts.clear();
+        this.deviceTimeCharts = this.$echarts.init(document.getElementById('deviceTime'));
+        this.deviceTimeCharts && this.deviceTimeCharts.setOption(this.deviceTimeOption);
+        //动态图
+        window.addEventListener("resize", this.eventListener);
+    },
+    destroyed() {
+        window.removeEventListener('resize', this.eventListener);
     },
     computed: {
 
     },
     methods: {
+        //获取上面三个块
+        getDeviceOverviewList() {
+            this.$axios.internet({
+                loading: {
+                    isShow: false,
+                },
+                method: 'get',
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/online/devicesNumber`,
+                //请求头配置
+                headers: {
+                    'X-Authorization': this.ajaxMsg.Authorization
+                }
+            }).then(res => {
+                this.deviceOverviewList[0].num = res.data.assetsTotal;
+                this.deviceOverviewList[1].num = res.data.onlineNumber + '/' + res.data.divicesTotal;
+            }).catch(function(err) {
+                console.log(err);
+            })
+            this.$axios.internet({
+                loading: {
+                    isShow: false,
+                },
+                method: 'get',
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/online/devicesHours`,
+                //请求头配置
+                headers: {
+                    'X-Authorization': this.ajaxMsg.Authorization
+                }
+            }).then(res => {
+                this.deviceOverviewList[2].num = this.sToH(res.data.totalHours) + '/h';
+                this.getDeviceTime(res.data);
+            }).catch(function(err) {
+                console.log(err);
+            })
+        },
         // 获取设备消息数
         getDeviceMessage() {
-            this.deviceMessageCharts && this.deviceMessageCharts.clear();
-            this.deviceMessageCharts = this.$echarts.init(document.getElementById('deviceMessage'));
-            this.deviceMessageCharts && this.deviceMessageCharts.setOption(this.deviceMessageOption);
-            window.addEventListener("resize", () => {
-                this.deviceMessageCharts.resize();
-            });
+            this.$axios.internet({
+                loading: {
+                    isShow: false,
+                },
+                method: 'get',
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/${this.deviceMessageModel}/Number`,
+                //请求头配置
+                headers: {
+                    'X-Authorization': this.ajaxMsg.Authorization
+                }
+            }).then(res => {
+                this.deviceMessageOption.xAxis.name = this.deviceMessageModel === 'month' ? '日' : 'h';
+                this.deviceMessageOption.xAxis.data = [];
+                this.deviceMessageOption.series = [];
+                res.data.forEach((v, i) => {
+                    v.deviceSet.forEach((vD, iD) => {
+                        if (i === 0) {
+                            this.deviceMessageOption.series.push({
+                                name: vD.name,
+                                type: 'bar',
+                                stack: 'device',
+                                data: [vD.number]
+                            })
+                        } else {
+                            let index = this.deviceMessageOption.series.findIndex(item => item.name === vD.name);
+                            this.deviceMessageOption.series[index].data.push(vD.number);
+                        }
+                    })
+                    this.deviceMessageOption.xAxis.data.push(this.deviceMessageModel === 'month' ? this.$moment(v.ts).format('DD') : this.$moment(v.ts).format('HH'));
+
+                })
+                this.deviceMessageCharts.setOption(this.deviceMessageOption, true)
+            }).catch(function(err) {
+                console.log(err);
+            })
+        },
+        //时间转换
+        sToH(s) {
+            return Math.ceil((s / 3600) * 1000) / 1000;
         },
         // 获取设备在线时长
-        getDeviceTime() {
-            this.deviceTimeCharts && this.deviceTimeCharts.clear();
-            this.deviceTimeCharts = this.$echarts.init(document.getElementById('deviceTime'));
-            this.deviceTimeCharts && this.deviceTimeCharts.setOption(this.deviceTimeOption);
-            window.addEventListener("resize", () => {
-                this.deviceTimeCharts.resize();
-            });
+        getDeviceTime(res) {
+            this.deviceTimeOption.yAxis.data = [];
+            this.deviceTimeOption.series[0].data = [];
+            this.deviceTimeOption.grid.left = '100px';
+            res.devices.forEach((v, i) => {
+                this.deviceTimeOption.yAxis.data.push(v.name);
+                this.deviceTimeOption.series[0].data.push(this.sToH(v.totaltime));
+            })
+            this.deviceTimeCharts && this.deviceTimeCharts.setOption(this.deviceTimeOption, true);
+        },
+        eventListener() {
+            this.deviceMessageCharts && this.deviceMessageCharts.resize();
+            this.deviceTimeCharts && this.deviceTimeCharts.resize();
         }
     }
 }
@@ -276,6 +365,15 @@ export default {
 <style lang="scss" scoped type="text/css">
 .Overview {
     height: 100%;
+    .el-select {
+        width: 201px;
+        /deep/ .el-input--medium .el-input__inner {
+            background-color: #f2f4f6;
+            border-radius: 4px;
+            border: none;
+            height: 32px;
+        }
+    }
     .deviceOverview {
         ul {
             width: 100%;
@@ -318,6 +416,9 @@ export default {
                 font-size: 50px;
                 color: #303030;
             }
+            em {
+                font-size: 20px;
+            }
         }
     }
     .overview {
@@ -328,6 +429,9 @@ export default {
         padding: 0 40px;
         overflow: hidden;
         box-sizing: border-box;
+        &:last-child{
+            margin-bottom: 0;
+        }
         p.header {
             text-align: left;
             height: 60px;
@@ -341,6 +445,9 @@ export default {
                 font-size: 16px;
                 font-weight: bold;
                 color: #424956;
+            }
+            .fr {
+                float: right;
             }
         }
     }

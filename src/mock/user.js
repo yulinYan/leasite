@@ -3,7 +3,7 @@ import MockAdapter from 'axios-mock-adapter';
 import qs from 'qs';
 
 //-----------------------用户中心管理模块------------------------
-import { 
+import {
 	userLoginInfo,
 	userList,
 	roleList,
@@ -58,7 +58,7 @@ export default {
 			});
 		});
 		//获取用户管理列表（分页）
-		mock.onGet('user/userList').reply(config => {
+		mock.onGet('user').reply(config => {
 			let {
 				param,
 				pageNum,
@@ -78,7 +78,7 @@ export default {
 							message: "获取成功",
 							data: {
 								total: total,
-								list: mockUserInfo
+								rows: mockUserInfo
 							}
 						}
 					]);
