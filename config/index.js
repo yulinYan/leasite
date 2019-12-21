@@ -9,7 +9,7 @@ module.exports = {
 
     // Paths
     assetsSubDirectory: 'static',
-    assetsPublicPath: './',//TODO 开发环境默认为/ , 打包生产代码前设置为./
+    assetsPublicPath: '/',//TODO 开发环境默认为/ , 打包生产代码前设置为./
     proxyTable: {},
 
     // Various Dev Server settings
@@ -52,13 +52,13 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: './',//TODO 开发环境默认为/ , 打包生产代码前设置为./
+    assetsPublicPath: '/',//TODO 开发环境默认为/ , 打包生产代码前设置为./
 
     /**
      * Source Maps
      */
 
-    productionSourceMap: false,//TODO 开发环境默认为true , 打包生产代码前设置为false
+    productionSourceMap: true,//TODO 开发环境默认为true , 打包生产代码前设置为false
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 
