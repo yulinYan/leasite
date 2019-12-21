@@ -9,7 +9,7 @@
 			</div>
 		</div>
 		<div v-show="!isminimize" class="dialogBody">
-			<iframe :src="appObj.appUrl" id="mobsf" scrolling="no" sandbox="allow-same-origin allow-top-navigation allow-forms allow-scripts" frameborder="0" height="600px"></iframe>
+			<iframe :src="appObj.appUrl" id="mobsf" scrolling="no" sandbox="allow-same-origin allow-top-navigation allow-forms allow-scripts" frameborder="0" width="100%" height="600px"></iframe>
 		</div>
 	</el-dialog>
 </template>

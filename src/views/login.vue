@@ -30,8 +30,8 @@
         	let self = this;
             return {
                 ruleForm: {
-                    'usersName': 'ykzhang',//登录账户
-					'loginPassword': '1234qwer',//密码
+                    'usersName': '',//登录账户
+					'loginPassword': '',//密码
 					'autoLogin':false
                 },
                 rules: {
