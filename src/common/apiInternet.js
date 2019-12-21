@@ -24,6 +24,10 @@ const interface_s = {
             "api/tenant/devices",//搜索设备
             "api/assets",//删除资产
             "api/devices",//删除设备
+            "internetPlatform",
+            "Overview",
+            "Asset",
+            "CollectingDevice"
 		],
 		vueFilter: [ //拦截器不拦截的vue界面集合
 		],

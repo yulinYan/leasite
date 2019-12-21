@@ -41,7 +41,7 @@ export default {
     data() {
         return {
             ajaxMsg: {
-                url: this.API.internet.baseURL, //接口ip
+                url: process.env.NODE_ENV !== 'development' ? this.API.internet.prodBaseURL : this.API.internet.baseURL, //接口ip
                 Authorization: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5d3hmZGo5OTk5QGxlYW5zaXRlLmNuIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiJhMTY1NWU2MC0yMGExLTExZWEtOGY2Ni0yNTQzMjcxOTY2OWQiLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiYTE0OGQ1YjAtMjBhMS0xMWVhLThmNjYtMjU0MzI3MTk2NjlkIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCIsImlzcyI6InRoaW5nc2JvYXJkLmlvIiwiaWF0IjoxNTc2OTA4OTgxLCJleHAiOjE1NzY5MTc5ODF9.tO5Zs4FD-xbqe-Dph_85kFdMoupSwLfnF_afnmLOFWrayaxnWw5WJ-0JroeoHQhLsMibYx_lP3sNfYYG2UXyBg', //接口令牌
             },
             activeName: '信息总览', //当前侧边栏
@@ -67,7 +67,7 @@ export default {
         }
     },
     created() {
-
+        console.log(process.env.NODE_ENV)
     },
     mounted() {
         this.loginCheck()
@@ -92,7 +92,7 @@ export default {
         loginCheck() {
             let self = this;
             this.$axios.internet({
-                url: this.API.internet.login, //不需要再添加ip和端口
+                url: `${this.ajaxMsg.url}api/auth/login`, //不需要再添加ip和端口
                 method: 'post', //提交方式：get和post，同 params 和 data配合使用
                 data: {
                     "username": '',
