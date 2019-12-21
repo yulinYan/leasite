@@ -5,38 +5,41 @@
             <span class="fl">设备信息</span>
             <div class="fr">
                 <span class="el-icon-plus" @click="addDevice()">新增设备</span>
+                <span @click="delAllAssets"><img :src="require('../../assets/img/internetPlatform/shanchu.png')" alt=""> 批量删除</span>
                 <div>
-                    <input type="text" v-model="searchInp">
+                    <input type="text" v-model="searchInp" placeholder="请输入设备名称">
                     <img @click="searchDevice" :src="require('../../assets/img/internetPlatform/sousuo.png')" alt="">
                 </div>
             </div>
         </div>
         <div class="con">
-            <el-table class="deviceTable" :height="tableDataHeight" :data="tableData" stripe highlight-current-row style="width: 100%;" :cell-style="cellStyle" :header-cell-style="headerStyle">
-                <el-table-column prop="name" label="设备名称">
+            <el-table @selection-change="handleSelectionChange" class="deviceTable" :height="tableDataHeight" :data="tableData" stripe highlight-current-row style="width: 100%;" :cell-style="cellStyle" :header-cell-style="headerStyle">
+                <el-table-column type="selection" width="55">
                 </el-table-column>
-                <el-table-column prop="type" label="设备分组">
+                <el-table-column prop="name" label="设备名称" show-overflow-tooltip>
                 </el-table-column>
-                <el-table-column prop="name" label="设备ID">
+                <el-table-column prop="type" label="设备分组" show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column prop="name" label="设备ID" show-overflow-tooltip>
                     <template slot-scope="scope">
                         {{scope.row.id.id}}
 </template>
                 </el-table-column>
-                <el-table-column prop="credentialsId" label="访问令牌">
+                <el-table-column prop="credentialsId" label="访问令牌" show-overflow-tooltip>
                 </el-table-column>
-                <el-table-column prop="name" label="设备类型">
+                <el-table-column prop="name" label="设备类型" show-overflow-tooltip>
 <template slot-scope="scope">
  {{scope.row.additionalInfo==null?'不是网关':scope.row.additionalInfo.gateway?'是网关':'不是网关'}}
 </template>
                 </el-table-column>
-                <el-table-column prop="createdTime" label="创建时间">
+                <el-table-column prop="createdTime" label="创建时间" show-overflow-tooltip>
 <template slot-scope="scope">
  {{scope.row.createdTime | momentDate}}
 </template>
                 </el-table-column>
                 <!-- <el-table-column prop="name" label="最后上线时间" min-width="110">
                 </el-table-column> -->
-                <el-table-column prop="name" label="说明">
+                <el-table-column prop="name" label="说明" show-overflow-tooltip>
 <template slot-scope="scope">
  {{scope.row.additionalInfo==null?'':scope.row.additionalInfo.description}}
 </template>
@@ -64,13 +67,13 @@
                 <el-tab-pane label="设备详情" name="first">
                     <el-form label-position="left" label-width="110px" :model="currentTableData">
                         <el-form-item label="设备名称：">
-                            <el-input v-model="currentTableData.name"></el-input>
+                            <el-input v-model="currentTableData.name" maxlength="6" placeholder="请输入六位以内字符"></el-input>
                         </el-form-item>
                         <el-form-item label="设备分组：">
                             <el-input v-model="currentTableData.type"></el-input>
                         </el-form-item>
                         <el-form-item label="设备ID：">
-                            <el-input readonly v-model="currentTableData.id==null?'':currentTableData.id.id"></el-input>
+                            <el-input title="请勿修改" readonly v-model="currentTableData.id==null?'':currentTableData.id.id"></el-input>
                         </el-form-item>
                         <el-form-item label="访问令牌：">
                             <el-input v-model="currentTableData.credentialsId"></el-input>
@@ -98,16 +101,16 @@
                     </el-select>
                     <span class="addAttribute" @click="addAttribute" :style="{visibility:addAttributeSel=='CLIENT_SCOPE'?'hidden':''}">+新增属性</span>
                     <el-table :data="tableDataAttribute" stripe highlight-current-row style="width: 100%;" :cell-style="cellStyle" :header-cell-style="headerStyle" :height="attrTableHeight">
-                        <el-table-column prop="key" label="键">
+                        <el-table-column prop="key" label="键" show-overflow-tooltip>
                         </el-table-column>
-                        <el-table-column prop="lastUpdateTs" label="更新时间">
+                        <el-table-column prop="lastUpdateTs" label="更新时间" show-overflow-tooltip>
 <template slot-scope="scope">
  {{scope.row.lastUpdateTs | momentDate}}
 </template>
                         </el-table-column>
-                        <el-table-column prop="value" label="值">
+                        <el-table-column prop="value" label="值" show-overflow-tooltip>
                         </el-table-column>
-                        <el-table-column prop="name" label="操作">
+                        <el-table-column prop="name" label="操作" show-overflow-tooltip>
 <template slot-scope="scope">
 <el-button type="text" @click="editAttribute(scope.row)" size="small" class="detailsBtn">
     <img :src="require('../../assets/img/internetPlatform/bianji.png')" alt="">编辑</el-button>
@@ -176,7 +179,7 @@
             <el-button type="primary" @click="saveDevice">确 定</el-button>
         </div>
     </el-dialog>
-    <el-dialog title="数据详情" :visible.sync="centerDialogVisible" center width="1004px" :modal="false">
+    <el-dialog title="数据详情" :visible.sync="centerDialogVisible" center width="1004px" :modal="false" @closed = "closeSialog">
         <div id="telemetryDetailsCharts"></div>
     </el-dialog>
 </div>
@@ -199,6 +202,7 @@ export default {
                     gateway: false
                 }
             }, //当前设备
+            multipleSelection: [],
             tableDataHeight: 0, //设备列表高度
             currentTableDataType: [], //设备类型
             searchInp: '', //设备搜索
@@ -323,7 +327,7 @@ export default {
                     areaStyle: {
                         color: '#CEDBF5'
                     },
-                    lineStyle:{
+                    lineStyle: {
                         color: '#5884DD'
                     },
                     // barWidth: 43,
@@ -389,6 +393,12 @@ export default {
                 this.telemetryDetailsCharts.setOption(this.telemetryDetailsOption, true);
             }).catch(function(err) {
                 console.log(err.response);
+            })
+        },
+        //关闭遥测
+        closeSialog() {
+            this.telemetryList.forEach((v, i) => {
+                v.active = false;
             })
         },
         //获取遥测
@@ -583,7 +593,8 @@ export default {
         //新增设备
         addDevice(row) {
             if (row !== undefined) {
-                this.currentTableData = row;
+                this.currentTableData = { ...row
+                };
                 this.currentTableData.additionalInfo = this.currentTableData.additionalInfo == null ? {
                     description: "",
                     gateway: false
@@ -607,6 +618,53 @@ export default {
                 this.getCurrentTableDataType();
                 this.dialogFormVisible = true;
             }
+        },
+        //全选
+        handleSelectionChange(val) {
+            this.multipleSelection = val;
+        },
+        //删除所有
+        delAllAssets() {
+            if (this.multipleSelection.length == 0) {
+                this.$message({
+                    type: 'info',
+                    message: '请选择要删除的项'
+                });
+                return;
+            }
+            var axioxFn = []
+            this.multipleSelection.forEach((v, i) => {
+                axioxFn[i] = new Promise((resolve, reject) => {
+                    this.$axios.internet({
+                        loading: {
+                            isShow: false,
+                        },
+                        method: 'delete',
+                        url: `${this.ajaxMsg.url}api/device/${v.id.id}`,
+                        //请求头配置
+                        headers: {
+                            'X-Authorization': this.ajaxMsg.Authorization
+                        }
+                    }).then(res => {
+                        resolve(res)
+                    }).catch(function(err) {
+                        reject(err)
+                    })
+                })
+            })
+            Promise.all(axioxFn).then(res => {
+                this.getDevice();
+                this.$message({
+                    type: 'success',
+                    message: '删除成功'
+                });
+            }).catch((error) => {
+                this.getDevice();
+                this.$message({
+                    type: 'info',
+                    message: '删除失败'
+                });
+            })
         },
         //删除设备
         delDevice(row) {

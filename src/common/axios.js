@@ -12,7 +12,6 @@ instance.interceptors.request.use(config => {
 		config.data = window.vm.qs.stringify(config.data);
 	}
     //过滤拦截路径
-    console.log(window.vm.$store.state.token)
 	if(window.vm.API.leansite.constObj.requestFilter.indexOf(config.url) === -1){//拦截的请求
 		let stateObj = window.vm.$store.state;
 		if(stateObj.token && stateObj.token.length >0 ) {//token验证
