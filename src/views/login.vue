@@ -82,6 +82,8 @@
             	let userObj = this.$store.state.loginUser;
             	if(userObj != ''){
             		this.ruleForm.autoLogin = true;
+            		this.ruleForm.usersName = userObj.user;
+            		this.ruleForm.loginPassword = this.commonFun.uncompileStr(userObj.psw);
             		let oLogin={
                     	sUsername:userObj.user,
                     	sPassword:this.commonFun.uncompileStr(userObj.psw)
