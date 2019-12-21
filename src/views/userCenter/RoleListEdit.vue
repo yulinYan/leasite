@@ -24,19 +24,10 @@
                 <el-table-column prop="roleName" label="模块一" align="center" min-width="200"></el-table-column>
                 <el-table-column prop="remark" label="模块二"  align="left" min-width="300"></el-table-column>
                 <el-table-column prop="userId" label="模块三" align="left" min-width="300"></el-table-column>
-<!--                <el-table-column label="操作" width="180" align="center">-->
-<!--                    <template slot-scope="scope">-->
-<!--                        &lt;!&ndash;<el-button type="text" icon="el-icon-edit" class="edit" @click="handleEdit(scope.$index, scope.row)">编辑权限</el-button>&ndash;&gt;-->
-<!--                        <el-button type="text" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
+
             </el-table>
             <Pagination :pageIndex="pageObj.pageIndex" :total="pageObj.total" :pageSize="pageObj.pageSize" @PageTurning="PageTurning"></Pagination>
         </div>
-        <el-dialog class="outDialog" key="roleDialog"  :title='dialogTitle' :visible.sync="roleDialogVisible" v-if="roleDialogVisible" width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
-       		<!-- 新增/编辑弹出框 -->
-       		<RoleListAdd :roleObj="roleObj" @RoleCallBack="RoleCallBack" ></RoleListAdd>
-       	</el-dialog>
     </div>
 </template>
 

@@ -20,7 +20,7 @@
 			</el-row>
         </el-header>
         <div class="container">
-            <el-table stripe :data="tableData" class="table" :row-class-name="tableRowClassName" ref="multipleTable" @selection-change="handleSelectionChange" :header-cell-style="{background:'#f2f4f6',color:'#101010'}">
+            <el-table stripe :data="tableData" class="table" :row-class-name="tableRowClassName" ref="multipleTable" @selection-change="handleSelectionChange" :cell-style="cellStyle"  :header-cell-style="{background:'#f2f4f6',color:'#101010'}">
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="roleName" label="角色名称" align="center" min-width="200"></el-table-column>
                 <el-table-column prop="remark" label="角色描述"  align="left" min-width="300"></el-table-column>
@@ -230,7 +230,25 @@
 					    return 'warning-row'
 					}
 
-			      }
+			      },
+            /**
+             * 改变隔行变色 颜色
+             */
+
+            cellStyle({row, column, rowIndex, columnIndex}) {
+                let style = {
+                    'text-align': 'center',
+                    'font-size': '14px',
+                    // 'height': '70px',
+                    'background-color': '#ffffff',
+                    'color': '#303030',
+
+                }
+                if (rowIndex % 2 != 0) {
+                    style['background-color'] = '#f2f4f6';
+                }
+                return style;
+            }
         }
     }
 
@@ -239,6 +257,8 @@
 <style lang="scss" scoped type="text/css">
     .roleList {
 	    height: 100%;
+        border-radius: 16px;
+        overflow:hidden;
 	    .el-header{
 	        height: 60px;
 	        line-height: 60px;
@@ -268,12 +288,12 @@
 	        		.el-icon-search{
 	        			color: #68c161;
 	        		}
+	        	}
                 .search{
                     position: relative;
                     left: -30px;
                     top: -2px;
                 }
-	        	}
 	        }
 	    }
 	    .container {
@@ -281,6 +301,7 @@
 	        height: 100%;
 	        padding: 27px 40px 0;
 	        .el-table{
+                
 	    	color: #303030;
 	    	font-size: 14px;
     		.delete{
