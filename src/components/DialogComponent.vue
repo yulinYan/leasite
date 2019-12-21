@@ -85,7 +85,7 @@
 				}
 				Vue.component('currComponent',currComponent);
 				this.moduleDialogVisible = true;
-				
+
 			},
 		},
 		mounted() {
@@ -111,7 +111,7 @@
 		user-select: none;
 		/* Non-prefixed version, currently */
 	}
-	
+
 	.isminimize {
 		left: 20px;
 		bottom: 20px;
@@ -136,9 +136,10 @@
 			bottom: 0;
 		}
 	}
-	
+
 	.systemModuleDialog {
 		min-height: 600px;
+        max-height: calc(100% - 5vh);
 		.is-fullscreen{
 			width: 100% !important;
 			left: 0 !important;
@@ -296,6 +297,7 @@
 				}
 			.el-dialog__body{
 				padding: 0;
+                height: calc(100% - 50px);
 			}
 		}
 	}
