@@ -11,15 +11,17 @@
 			  	<el-input
 			  		style="width:200px;"
 				   placeholder="输入用户名搜索"
-				   suffix-icon="el-icon-search"
+
 				   v-model="searchText"
 				   @keyup.enter.native="searchEnterFun">
+
 				</el-input>
+                  <img @click="searchImgClick" class="search" src='../../assets/img/internetPlatform/sousuo.png' alt="">
 			  </el-col>
 			</el-row>
         </el-header>
         <div class="container">
-            <el-table stripe :data="tableData" :row-class-name="tableRowClassName"   class="table" ref="multipleTable" @selection-change="handleSelectionChange" :header-cell-style="{background:'#f2f4f6',color:'#101010'}" >
+            <el-table stripe :data="tableData" :row-class-name="tableRowClassName"   class="table" ref="multipleTable" @selection-change="handleSelectionChange" :cell-style="cellStyle" :header-cell-style="{background:'#f2f4f6',color:'#101010'}" >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="nickname"  label="员工姓名" align="center" width="120"></el-table-column>
                 <el-table-column prop="username" label="用户" align="center" width="120"></el-table-column>
@@ -29,7 +31,9 @@
                 <el-table-column prop="lastLoginTime" label="最后登录时间" align="center" min-width="180" ></el-table-column>
                 <el-table-column label="操作" width="200" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" class="edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text"  class="edit" @click="handleEdit(scope.$index, scope.row)">
+                            <img src='../../assets/img/internetPlatform/bianji.png' class="edit-img" alt="">编辑
+                        </el-button>
                         <el-button type="text" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -37,7 +41,7 @@
             <Pagination :pageIndex="pageObj.pageIndex" :total="pageObj.total" :pageSize="pageObj.pageSize" @PageTurning="PageTurning"></Pagination>
         </div>
         <el-dialog class="outDialog" key="userDialog"  :title='dialogTitle' :visible.sync="userDialogVisible" v-if="userDialogVisible"  width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
-       		<!-- 新增/编辑弹出框 --> 
+       		<!-- 新增/编辑弹出框 -->
        		<UserListAddAndEdit :userObj="userObj" @UserCallBack="UserCallBack" ></UserListAddAndEdit>
        	</el-dialog>
     </div>
@@ -54,6 +58,7 @@
 		},
         data() {
             return {
+                self:this,
                 tableData: [],
                 multipleSelection: [],//选中项
                 pageObj: {
@@ -72,105 +77,114 @@
             this.getData();
         },
         methods: {
-			/*
+
+            /*
 			 * 分页组件回调方法--子组件回传数据的方法
 			 * @page_obj {Object} 分页信息
 			 * page_obj.page_index 当前页下标
 			 * page_obj.page_size 页大小
 			 */
-			PageTurning(page_obj) {
-				this.pageObj.pageIndex = page_obj.page_index;
-				this.pageObj.pageSize = page_obj.page_size;
-				this.getData();
-			},
-	        /*
+            PageTurning(page_obj) {
+                this.pageObj.pageIndex = page_obj.page_index;
+                this.pageObj.pageSize = page_obj.page_size;
+                this.getData();
+            },
+            /*
 	         * 用户信息组件回调方法--子组件回调数据的方法
 	         * @param {Boolean} isRefresh是否需要刷新数据 true=刷新；false=不刷新
 	         */
-	        UserCallBack(isRefresh){
-	            this.userDialogVisible = false;
-				if(isRefresh){
-			   		this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
-					this.getData();
-				}
-			},
-			/**
-			 * 获取列表数据
-			 */
-			getData() {
-				this.$axios.leansite({
-					method: 'get',
-					url: this.API.leansite.userListByNameOrUserName,
-					params: {
-						'param':this.searchText,
-						'pageNum': this.pageObj.pageIndex,
-						'pageSize': this.pageObj.pageSize
-					}
-				}).then((res) => {
-					var resData = res.data;
-					if(resData.status == 200) {
-						this.tableData = resData.data.rows;
-						this.pageObj.total = resData.data.total;
-					} else {
-						this.$message({
-							type: 'error',
-							message: '查询失败，请刷新重试！'
-						});
-					}
-				}).catch((err) => {
-					this.$message({
-						type: 'error',
-						message: '请求异常，请检查网络！'
-					});
-				})
-			},
-			/**
-			 * 按回车键搜索
-			 */
-            searchEnterFun(e){
-			   var keyCode = window.event? e.keyCode:e.which;
-			   if(keyCode == 13){
-			   		this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
-					this.getData();
-			   }
-			},
+            UserCallBack(isRefresh) {
+                this.userDialogVisible = false;
+                if (isRefresh) {
+                    this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
+                    this.getData();
+                }
+            },
+            /**
+             * 获取列表数据
+             */
+            getData() {
+                this.$axios.leansite({
+                    method: 'get',
+                    url: this.API.leansite.userListByNameOrUserName,
+                    params: {
+                        'param': this.searchText.trim(),
+                        'pageNum': this.pageObj.pageIndex,
+                        'pageSize': this.pageObj.pageSize
+                    }
+                }).then((res) => {
+                    var resData = res.data;
+                    if (resData.status == 200) {
+                        this.tableData = resData.data.rows;
+                        this.pageObj.total = resData.data.total;
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: '查询失败，请刷新重试！'
+                        });
+                    }
+                }).catch((err) => {
+                    this.$message({
+                        type: 'error',
+                        message: '请求异常，请检查网络！'
+                    });
+                })
+            },
+            /**
+             * 点击搜索
+             * /
+            searchImgClick(){
+                this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
+                this.getData();
+            },
+            /**
+             * 按回车键搜索
+             */
+            searchEnterFun(e) {
+                var keyCode = window.event ? e.keyCode : e.which;
+                if (keyCode == 13) {
+                    this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
+                    this.getData();
+                }
+            },
             /**
              * 批量删除用户
              */
-            datchDel(){
-            	let self = this;
-        		if(this.multipleSelection.length <= 0){
-            		this.$message({
-						type: 'warning',
-						message: '请先选择需要删除的用户！'
-					});
-					return;
-            	}
-            	this.$confirm('确定删除选中的用户', '提示', {
-		          confirmButtonText: '确定',
-		          cancelButtonText: '取消',
-		          type: 'warning'
-		        }).then(() => {
+            datchDel() {
+                let self = this;
+                if (this.multipleSelection.length <= 0) {
+                    this.$message({
+                        type: 'warning',
+                        message: '请先选择需要删除的用户！'
+                    });
+                    return;
+                }
+                this.$confirm('确定删除选中的用户', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
 
-	            	let delUsers = [];
-	            	self.multipleSelection.forEach(function(item,index){
-	            		delUsers.push(item.userId);
-	            	});
-		          self.deleteRequest(delUsers.toString());//批量删除请求
-		        }).catch(() => {});
+                    let delUsers = [];
+                    self.multipleSelection.forEach(function (item, index) {
+                        delUsers.push(item.userId);
+                    });
+                    self.deleteRequest(delUsers.toString());//批量删除请求
+                }).catch(() => {
+                });
             },
             handleAddUser() {
-            	this.dialogTitle = "添加用户";
-            	this.userObj = {};
+                this.dialogTitle = "添加用户";
+                this.userObj = {};
                 this.userDialogVisible = true;
-                
+
             },
             /**
              * 用户编辑
              */
             handleEdit(index, row) {
-            	this.dialogTitle = "编辑用户";
-				this.userObj = this.tableData[index];
+                this.dialogTitle = "编辑用户";
+                this.userObj = this.tableData[index];
                 this.userDialogVisible = true;
             },
             /**
@@ -178,43 +192,44 @@
              */
             handleDelete(index, row) {
                 this.idx = index;
-            	this.$confirm('确定删除该用户', '提示', {
-		          confirmButtonText: '确定',
-		          cancelButtonText: '取消',
-		          type: 'warning'
-		        }).then(() => {
-		          this.deleteRequest(row.userId);//批量删除请求
-		        }).catch(() => {});
+                this.$confirm('确定删除该用户', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.deleteRequest(row.userId);//批量删除请求
+                }).catch(() => {
+                });
             },
             /**
              * 批量删除请求
              */
-            deleteRequest(delUserText){
-				this.$axios.leansite({
-					method: 'delete',
-					url: this.API.leansite.deleteUsers+'/'+delUserText,
-				}).then((res) => {
-					var resData = res.data;
-					if(resData.status == 200) {
-						this.multipleSelection = [];
-						this.$message({
-							type: 'success',
-							message: '删除成功！'
-						});
-				   		this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
-						this.getData();
-					} else {
-						this.$message({
-							type: 'error',
-							message: '删除失败！'
-						});
-					}
-				}).catch((err) => {
-					this.$message({
-						type: 'error',
-						message: '请求异常，请检查网络！'
-					});
-				})
+            deleteRequest(delUserText) {
+                this.$axios.leansite({
+                    method: 'delete',
+                    url: this.API.leansite.deleteUsers + '/' + delUserText,
+                }).then((res) => {
+                    var resData = res.data;
+                    if (resData.status == 200) {
+                        this.multipleSelection = [];
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功！'
+                        });
+                        this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
+                        this.getData();
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: '删除失败！'
+                        });
+                    }
+                }).catch((err) => {
+                    this.$message({
+                        type: 'error',
+                        message: '请求异常，请检查网络！'
+                    });
+                })
             },
             /**
              * 多选
@@ -222,19 +237,37 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-		    /**
-		     * 改变隔行变色 颜色
-		     */
-			tableRowClassName(row, rowIndex) {
-		        let index = rowIndex + 1;
-					if(index %2 == 1){
-					    return 'warning-row'
-					}
+            /**
+             * 改变隔行变色 颜色
+             */
+            // tableRowClassName(row, rowIndex) {
+            //     let index = rowIndex + 1;
+            // 		if(index %2 == 1){
+            // 		    return 'warning-row'
+            // 		}
+            //
+            //       },
+            /**
+             * 改变隔行变色 颜色
+             */
 
-			      }  
-      		}
-        
-        
+            cellStyle({row, column, rowIndex, columnIndex}) {
+                let style = {
+                    'text-align': 'center',
+                    'font-size': '14px',
+                    // 'height': '70px',
+                    'background-color': '#ffffff',
+                    'color': '#303030',
+
+                }
+                if (rowIndex % 2 != 0) {
+                    style['background-color'] = '#f2f4f6';
+                }
+                return style;
+            }
+        }
+
+
     }
 
 </script>
@@ -242,6 +275,8 @@
 <style lang="scss" scoped type="text/css">
     .userList {
 	    height: 100%;
+        border-radius: 16px;
+        overflow:hidden;
 	    .el-header {
 	        height: 60px;
 	        line-height: 60px;
@@ -275,6 +310,11 @@
 	        			outline: none;
 	        		}
 	        	}
+                .search{
+                    position: relative;
+                    left: -30px;
+                    top: -2px;
+                }
 	        }
 	    }
 	    .container {
@@ -287,21 +327,24 @@
 	    	.warning-row{
 	    		background: #f2f4f6;
 	    	}
-	    	
+
 	    .edit{
 	    	border: solid 1px #68c161;
 	    	color: #6ecd8b;
-	    	font-size: 12px;
+	    	font-size: 14px;
 			padding: 9px 7px;
 			width: 80px;
 			height: 30px;
 			padding-top: 8px;
+            .edit-img{
+                margin-right: 6px;
+            }
 	    	}
     		.delete{
     			border-radius: 4px;
 				border: solid 1px #ec5555;
 				color: #ed5151;
-				font-size: 12px;
+				font-size: 14px;
 				padding: 9px 7px;
 				width: 80px;
 				height: 30px;
@@ -315,7 +358,7 @@
 	     .el-dialog{
 	    	background-color: #ffffff;
 	    	border-radius: 16px!important;
-			box-shadow: 0px 1px 20px 0px 
+			box-shadow: 0px 1px 20px 0px
 				rgba(0, 0, 0, 0.2);
 			 /deep/ .el-dialog__header{
 				padding: 12px 40px;
