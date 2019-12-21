@@ -21,7 +21,7 @@
 			</el-row>
         </el-header>
         <div class="container">
-            <el-table stripe :data="tableData" :row-class-name="tableRowClassName"   class="table" ref="multipleTable" @selection-change="handleSelectionChange" :cell-style="cellStyle" :header-cell-style="{background:'#f2f4f6',color:'#101010'}" >
+            <el-table stripe :data="tableData"   class="table" ref="multipleTable" @selection-change="handleSelectionChange" :cell-style="cellStyle" :header-cell-style="{background:'#f2f4f6',color:'#101010'}" >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="nickname"  label="员工姓名" align="center" width="120" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="username" label="用户" align="center" width="120" show-overflow-tooltip></el-table-column>

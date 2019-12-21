@@ -113,8 +113,8 @@
 	}
 
 	.isminimize {
-		left: 20px;
-		bottom: 20px;
+		left: 80px;
+    	bottom: -355px;
 		top: auto;
 		right: auto;
 		overflow: hidden;

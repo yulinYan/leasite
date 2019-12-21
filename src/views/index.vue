@@ -30,7 +30,7 @@
 			</el-input>-->
 			<!--显示活动的app图标-->
 			<el-tooltip v-if="activeApps.length > 0" v-for="app in activeApps" :content="`${app.appName}`" placement="top" visible-arrow="false" :key="`${app.appName}`" @click.native="clickMinimizedApp(app)">
-  				<img class="statusIcon" v-bind:src="app.appNameIcon" />
+  				<img class="statusIcon" v-bind:src="app.appIcon" />
 			</el-tooltip>
 		</div>
 		<!--弹框打开第三方应用-->
@@ -63,7 +63,7 @@
 				systemModules:[//系统功能模块
 					{ appName:'用户中心',appUrl:'/userCenterHome',appIcon:require("../assets/img/yonghuzhongxin.png")},
 					{ appName:'物联网中心',appUrl:'/internetPlatform',appIcon:require("../assets/img/wulianwang.png")},
-					{ appName:'运维中心',appUrl:this.API.appPlatform,appIcon:require("../assets/img/yunweizhongxin.png")},
+					{ appName:'运维中心',appUrl:this.API.appPlatform.baseURL,appIcon:require("../assets/img/yunweizhongxin.png")},
 				],
 				activeApps: [],//状态栏显示打开的app数组
 			}
@@ -123,7 +123,7 @@
 				}
 				let searchIndex = -1;
 				if(this.activeApps.length > 0){
-					searchIndex = this.activeApps.findIndex((value)=>value.name==appObj.name);
+					searchIndex = this.activeApps.findIndex((value)=>value.appName==appObj.appName);
 				}
 				if(searchIndex ==-1){
 					if(this.activeApps.length >= 20){

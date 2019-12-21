@@ -20,7 +20,7 @@
 			</el-row>
         </el-header>
         <div class="container">
-            <el-table stripe :data="tableData" class="table" :row-class-name="tableRowClassName" ref="multipleTable" @selection-change="handleSelectionChange" :cell-style="cellStyle"  :header-cell-style="{background:'#f2f4f6',color:'#101010'}">
+            <el-table stripe :data="tableData" class="table" ref="multipleTable" @selection-change="handleSelectionChange" :cell-style="cellStyle"  :header-cell-style="{background:'#f2f4f6',color:'#101010'}">
                 <el-table-column type="selection"  width="55" align="center"></el-table-column>
                 <el-table-column prop="roleName" label="角色名称" align="center" min-width="200"></el-table-column>
                 <el-table-column prop="remark" label="角色描述"  align="left" min-width="300"></el-table-column>

@@ -8,8 +8,8 @@
 				<i class="el-icon-close"  @click="closeDialog"></i>
 			</div>
 		</div>
-		<div v-show="!isminimize" class="dialogBody">
-			<iframe :src="appObj.appUrl" id="mobsf" scrolling="no" sandbox="allow-same-origin allow-top-navigation allow-forms allow-scripts" frameborder="0" width="100%" height="600px"></iframe>
+		<div v-show="!isminimize" class="dialogBody" style="height: 100% !important;">
+			<iframe :src="appObj.appUrl" id="mobsf" scrolling="no" sandbox="allow-same-origin allow-top-navigation allow-forms allow-scripts" frameborder="0" width="100%" height="100%"></iframe>
 		</div>
 	</el-dialog>
 </template>
@@ -81,6 +81,7 @@
 <style lang="scss" type="text/css" scoped>
 	.el-dialog {
 		margin-top: 10vh!important;
+		height: 60vh;
 	}
 	
 	.no_select {
@@ -99,8 +100,8 @@
 	}
 	
 	.isminimize{
-		left: 20px;
-		bottom: 20px;
+		left: 80px;
+    	bottom: -355px;
 		top: auto;
 		right: auto;
 		overflow: hidden;
@@ -108,8 +109,8 @@
 			margin: 0 !important;
 			width: 240px !important;
 			height: 40px;
-			top: 0 !important;
-			left: 0 !important;
+			bottom: 0 !important;
+			left:50px !important;
 		}
 		.el-dialog__header{
 			cursor: auto!important;
@@ -130,7 +131,7 @@
 			left: 0 !important;
 			top: 0 !important;
 			margin-top: 0 !important;
-			overflow: hidden;
+			overflow: hidden !important;
 			position: relative;
 			.el-dialog__header{
 				cursor: auto!important;
@@ -151,6 +152,7 @@
 			}
 		}
 		.el-dialog {
+			height: 100%;
 			.el-dialog__header{
 				width: 100%;
 				height: 48px;
@@ -159,7 +161,7 @@
 			    color: #303030;
 			    border-bottom: solid 1px #d9e3f3 !important;
 				display: flex;
-				@extend .no_select;
+				/*@extend .no_select;*/
 				cursor: auto;
 				.medium{
 					width: 100%;
@@ -236,7 +238,7 @@
 				padding: 1px !important;
 				height: 100% !important;
 				.dialogBody {
-					max-height: calc(80vh - 50px);
+					height: 100%;
 					overflow: auto;
 					padding: 0 !important;
 					background: #f7f9fc;
@@ -265,15 +267,9 @@
 				}
 			}
 		}
-		.xhzqDialog {
-			.el-select {
-				width: 100%;
-			}
-			.el-date-editor {
-				width: 100%;
-			}
-		}
 		/deep/ .el-dialog--center{
+			height: 100%;
+			overflow: hidden !important;
 			.el-dialog__header{
 					height: 48px;
 				    padding: 0 20px !important;
@@ -281,8 +277,12 @@
 				    border-bottom: solid 1px #d9e3f3 !important;
 				}
 			.el-dialog__body{
+				height:100%;
 				padding: 0;
 			}
+		}
+		/deep/.el-dialog.is-fullscreen{
+			overflow: hidden !important;
 		}
 	}
 </style>
