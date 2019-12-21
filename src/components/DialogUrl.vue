@@ -9,7 +9,7 @@
 			</div>
 		</div>
 		<div v-show="!isminimize" class="dialogBody">
-			<iframe :src="appObj.appUrl" id="mobsf" scrolling="no" sandbox="allow-same-origin allow-top-navigation allow-forms allow-scripts" frameborder="0"></iframe>
+			<iframe :src="appObj.appUrl" id="mobsf" scrolling="no" sandbox="allow-same-origin allow-top-navigation allow-forms allow-scripts" frameborder="0" width="100%" height="600px"></iframe>
 		</div>
 	</el-dialog>
 </template>
@@ -124,7 +124,6 @@
 	}
 	
 	.xhzqDialog{
-		height: 600px;
 		min-height: 600px;
 		.is-fullscreen{
 			width: 100% !important;
@@ -142,10 +141,6 @@
 					height: 100% !important;
 					min-height: calc(80vh-50px) !important;
 					padding-bottom: 120px!important;
-					iframe{
-						width: 100%;
-						height: 100%;
-					}
 				}
 			}
 			.dialogFooter{
@@ -241,15 +236,10 @@
 				padding: 1px !important;
 				height: 100% !important;
 				.dialogBody {
-					height: 100% !important;
-					min-height: calc(80vh - 50px) !important;
+					max-height: calc(80vh - 50px);
 					overflow: auto;
 					padding: 0 !important;
 					background: #f7f9fc;
-					iframe{
-						width: 100%;
-						height: 100%;
-					}
 					&::-webkit-scrollbar {
 						width: 4px;
 						height: 8px;
@@ -292,10 +282,6 @@
 				}
 			.el-dialog__body{
 				padding: 0;
-				iframe{
-					width: 100%;
-					height: 100%;
-				}
 			}
 		}
 	}
