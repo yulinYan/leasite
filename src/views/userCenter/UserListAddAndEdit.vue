@@ -142,7 +142,7 @@
 					            }else{
 					                callback();
 					            }
-					        }, 
+					        },
 					    	trigger: 'blur'
 					    }
 					],
@@ -159,7 +159,7 @@
 					            }else{
 					                callback();
 					            }
-					        }, 
+					        },
 					    	trigger: 'blur'
 					    }
 					]
@@ -175,15 +175,15 @@
 				this.isCheckPassword = false;
 				this.pageType = 'edit';
 				this.setFormData();//表单赋值
-				
+
 			}else{
 				this.isCheckPassword = true;
 				this.pageType ='add';
-				
+
 			}
 		},
 		computed: {
-			
+
 		},
 		methods: {
 			/**
@@ -194,7 +194,7 @@
 				this.userForm.nickname=this.userObj.nickname;
 				this.userForm.username=this.userObj.username;
 				if(this.userObj.roleId*1 != 0){
-					this.userForm.roleId=this.userObj.roleId*1;	
+					this.userForm.roleId=this.userObj.roleId*1;
 				}
 				this.userForm.roleName=this.userObj.roleName;
 				this.userForm.email=this.userObj.email;
@@ -202,7 +202,7 @@
 				this.userForm.status=this.userObj.status;
 			},
 			/**
-			 * 角色改变时 
+			 * 角色改变时
 			 */
 			handleRoleChange(value){
 				let filtedList = this.roleList.filter(function(currentValue, index,arr){
@@ -220,7 +220,7 @@
 					if(valid) {
 		                self.$axios.leansite({
 		            		method:'post',
-		                	url:self.API.leansite.addUsers, 
+		                	url:self.API.leansite.addUsers,
 		                	data:self.userForm
 		                }).then((res) => {
 		                    var resData = res.data;
@@ -242,7 +242,7 @@
 		                	self.$message({
 					            type: 'error',
 					            message: '请求异常，请检查网络！'
-					        });  
+					        });
 		                })
 					} else {
 						return false;
@@ -259,7 +259,7 @@
 					if(valid) {
 		                self.$axios.leansite({
 		            		method:'post',
-		                	url:self.API.leansite.updateUser, 
+		                	url:self.API.leansite.updateUser,
 		                	data:self.userForm
 		                }).then((res) => {
 		                    var resData = res.data;
@@ -281,7 +281,7 @@
 		                	self.$message({
 					            type: 'error',
 					            message: '请求异常，请检查网络！'
-					        });  
+					        });
 		                })
 					} else {
 						return false;
@@ -342,19 +342,24 @@
 </script>
 <style lang="scss" scoped type="text/css">
 	.userListAddAndEdit {
-		.el-form{
+        border-radius: 16px;
+        overflow:hidden;
+		/deep/ .el-form{
 			padding:0 48px 0;
 			border-radius: 16px;
+            overflow: hidden;
 		}
 		.dialog-footer{
 			margin-top:15px;
 			text-align: center;
-			
+
 			.el-button{
 				width: 130px;
 			}
 			.el-button:first-child{
 				margin-right: 70px;
+				color: #FFFFFF;
+                background-color: #c4d4e7;
 			}
 		}
 		.el-select{

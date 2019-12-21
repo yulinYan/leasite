@@ -40,7 +40,7 @@
             </el-table>
             <Pagination :pageIndex="pageObj.pageIndex" :total="pageObj.total" :pageSize="pageObj.pageSize" @PageTurning="PageTurning"></Pagination>
         </div>
-        <el-dialog class="outDialog" key="userDialog"  :title='dialogTitle' :visible.sync="userDialogVisible" v-if="userDialogVisible"  width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
+        <el-dialog class="outDialog" custom-class = "dialogstyle" key="userDialog"  :title='dialogTitle' :visible.sync="userDialogVisible" v-if="userDialogVisible"  width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
        		<!-- 新增/编辑弹出框 -->
        		<UserListAddAndEdit :userObj="userObj" @UserCallBack="UserCallBack" ></UserListAddAndEdit>
        	</el-dialog>
@@ -352,18 +352,20 @@
     		}
 	    	}
 	    }
+
 	    .el-main {
 	        padding: 30px;
 	    }
-	     .el-dialog{
-	    	background-color: #ffffff;
-	    	border-radius: 16px!important;
-			box-shadow: 0px 1px 20px 0px
-				rgba(0, 0, 0, 0.2);
-			 /deep/ .el-dialog__header{
-				padding: 12px 40px;
-				border-bottom: 1px solid #d9e3f3;
-			}
-	    }
+
 	}
+    /deep/ .el-dialog{
+        background-color: #ffffff;
+        box-shadow: 0px 1px 20px 0px
+        rgba(0, 0, 0, 0.2);
+        border-radius:16px;
+    	.el-dialog__header{
+	        padding: 12px 40px;
+	        border-bottom: 1px solid #d9e3f3;
+	    }
+}
 </style>

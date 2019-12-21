@@ -4,7 +4,7 @@
 			<div class="centers"><span>{{appObj.appName}}</span></div>
 			<div class="icons">
 				<i class="el-icon-minus"  @click="minimize"></i>
-				<i :class="isfullscreen? 'iconfont leansite-suoxiao' : 'iconfont leansite-fangda' " style="font-size: 24px" @click="IsFullscreen"></i>
+				<i :class="isfullscreen? 'iconfont leansite-suoxiao' : 'iconfont leansite-fangda' " style="font-size: 16px" @click="IsFullscreen"></i>
 				<i class="el-icon-close"  @click="closeDialog"></i>
 			</div>
 		</div>
@@ -85,7 +85,7 @@
 				}
 				Vue.component('currComponent',currComponent);
 				this.moduleDialogVisible = true;
-				
+
 			},
 		},
 		mounted() {
@@ -111,7 +111,7 @@
 		user-select: none;
 		/* Non-prefixed version, currently */
 	}
-	
+
 	.isminimize {
 		left: 20px;
 		bottom: 20px;
@@ -136,9 +136,10 @@
 			bottom: 0;
 		}
 	}
-	
+
 	.systemModuleDialog {
 		min-height: 600px;
+        max-height: calc(100% - 5vh);
 		.is-fullscreen{
 			width: 100% !important;
 			left: 0 !important;
@@ -193,9 +194,8 @@
 						display: flex;
 						justify-content: flex-end;
 						i{
-							font-size: 24px;
 							color: #5f6368;
-							font-size: 18px!important;
+							font-size: 18px;
 							display: block;
 							padding: 0 7px;
 						}
@@ -297,6 +297,7 @@
 				}
 			.el-dialog__body{
 				padding: 0;
+                height: calc(100% - 50px);
 			}
 		}
 	}
