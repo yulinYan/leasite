@@ -12,6 +12,7 @@ import '@/assets/css/global.css';   //全局样式
 import router from "./router/router.js" // 引入全局的路由
 import api from "./common/api.js" //引入接口
 import apiInternet from "./common/apiInternet.js" //引入接口
+import apiAppPlatform from "./common/apiAppPlatform.js" //引入接口
 import commonFun from "./common/commonFun.js" //引入接口
 import ZkTable from 'vue-table-with-tree-grid'
 import TreeTable from 'tree-table-vue'
@@ -39,7 +40,8 @@ Vue.use(ElementUI, {
 Vue.use(md5);
 Vue.prototype.API = {
 	leansite:api,//Leansite Paas平台
-	internet:apiInternet//物联网平台
+	internet:apiInternet,//物联网平台
+	appPlatform:apiAppPlatform//运维中心
 };
 Vue.prototype.qs = qs
 Vue.prototype.commonFun = commonFun;

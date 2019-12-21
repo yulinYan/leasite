@@ -63,7 +63,7 @@
 				systemModules:[//系统功能模块
 					{ appName:'用户中心',appUrl:'/userCenterHome',appIcon:require("../assets/img/yonghuzhongxin.png")},
 					{ appName:'物联网中心',appUrl:'/internetPlatform',appIcon:require("../assets/img/wulianwang.png")},
-					{ appName:'运维中心',appUrl:'http://192.168.2.16:8880/',appIcon:require("../assets/img/yunweizhongxin.png")},
+					{ appName:'运维中心',appUrl:this.API.appPlatform,appIcon:require("../assets/img/yunweizhongxin.png")},
 				],
 				activeApps: [],//状态栏显示打开的app数组
 			}
