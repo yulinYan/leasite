@@ -21,12 +21,12 @@
         <div class="container">
             <el-table stripe :data="tableData" :row-class-name="tableRowClassName"   class="table" ref="multipleTable" @selection-change="handleSelectionChange" :header-cell-style="{background:'#f2f4f6',color:'#101010'}" >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="nickname"  label="员工姓名" align="center" width="120"></el-table-column>
-                <el-table-column prop="username" label="用户" align="center" width="120"></el-table-column>
-                <el-table-column prop="roleName" label="角色名称" align="center" width="150"></el-table-column>
+                <el-table-column prop="nickname"  label="员工姓名" align="center" width="120" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="username" label="用户" align="center" width="120" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="roleName" label="角色名称" align="center" width="150" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="mobile" label="电话"  align="center" width="120"></el-table-column>
-                <el-table-column prop="email" label="邮箱" align="center" min-width="200"></el-table-column>
-                <el-table-column prop="lastLoginTime" label="最后登录时间" align="center" min-width="180" ></el-table-column>
+                <el-table-column prop="email" label="邮箱" align="center" min-width="200" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="lastLoginTime" label="最后登录时间" align="center" min-width="180"  show-overflow-tooltip></el-table-column>
                 <el-table-column label="操作" width="200" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" class="edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>

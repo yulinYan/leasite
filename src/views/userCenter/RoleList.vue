@@ -23,7 +23,7 @@
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="roleName" label="角色名称" align="center" min-width="200"></el-table-column>
                 <el-table-column prop="remark" label="角色描述"  align="left" min-width="300"></el-table-column>
-                <el-table-column prop="userId" label="用户列表" align="left" min-width="300"></el-table-column>
+                <el-table-column prop="userId" label="用户列表" align="left" min-width="300" show-overflow-tooltip></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <!--<el-button type="text" icon="el-icon-edit" class="edit" @click="handleEdit(scope.$index, scope.row)">编辑权限</el-button>-->
