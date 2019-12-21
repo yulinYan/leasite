@@ -2,15 +2,15 @@ kind: pipeline
 name: default
 
 steps:
-- name: node
-  image: guoxudongdocker/node-drone
-  commands:
-  - rm -rf ./dist/static/ && rm -rf ./dist/index.html
-  - npm install
-  - npm run build
-  volumes:
-  - name: npmcache
-    path: /drone/src/node_modules
+#- name: node
+#  image: guoxudongdocker/node-drone
+#  commands:
+#  - rm -rf ./dist/static/ && rm -rf ./dist/index.html
+#  - npm install
+#  - npm run build
+#  volumes:
+#  - name: npmcache
+#    path: /drone/src/node_modules
 
 
 - name: build
@@ -20,7 +20,7 @@ steps:
       from_secret: docker_user
     password:
       from_secret: docker_pass
-    repo: hub.dh.com/zhzm/web
+    repo: hub.dh.com/leansite/web
     registry: hub.dh.com
     tags: ${DRONE_BUILD_NUMBER}
     context: ./dist
@@ -29,14 +29,12 @@ steps:
     path: /var/run/docker.sock
   - name: daemon
     path: /etc/docker/certs.d/hub.dh.com
-  - name: npmcache
-    path: /drone/src/node_modules
 
 
 - name: run
   image: hub.dh.com/library/drone-ssh
   settings:
-    host: 192.168.1.22
+    host: 192.168.2.59
     username: root
     password:
       from_secret: ssh_password
