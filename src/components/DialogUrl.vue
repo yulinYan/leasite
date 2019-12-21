@@ -1,7 +1,7 @@
 <template>
-	<el-dialog ref="xhzqDialog" :width="width"  class="xhzqDialog" :title="Object.name" :fullscreen="isfullscreen" :modal="false" :visible.sync="dialogVisible"  :append-to-body="false" :close-on-click-modal="false" :destroy-on-close="true" :show-close="false"  :class="isminimize? 'isminimize': ''" center>
+	<el-dialog ref="xhzqDialog" :width="width"  class="xhzqDialog" :title="appObj.appName" :fullscreen="isfullscreen" :modal="false" :visible.sync="dialogVisible"  :append-to-body="false" :close-on-click-modal="false" :destroy-on-close="true" :show-close="false"  :class="isminimize? 'isminimize': ''" center>
 		<div v-show="!isminimize" slot="title" class="medium">
-			<div class="centers"><span>{{appObj.name}}</span></div>
+			<div class="centers"><span>{{appObj.appName}}</span></div>
 			<div class="icons">
 				<i class="el-icon-minus" style="font-size: 24px" @click="minimize"></i>
 				<i :class="isfullscreen? 'iconfont leansite-suoxiao' : 'iconfont leansite-fangda' " style="font-size: 24px" @click="IsFullscreen"></i>
@@ -9,7 +9,7 @@
 			</div>
 		</div>
 		<div v-show="!isminimize" class="dialogBody">
-			<iframe :src="appObj.path" id="mobsf" scrolling="no" frameborder="0" style="width: 100%;height: 100%;"></iframe>
+			<iframe :src="appObj.appUrl" id="mobsf" scrolling="no" frameborder="0" style="width: 100%;height: 100%;"></iframe>
 		</div>
 	</el-dialog>
 </template>
@@ -36,7 +36,7 @@
 			}
 		},
 		created() {
-			this.appObj.path +="?username="+this.username+"&token="+this.leansiteToken;
+			this.appObj.appUrl +="?username="+this.username+"&token="+this.leansiteToken;
 			this.openDialog();
 		},
 		watch: {

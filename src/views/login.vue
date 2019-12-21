@@ -6,8 +6,8 @@
 				<el-form-item label="" prop="usersName" >
 					<el-input prefix-icon="iconfont leansite-user" v-model="ruleForm.usersName" id="name" placeholder="用户名/邮箱"></el-input>
 				</el-form-item>
-				<el-form-item label="" prop="password">
-					<el-input prefix-icon="iconfont leansite-mima" v-model="ruleForm.password" type="password" placeholder="密码"></el-input>
+				<el-form-item label="" prop="loginPassword">
+					<el-input prefix-icon="iconfont leansite-mima" v-model="ruleForm.loginPassword" type="password" placeholder="密码"></el-input>
 				</el-form-item>
 				<el-form-item label="" prop="type">
 					<el-checkbox v-model="ruleForm.autoLogin">自动登录</el-checkbox>
@@ -31,31 +31,39 @@
             return {
                 ruleForm: {
                     'usersName': 'ykzhang',//登录账户
-					'password': '1234qwer',//密码
-					'autoLogin':true
+					'loginPassword': '1234qwer',//密码
+					'autoLogin':false
                 },
                 rules: {
                     usersName: [
                        { required: true, message: '请输入用户名', trigger: 'blur' }
                     ],
-                    password: [
+                    loginPassword: [
                         { required: true, message: '请输入密码', trigger: 'blur' }
 					],
                 }
             }
         },
         created(){
+        	this.autoLogin();
         	this.keyupEnter();
         },
         methods: {
+        	/**
+        	  * 登录 
+        	  */
         	 submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (!valid) {
                         return false;
                     } 
-                    this.login();
+                    let oLogin={
+                    	sUsername:this.ruleForm.usersName.trim(),
+                    	sPassword:this.ruleForm.loginPassword.trim()
+                    };
+                    this.login(oLogin);
                 });
-            },
+           },
             /**
              * 回车--登录
              */
@@ -68,21 +76,42 @@
                 }
             },
             /**
-             * 登录
+             * 判断是否自动登录
              */
-            login(){
+            autoLogin(isAutoLogin){
+            	let userObj = this.$store.state.loginUser;
+            	if(userObj != ''){
+            		this.ruleForm.autoLogin = true;
+            		let oLogin={
+                    	sUsername:userObj.user,
+                    	sPassword:this.commonFun.uncompileStr(userObj.psw)
+                    };
+                    setTimeout(()=>{
+                    	this.login(oLogin);	
+                    },2000);
+            	}
+            },
+            /**
+             * 登录请求
+             */
+            login(loginObj){
             	let self = this;
 				this.$axios.leansite({
 					url: this.API.leansite.login,//不需要再添加ip和端口
 					method: 'post',//提交方式：get和post，同 params 和 data配合使用
 					data: {
-						username: this.ruleForm.usersName.trim(),
-						password: this.ruleForm.password.trim()
+						'username': loginObj.sUsername,
+						'password': loginObj.sPassword
 					}
 				}).then((res) => {
 					var resData = res.data;
 					let resCode = parseInt(resData.status);
 					if(resCode == 200){
+						if(self.ruleForm.autoLogin){
+							this.$store.commit('saveStoreByNameLocal',{name:this.API.leansite.constObj.loginUser,storeName:'user',storeInfo:{'user':loginObj.sUsername,'psw':self.commonFun.compileStr(loginObj.sPassword)}});	
+						}else{
+							this.$store.commit('removeStoreByNameLocal',{name:this.API.leansite.constObj.loginUser,storeName:'loginUser'});
+						}
 						this.$store.commit('saveStoreByName',{name:this.API.leansite.constObj.loginInfo,storeName:'user',storeInfo:resData.data.user});
 						this.$store.commit('saveStoreByName',{name:this.API.leansite.constObj.token,storeName:'token',storeInfo:resData.data.token});
 						this.$store.commit('saveStoreByName',{name:this.API.leansite.constObj.operationAuthority,storeName:'operationAuthority',storeInfo:resData.data.permissions});
@@ -90,7 +119,7 @@
 						if (self.$route.query.redirect) {
 						  	self.$router.push(self.$route.query.redirect);  // 登录过期重新登录
 						} else {
-						  	self.$router.push('/index');  // 正常登录
+						  	self.$router.push({name:'index'});  // 正常登录
 						}
 					}else{
 						self.$alert(resData.message);	
@@ -98,32 +127,6 @@
 				}).catch(function(err) {
 					console.log("连接错误" + err);
 				})
-//          	this.$axios({
-//					url: this.API.api.login,//不需要再添加ip和端口
-//					method: 'post',//提交方式：get和post，同 params 和 data配合使用
-//					data: {
-//						username: this.ruleForm.usersName.trim(),
-//						password: this.ruleForm.password.trim()
-//					}
-//				}).then((res) => {
-//					var resData = res.data;
-//					let resCode = parseInt(resData.status);
-//					if(resCode == 200){
-//						this.$store.commit('saveStoreByName',{name:this.API.constObj.loginInfo,storeName:'user',storeInfo:resData.data.user});
-//						this.$store.commit('saveStoreByName',{name:this.API.constObj.token,storeName:'token',storeInfo:resData.data.token});
-//						this.$store.commit('saveStoreByName',{name:this.API.constObj.operationAuthority,storeName:'operationAuthority',storeInfo:resData.data.permissions});
-//						this.$store.commit('saveStoreByName',{name:this.API.constObj.roles,storeName:'roles',storeInfo:resData.data.roles});
-//						if (self.$route.query.redirect) {
-//						  	self.$router.push(self.$route.query.redirect);  // 登录过期重新登录
-//						} else {
-//						  	self.$router.push('/index');  // 正常登录
-//						}
-//					}else{
-//						self.$alert(resData.message);	
-//					}	
-//				}).catch(function(err) {
-//					console.log("连接错误" + err);
-//				})
 			}
         }
     }

@@ -28,7 +28,7 @@ const routes = [
 	},
 	{
 		name: 'index',
-		path: '/index',
+		path: '/',
 		component:index,
 		meta: {
 			title: '首页',

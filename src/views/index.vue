@@ -2,7 +2,7 @@
 	<div class="index">
 		<!--桌面-->
 		<div class="main-block" >
-			<div class="block-item" v-for="app in thirdAppList" @click="openDialog(app)">
+			<div  v-for="app in thirdAppList" :class="app.available=='0'?'block-item noActive':'block-item'" @click="openDialog(app)" :title="app.available=='0'?'您没有'+app.appName+'的操作权限':app.appName">
 			    <img :src="app.appIcon"/>
 			    <span class="demonstration">{{app.appName}}</span>
 			</div>
@@ -10,34 +10,33 @@
 		<!--状态栏-->
 		<div class="status-bar">
 			<!--状态栏系统菜单-->
-			<!--<SystemMenu v-if="systemMenuVisible" @openCallBack="statusBarData" @closeCallBack="closeParentDialog" ref="systemMenu"></SystemMenu>-->
 			<div v-show="systemMenuVisible" class="systemMenu">
 				<ul class="leftMenus">
-					<li v-for="menus in systemMenus" @click="alertComponent(menus)">
-						<img :src="menus.icon" :tile="menus.name"/>
+					<li v-for="menus in systemMenus" @click="alertComponent(menus)" :title="menus.appName">
+						<img :src="menus.appIcon" :alt="menus.appName"/>
 					</li>
 				</ul><ul class="rightMenus">
 					<li v-for="menus in systemModules" @click="alertComponent(menus)">
-						<img :src="menus.icon" :tile="menus.name"/>
-						<span>{{menus.name}}</span>
+						<img :src="menus.appIcon" :tile="menus.appName"/>
+						<span>{{menus.appName}}</span>
 					</li>
 				</ul>
 			</div>
 			<img class="menuLogo" @click="clickSystemMenu" src="../assets/img/logo_icon.png" alt="菜单图标" title="打开系统菜单"/>
-			<el-input
+			<!--<el-input
 			    placeholder="在此处搜索应用"
 			    prefix-icon="el-icon-search"
 			    v-model="searchApp">
-			</el-input>
+			</el-input>-->
 			<!--显示活动的app图标-->
-			<el-tooltip v-if="activeApps.length > 0" v-for="app in activeApps" :content="`${app.name}`" placement="top" visible-arrow="false" :key="`${app.name}`" @click.native="clickMinimizedApp(app)">
-  				<img class="statusIcon" v-bind:src="app.icon" />
+			<el-tooltip v-if="activeApps.length > 0" v-for="app in activeApps" :content="`${app.appName}`" placement="top" visible-arrow="false" :key="`${app.appName}`" @click.native="clickMinimizedApp(app)">
+  				<img class="statusIcon" v-bind:src="app.appNameIcon" />
 			</el-tooltip>
 		</div>
 		<!--弹框打开第三方应用-->
-		<DialogUrl  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 2" width="1500px" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.name}`" :ref="'dialogUrl'+index"></DialogUrl>
+		<DialogUrl  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 2" width="1000px" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogUrl'+index"></DialogUrl>
 		<!--弹框打开组件-->
-		<DialogComponent  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 1" width="1500px" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.name}`" :ref="'dialogComponent'+index"></DialogComponent>
+		<DialogComponent  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 1" width="1500px" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogComponent'+index"></DialogComponent>
 	</div>
 </template>
 
@@ -57,14 +56,14 @@
 				systemMenuVisible:false,//是否显示状态栏系统菜单
 				thirdAppList:[],//桌面第三方应用
 				systemMenus:[//系统菜单项目
-					{ name:'个人中心',path:'/gerenzhongxin',icon:require("../assets/img/yonghu.png")},
-//					{ name:'设置中心',path:'/gerenzhongxin',icon:require("../assets/img/shezhi.png")},
-					{ name:'退出系统',path:'/logout',icon:require("../assets/img/tuichu.png")},
+					{ appName:'个人中心',appUrl:'/gerenzhongxin',appIcon:require("../assets/img/yonghu.png")},
+//					{ appName:'设置中心',appUrl:'/gerenzhongxin',appIcon:require("../assets/img/shezhi.png")},
+					{ appName:'退出系统',appUrl:'/logout',appIcon:require("../assets/img/tuichu.png")},
 				],
 				systemModules:[//系统功能模块
-					{ name:'用户中心',path:'/userCenterHome',icon:require("../assets/img/yonghuzhongxin.png")},
-					{ name:'物联网中心',path:'/internetPlatform',icon:require("../assets/img/wulianwang.png")},
-					{ name:'运维中心',path:'/gerenzhongxin',icon:require("../assets/img/yunweizhongxin.png")},
+					{ appName:'用户中心',appUrl:'/userCenterHome',appIcon:require("../assets/img/yonghuzhongxin.png")},
+					{ appName:'物联网中心',appUrl:'/internetPlatform',appIcon:require("../assets/img/wulianwang.png")},
+					{ appName:'运维中心',appUrl:'http://192.168.2.16:8880/',appIcon:require("../assets/img/yunweizhongxin.png")},
 				],
 				activeApps: [],//状态栏显示打开的app数组
 			}
@@ -115,6 +114,13 @@
 			 * 打开桌面的第三方app
 			 */
 			openDialog(appObj){
+				if(appObj.available == "0"){//没有操作权限
+					this.$alert('您没有'+appObj.appName+"的操作权限，请联系管理员!", '操作提示', {
+			          confirmButtonText: '确定',
+			          callback: action => {}
+			        });
+			        return;
+				}
 				let searchIndex = -1;
 				if(this.activeApps.length > 0){
 					searchIndex = this.activeApps.findIndex((value)=>value.name==appObj.name);
@@ -135,10 +141,10 @@
 						}
 					}
 					let appObject = {
-						name:appObj.appName,//APP名称
-						icon:chioceApp.appIcon,//app图标
+						appName:appObj.appName,//APP名称
+						appIcon:appObj.appIcon,//app图标
 						webSource:2,//打开的网页来源  1=本项目；2=第三方项目
-						path:chioceApp.appUrl,
+						appUrl:appObj.appUrl,
 						isActive:true,//状态栏中显示的app是否处于活动状态
 						isShowDialog:true,//是否显示弹框
 						isMinimize:false//是否缩小弹框
@@ -154,7 +160,7 @@
 			openComponent(appObj){
 				let searchIndex = -1;
 				if(this.activeApps.length > 0){
-					searchIndex = this.activeApps.findIndex((value)=>value.name==appObj.name);
+					searchIndex = this.activeApps.findIndex((value)=>value.appName==appObj.appName);
 				}
 				if(searchIndex ==-1){
 					if(this.activeApps.length >= 20){
@@ -165,10 +171,10 @@
 			            return;
 					}
 					let appObject = {
-						name:appObj.name,//APP名称
-						icon:appObj.icon,//app图标
+						appName:appObj.appName,//APP名称
+						appIcon:appObj.appIcon,//app图标
 						webSource:1,//打开的网页来源  1=本项目；2=第三方项目
-						path:appObj.path,
+						appUrl:appObj.appUrl,
 						isActive:true,//状态栏中显示的app是否处于活动状态
 						isShowDialog:true,//是否显示弹框
 						isMinimize:false//是否缩小弹框
@@ -183,7 +189,7 @@
 			closeParentDialog(appObj){
 				let searchIndex = -1;
 				if(this.activeApps.length > 0){
-					searchIndex = this.activeApps.findIndex((value)=>value.name==appObj.name);
+					searchIndex = this.activeApps.findIndex((value)=>value.appName==appObj.appName);
 				}
 				if(searchIndex !=-1){
 					this.$delete(this.activeApps, searchIndex);
@@ -196,7 +202,7 @@
 				if(this.activeApps.length > 0){
 					let searchIndex = -1;
 					for(let i=0;i<this.activeApps.length;i++){
-						if(this.activeApps[i].name == appObj.name){
+						if(this.activeApps[i].appName == appObj.appName){
 							searchIndex = i;
 							break;
 						}
@@ -226,7 +232,7 @@
 	         */
 			alertComponent(menuObj) {
 				this.systemMenuVisible = false;
-				switch (menuObj.name){
+				switch (menuObj.appName){
 					case "退出系统":
 						this.logout();
 						break;
@@ -302,6 +308,9 @@
     				margin-bottom:10px;
 				}
 			}
+			.block-item.noActive{
+				opacity: 0.3;
+			}
 		}
 		.status-bar{
 			width: 100%;
@@ -363,6 +372,7 @@
 			    height: 30px;
 			    padding: 10px 15px;
 			    cursor: pointer;
+			    margin-right: 10px;
 			}
 			img.menuLogo:hover{
 				background-color: #202020;

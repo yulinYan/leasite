@@ -32,6 +32,7 @@ const interface_s = {
         operationAuthority:'LEANSITEPAAS-OPTAUTHORITY',//功能操作权限
         token:"LEANSITEPAAS-TOKEN",//token
         roles:"LEANSITEPAAS-ROLES",//role
+        loginUser:"LEANSITEPAAS-LOGINUSER"//登录信息
 	}
 }
 //配置生产环境和非生产环境之间的切换

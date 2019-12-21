@@ -1,7 +1,7 @@
 <template>
-	<el-dialog ref="systemModuleDialog" :width="width" class="systemModuleDialog" :title="appObj.name" :fullscreen="isfullscreen" :modal="false" :visible.sync="moduleDialogVisible"  :append-to-body="false" :close-on-click-modal="false" :destroy-on-close="true" :show-close="false"  :class="isminimize? 'isminimize': ''" center>
+	<el-dialog ref="systemModuleDialog" :width="width" class="systemModuleDialog" :title="appObj.appName" :fullscreen="isfullscreen" :modal="false" :visible.sync="moduleDialogVisible"  :append-to-body="false" :close-on-click-modal="false" :destroy-on-close="true" :show-close="false"  :class="isminimize? 'isminimize': ''" center>
 		<div v-show="!isminimize" slot="title" class="medium">
-			<div class="centers"><span>{{appObj.name}}</span></div>
+			<div class="centers"><span>{{appObj.appName}}</span></div>
 			<div class="icons">
 				<i class="el-icon-minus"  @click="minimize"></i>
 				<i :class="isfullscreen? 'iconfont leansite-suoxiao' : 'iconfont leansite-fangda' " style="font-size: 24px" @click="IsFullscreen"></i>
@@ -78,7 +78,7 @@
 				let routers = this.$router.options.routes;
 				let currComponent = '';
 				for(let i=0;i<routers.length;i++){
-					if(this.appObj.path == routers[i].path){
+					if(this.appObj.appUrl == routers[i].path){
 						currComponent = routers[i].component;
 						break;
 					}
