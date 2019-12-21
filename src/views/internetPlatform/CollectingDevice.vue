@@ -18,7 +18,7 @@
                 </el-table-column>
                 <el-table-column prop="name" label="设备名称" show-overflow-tooltip>
                 </el-table-column>
-                <el-table-column prop="type" label="设备分组" show-overflow-tooltip>
+                <el-table-column prop="type" label="设备类型" show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column prop="name" label="设备ID" show-overflow-tooltip>
                     <template slot-scope="scope">
@@ -27,10 +27,12 @@
                 </el-table-column>
                 <el-table-column prop="credentialsId" label="访问令牌" show-overflow-tooltip>
                 </el-table-column>
-                <el-table-column prop="name" label="设备类型" show-overflow-tooltip>
+                <el-table-column prop="name" label="网关" show-overflow-tooltip>
 <template slot-scope="scope">
  {{scope.row.additionalInfo==null?'不是网关':scope.row.additionalInfo.gateway?'是网关':'不是网关'}}
 </template>
+                </el-table-column>
+                <el-table-column prop="label" label="设备标签" show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column prop="createdTime" label="创建时间" show-overflow-tooltip>
 <template slot-scope="scope">
@@ -69,23 +71,23 @@
                         <el-form-item label="设备名称：" prop="name">
                             <el-input v-model="currentTableData.name" maxlength="6" placeholder="请输入六位以内字符"></el-input>
                         </el-form-item>
-                        <el-form-item label="设备分组：" prop="type">
-                            <el-input v-model="currentTableData.type"></el-input>
+                        <el-form-item label="设备类型：" prop="type">
+                            <el-input v-model="currentTableData.type" maxlength="30" placeholder="请输入三十位以内字符"></el-input>
                         </el-form-item>
                         <el-form-item label="设备ID：">
                             <el-input title="请勿修改" readonly v-model="currentTableData.id==null?'':currentTableData.id.id"></el-input>
                         </el-form-item>
                         <el-form-item label="访问令牌：">
-                            <el-input v-model="currentTableData.credentialsId"></el-input>
+                            <el-input title="请勿修改" readonly v-model="currentTableData.credentialsId"></el-input>
                         </el-form-item>
-                        <!-- <el-form-item label="设备状态：">
-                            <el-input v-model="currentTableData.type"></el-input>
-                        </el-form-item> -->
-                        <el-form-item label="设备类型：">
+                        <el-form-item label="设备标签：">
+                            <el-input v-model="currentTableData.label" maxlength="10" placeholder="请输入十位以内字符"></el-input>
+                        </el-form-item>
+                        <el-form-item label="网关：">
                             <el-checkbox v-model="currentTableData.additionalInfo==null?'false':currentTableData.additionalInfo.gateway">{{currentTableData.additionalInfo==null?'不是网关':currentTableData.additionalInfo.gateway?'是网关':'不是网关'}}</el-checkbox>
                         </el-form-item>
                         <el-form-item label="说明：">
-                            <el-input v-model="currentTableData.additionalInfo==null?'':currentTableData.additionalInfo.description"></el-input>
+                            <el-input v-model="currentTableData.additionalInfo==null?'':currentTableData.additionalInfo.description" ></el-input>
                         </el-form-item>
                     </el-form>
                     <div class="saveDevice">
@@ -165,13 +167,13 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="标签">
-                <el-input v-model="currentTableData.label"></el-input>
+                <el-input v-model="currentTableData.label" maxlength="10" placeholder="请输入十位以内字符"></el-input>
             </el-form-item>
             <el-form-item label="是网关">
                 <el-checkbox v-model="currentTableData.additionalInfo==null?'false':currentTableData.additionalInfo.gateway"></el-checkbox>
             </el-form-item>
             <el-form-item label="说明">
-                <el-input v-model="currentTableData.additionalInfo==null?'':currentTableData.additionalInfo.description"></el-input>
+                <el-input v-model="currentTableData.additionalInfo==null?'':currentTableData.additionalInfo.description" maxlength="30" placeholder="请输入三十位以内字符"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -343,11 +345,14 @@ export default {
         this.getDevice();
         window.addEventListener('resize', this.resize)
     },
+    destroyed() {
+        window.removeEventListener('resize', this.resize);
+    },
     computed: {},
     methods: {
         resize() {
-            this.tableDataHeight = document.querySelector('.con').offsetHeight - 56;
-            this.attrTableHeight = document.querySelector('.el-tabs').offsetHeight - 170;
+            document.querySelector('.con') == null ? '' : this.tableDataHeight = document.querySelector('.con').offsetHeight - 56;
+            document.querySelector('.con') == null ? '' : this.attrTableHeight = document.querySelector('.el-tabs').offsetHeight - 170;
         },
         //遥测详情
         telemetryDetails(index, name) {
@@ -935,7 +940,7 @@ export default {
     }
     .saveDevice {
         position: absolute;
-        bottom: 12%;
+        bottom: 5%;
         display: flex;
         justify-content: center;
         width: calc(100% - 84px);

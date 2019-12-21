@@ -67,7 +67,7 @@
                             <el-input title="请勿修改" readonly v-model="currentTableData.id==null?'':currentTableData.id.id"></el-input>
                         </el-form-item>
                         <el-form-item label="说明：">
-                            <el-input v-model="currentTableData.additionalInfo==null?'':currentTableData.additionalInfo.description"></el-input>
+                            <el-input v-model="currentTableData.additionalInfo==null?'':currentTableData.additionalInfo.description" maxlength="30" placeholder="请输入三十位以内字符"></el-input>
                         </el-form-item>
                     </el-form>
                     <div class="saveAssets">
@@ -137,7 +137,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="说明">
-                <el-input v-model="currentTableData.additionalInfo==null?'':currentTableData.additionalInfo.description"></el-input>
+                <el-input v-model="currentTableData.additionalInfo==null?'':currentTableData.additionalInfo.description" maxlength="30" placeholder="请输入三十位以内字符"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -308,6 +308,9 @@ export default {
         //获取所有资产
         this.getAssets();
         window.addEventListener('resize', this.resize)
+    },
+    destroyed() {
+        window.removeEventListener('resize', this.resize);
     },
     computed: {},
     methods: {
@@ -732,8 +735,8 @@ export default {
             return style;
         },
         resize() {
-            this.tableDataHeight = document.querySelector('.con').offsetHeight - 56;
-            this.attrTableHeight = document.querySelector('.el-tabs').offsetHeight - 170;
+            document.querySelector('.con') == null ? '' : this.tableDataHeight = document.querySelector('.con').offsetHeight - 56;
+            document.querySelector('.con') == null ? '' : this.attrTableHeight = document.querySelector('.el-tabs').offsetHeight - 170;
         }
     }
 }
