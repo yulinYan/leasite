@@ -4,7 +4,7 @@ import axios from 'axios'
  */
 const interface_s = {
 	baseURL: 'http://192.168.2.59:9527/',//非生产环境
-	//prodBaseURL:window.configs.leansiteAPI,//生产环境
+	prodBaseURL:window.configs.leansiteAPI,//生产环境
 	//登录模块
 	login: "login", //登录
 	logout:"kickout",//退出系统
