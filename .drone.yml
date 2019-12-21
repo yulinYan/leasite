@@ -2,15 +2,15 @@ kind: pipeline
 name: default
 
 steps:
-#- name: node
-#  image: guoxudongdocker/node-drone
-#  commands:
-#  - rm -rf ./dist/static/ && rm -rf ./dist/index.html
-#  - npm install
-#  - npm run build
-#  volumes:
-#  - name: npmcache
-#    path: /drone/src/node_modules
+- name: node
+  image: guoxudongdocker/node-drone
+  commands:
+  - rm -rf ./dist/static/ && rm -rf ./dist/index.html
+  - npm install
+  - npm run build
+  volumes:
+  - name: npmcache
+    path: /drone/src/node_modules
 
 
 - name: build
