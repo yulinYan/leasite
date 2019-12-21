@@ -65,11 +65,11 @@
         <div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="设备详情" name="first">
-                    <el-form label-position="left" label-width="110px" :model="currentTableData">
-                        <el-form-item label="设备名称：">
+                    <el-form :rules="rules" label-position="left" label-width="110px" :model="currentTableData">
+                        <el-form-item label="设备名称：" prop="name">
                             <el-input v-model="currentTableData.name" maxlength="6" placeholder="请输入六位以内字符"></el-input>
                         </el-form-item>
-                        <el-form-item label="设备分组：">
+                        <el-form-item label="设备分组：" prop="type">
                             <el-input v-model="currentTableData.type"></el-input>
                         </el-form-item>
                         <el-form-item label="设备ID：">
