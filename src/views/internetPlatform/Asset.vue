@@ -311,9 +311,11 @@ export default {
     },
     created() {},
     mounted() {
-        //获取所有资产
-        this.getAssets();
-        window.addEventListener('resize', this.resize)
+        this.$nextTick(() => {
+            //获取所有资产
+            this.getAssets();
+            window.addEventListener('resize', this.resize)
+        })
     },
     destroyed() {
         window.removeEventListener('resize', this.resize);

@@ -9,7 +9,7 @@
             <el-tabs tab-position="left" style="width: 100%;" v-model="activeName" @tab-click="asideClick" :lazy="true" class="plantFormClass">
                 <el-tab-pane label="信息总览" v-for="(item,index) in asideList" :key="index" :name="item.name" class="plantFormClassItem">
                     <span slot="label"><img style="margin-right: 15px;" :src="item.isactive ? item.icon[1]:item.icon[0]" alt="" >{{item.name}}</span>
-                    <component v-if="activeName === item.name" :is="item.com" :ajaxMsg="ajaxMsg" />
+                    <component v-if="activeName === item.name&&ajaxMsg.Authorization!=''" :is="item.com" :ajaxMsg="ajaxMsg" />
                 </el-tab-pane>
             </el-tabs>
         </el-container>
@@ -42,7 +42,7 @@ export default {
         return {
             ajaxMsg: {
                 url: process.env.NODE_ENV !== 'development' ? this.API.internet.prodBaseURL : this.API.internet.baseURL, //接口ip
-                Authorization: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5d3hmZGo5OTk5QGxlYW5zaXRlLmNuIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiJhMTY1NWU2MC0yMGExLTExZWEtOGY2Ni0yNTQzMjcxOTY2OWQiLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiYTE0OGQ1YjAtMjBhMS0xMWVhLThmNjYtMjU0MzI3MTk2NjlkIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCIsImlzcyI6InRoaW5nc2JvYXJkLmlvIiwiaWF0IjoxNTc2OTA4OTgxLCJleHAiOjE1NzY5MTc5ODF9.tO5Zs4FD-xbqe-Dph_85kFdMoupSwLfnF_afnmLOFWrayaxnWw5WJ-0JroeoHQhLsMibYx_lP3sNfYYG2UXyBg', //接口令牌
+                Authorization: '', //接口令牌
             },
             activeName: '信息总览', //当前侧边栏
             //侧边栏
@@ -89,9 +89,9 @@ export default {
 
             });
         },
-        loginCheck() {
+        async loginCheck() {
             let self = this;
-            this.$axios.internet({
+            await this.$axios.internet({
                 url: `${this.ajaxMsg.url}api/auth/login`, //不需要再添加ip和端口
                 method: 'post', //提交方式：get和post，同 params 和 data配合使用
                 data: {
@@ -107,6 +107,7 @@ export default {
                         storeName: 'internetToken',
                         storeInfo: 'Bearer ' + resData.token
                     });
+                    this.ajaxMsg.Authorization = 'Bearer ' + resData.token;
                 } else {
                     self.$alert("打开物联网中心失败,请关闭重新打开!");
                 }

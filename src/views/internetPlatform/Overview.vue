@@ -249,20 +249,22 @@ export default {
 
     },
     mounted() {
-        //获取上面三个块 设备在线时长
-        this.getDeviceOverviewList();
-        // 获取设备消息数
-        this.getDeviceMessage();
-        //画图设备消息数
-        this.deviceMessageCharts && this.deviceMessageCharts.clear();
-        this.deviceMessageCharts = this.$echarts.init(document.getElementById('deviceMessage'));
-        this.deviceMessageCharts && this.deviceMessageCharts.setOption(this.deviceMessageOption);
-        //画图在线时辰
-        this.deviceTimeCharts && this.deviceTimeCharts.clear();
-        this.deviceTimeCharts = this.$echarts.init(document.getElementById('deviceTime'));
-        this.deviceTimeCharts && this.deviceTimeCharts.setOption(this.deviceTimeOption);
-        //动态图
-        window.addEventListener("resize", this.eventListener);
+        this.$nextTick(() => {
+            //获取上面三个块 设备在线时长
+            this.getDeviceOverviewList();
+            // 获取设备消息数
+            this.getDeviceMessage();
+            //画图设备消息数
+            this.deviceMessageCharts && this.deviceMessageCharts.clear();
+            this.deviceMessageCharts = this.$echarts.init(document.getElementById('deviceMessage'));
+            this.deviceMessageCharts && this.deviceMessageCharts.setOption(this.deviceMessageOption);
+            //画图在线时辰
+            this.deviceTimeCharts && this.deviceTimeCharts.clear();
+            this.deviceTimeCharts = this.$echarts.init(document.getElementById('deviceTime'));
+            this.deviceTimeCharts && this.deviceTimeCharts.setOption(this.deviceTimeOption);
+            //动态图
+            window.addEventListener("resize", this.eventListener);
+        })
     },
     destroyed() {
         window.removeEventListener('resize', this.eventListener);
@@ -434,7 +436,7 @@ export default {
         padding: 0 40px;
         overflow: hidden;
         box-sizing: border-box;
-        &:last-child{
+        &:last-child {
             margin-bottom: 0;
         }
         p.header {
