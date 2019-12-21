@@ -40,7 +40,7 @@ steps:
       from_secret: ssh_password
     port: 22
     script:
-    - bash /root/webtag.sh ${DRONE_BUILD_NUMBER}
+    - bash /usr/local/bin/webtag.sh ${DRONE_BUILD_NUMBER}
 
 - name: 钉钉通知
   image: lddsb/drone-dingtalk-message
