@@ -7,6 +7,12 @@
   url('iconfont.svg?t=1576811120661#iconfont') format('svg'); /* iOS 4.1- */
 }
 
+@font-face {
+    font-family: GrayDesign-Medium;
+    src: url('./GrayDesignMedium.otf');
+}
+
+
 .iconfont {
   font-family: "iconfont" !important;
   font-size: 16px;
