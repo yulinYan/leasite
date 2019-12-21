@@ -34,9 +34,9 @@
 			</el-tooltip>
 		</div>
 		<!--弹框打开第三方应用-->
-		<DialogUrl  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 2" width="1000px" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogUrl'+index"></DialogUrl>
+		<DialogUrl  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 2" width="80%" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogUrl'+index"></DialogUrl>
 		<!--弹框打开组件-->
-		<DialogComponent  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 1" width="1500px" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogComponent'+index"></DialogComponent>
+		<DialogComponent  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 1" width="80%" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogComponent'+index"></DialogComponent>
 	</div>
 </template>
 
@@ -327,11 +327,11 @@
 				position: absolute;
 				left: 0;
 				top:-39vh;
-				
+
 				.leftMenus{
 					display: inline-block;
 				    /*height: 95%;*/
-				   
+
 				    padding-top: 5%;
 				    width: 16.76%;
 				    text-align: center;
