@@ -72,7 +72,10 @@
                             <el-input v-model="currentTableData.name" maxlength="6" placeholder="请输入六位以内字符"></el-input>
                         </el-form-item>
                         <el-form-item label="设备类型：" prop="type">
-                            <el-input v-model="currentTableData.type" maxlength="30" placeholder="请输入三十位以内字符"></el-input>
+                            <el-select v-model="currentTableData.type" filterable allow-create default-first-option style="width:100%">
+                                <el-option v-for="(item,index) in currentTableDataType" :key="index" :label="item.type" :value="item.type">
+                                </el-option>
+                            </el-select>
                         </el-form-item>
                         <el-form-item label="设备ID：">
                             <el-input title="请勿修改" readonly v-model="currentTableData.id==null?'':currentTableData.id.id"></el-input>
@@ -87,7 +90,7 @@
                             <el-checkbox v-model="currentTableData.additionalInfo==null?'false':currentTableData.additionalInfo.gateway">{{currentTableData.additionalInfo==null?'不是网关':currentTableData.additionalInfo.gateway?'是网关':'不是网关'}}</el-checkbox>
                         </el-form-item>
                         <el-form-item label="说明：">
-                            <el-input v-model="currentTableData.additionalInfo==null?'':currentTableData.additionalInfo.description" ></el-input>
+                            <el-input v-model="currentTableData.additionalInfo==null?'':currentTableData.additionalInfo.description" maxlength="30" placeholder="请输入三十位以内字符"></el-input>
                         </el-form-item>
                     </el-form>
                     <div class="saveDevice">
@@ -111,6 +114,9 @@
 </template>
                         </el-table-column>
                         <el-table-column prop="value" label="值" show-overflow-tooltip>
+<template slot-scope="scope">
+ {{String(scope.row.value)}}
+</template>
                         </el-table-column>
                         <el-table-column prop="name" label="操作" show-overflow-tooltip>
 <template slot-scope="scope">
@@ -133,10 +139,10 @@
             </el-tabs>
         </div>
     </el-drawer>
-    <el-dialog :title="editAttrFlag?'编辑属性':'添加属性'" :visible.sync="attributeVisible" width="500px" :modal="false">
+    <el-dialog :title="editAttrFlag?'编辑属性':'添加属性'" :visible.sync="attributeVisible" width="500px" :modal="false" :close-on-click-modal="false">
         <el-form :model="currentAttribute" label-position="left" label-width="110px" size="small" style="margin:25px auto 0">
-            <el-form-item label="键">
-                <el-input v-model="currentAttribute.key" :disabled="editAttrFlag"></el-input>
+            <el-form-item label="键" label-width="50px">
+                <el-input v-model="currentAttribute.key" :disabled="editAttrFlag" maxlength="10" placeholder="请输入十位以内字符"></el-input>
             </el-form-item>
             <!-- <el-form-item label="值类型">
                 <el-select v-model="currentAttribute.type" placeholder="请选择">
@@ -146,8 +152,8 @@
                     <el-option label="布尔" value="布尔"></el-option>
                 </el-select>
             </el-form-item> -->
-            <el-form-item label="值">
-                <el-input v-model="currentAttribute.value"></el-input>
+            <el-form-item label="值" label-width="50px">
+                <el-input v-model="currentAttribute.value" maxlength="10" placeholder="请输入十位以内字符"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -155,13 +161,13 @@
             <el-button type="primary" @click="saveAttribute">确 定</el-button>
         </div>
     </el-dialog>
-    <el-dialog title="添加设备" :visible.sync="dialogFormVisible" width="500px" :modal="false">
+    <el-dialog title="添加设备" :visible.sync="dialogFormVisible" width="500px" :modal="false" :close-on-click-modal="false">
         <el-form :rules="rules" :model="currentTableData" label-position="left" label-width="110px" size="small" style="margin:25px auto 0">
             <el-form-item label="名称" prop="name">
                 <el-input v-model="currentTableData.name" maxlength="6" placeholder="请输入六位以内字符"></el-input>
             </el-form-item>
             <el-form-item label="设备类型" prop="type">
-                <el-select v-model="currentTableData.type"  filterable allow-create default-first-option style="width:100%">
+                <el-select v-model="currentTableData.type" filterable allow-create default-first-option style="width:100%">
                     <el-option v-for="(item,index) in currentTableDataType" :key="index" :label="item.type" :value="item.type">
                     </el-option>
                 </el-select>
@@ -546,7 +552,7 @@ export default {
         saveDevice() {
             if (this.currentTableData.name === '' || this.currentTableData.type === '') {
                 this.$message({
-                    type: 'info',
+                    type: 'warning',
                     message: '请填写完整'
                 });
                 return;
@@ -632,7 +638,7 @@ export default {
         delAllAssets() {
             if (this.multipleSelection.length == 0) {
                 this.$message({
-                    type: 'info',
+                    type: 'warning',
                     message: '请选择要删除的项'
                 });
                 return;
@@ -666,7 +672,7 @@ export default {
             }).catch((error) => {
                 this.getDevice();
                 this.$message({
-                    type: 'info',
+                    type: 'warning',
                     message: '删除失败'
                 });
             })
@@ -698,10 +704,7 @@ export default {
                         console.log(err.response);
                     })
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消设置'
-                    });
+
                 });
             }
         },
@@ -1069,8 +1072,10 @@ export default {
         border-bottom: solid 1px #d9e3f3;
         padding: 0px 40px;
         text-align: left;
-        font-size: 16px;
-        color: #202020;
+        span {
+            font-size: 16px;
+            color: #202020;
+        }
     }
     /deep/ .el-dialog__headerbtn {
         top: 15px;
@@ -1080,7 +1085,7 @@ export default {
         font-size: 22px;
     }
     /deep/ .el-dialog__footer {
-        padding: 10px 20px 40px;
+        padding: 10px 20px 30px;
     }
     /deep/ .el-message-box__btns button.el-button,
     /deep/ .el-dialog__footer button.el-button {
