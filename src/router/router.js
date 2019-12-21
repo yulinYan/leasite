@@ -14,6 +14,7 @@ const error404 = () => import('@/views/404.vue');
 const userCenterHome = () => import('@/views/userCenter/UserCenterHome.vue');
 const userList = () => import('@/views/userCenter/UserList.vue');
 const roleList = () => import('@/views/userCenter/RoleList.vue');
+const roleListEdit = () => import('@/views/userCenter/RoleListEdit.vue');
 const internetPlatform = () => import('@/views/internetPlatform/internetPlatform.vue');
 const routes = [
 	{
@@ -72,6 +73,16 @@ const routes = [
 			requiresAuth: true
 		}
 	},
+    //权限管理路由
+    {
+        name: 'roleListEdit',
+        path: '/roleListEdit',
+        component:roleListEdit,
+        meta: {
+            title: '权限管理',
+            requiresAuth: true
+        }
+    },
 	{
 		path: '/404',
 		component: error404

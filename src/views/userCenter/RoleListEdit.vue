@@ -11,26 +11,25 @@
 			  	<el-input
 			  		style="width:200px;"
 				   placeholder="输入角色名搜索"
-
+				   suffix-icon="el-icon-search"
 				   v-model="searchText"
 				   @keyup.enter.native="searchEnterFun">
 				</el-input>
-                  <img @click="searchImgClick" class="search" src='../../assets/img/internetPlatform/sousuo.png' alt="">
 			  </el-col>
 			</el-row>
         </el-header>
         <div class="container">
             <el-table stripe :data="tableData" class="table" :row-class-name="tableRowClassName" ref="multipleTable" @selection-change="handleSelectionChange" :header-cell-style="{background:'#f2f4f6',color:'#101010'}">
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="roleName" label="角色名称" align="center" min-width="200"></el-table-column>
-                <el-table-column prop="remark" label="角色描述"  align="left" min-width="300"></el-table-column>
-                <el-table-column prop="userId" label="用户列表" align="left" min-width="300" show-overflow-tooltip></el-table-column>
-                <el-table-column label="操作" width="180" align="center">
-                    <template slot-scope="scope">
-                        <!--<el-button type="text" icon="el-icon-edit" class="edit" @click="handleEdit(scope.$index, scope.row)">编辑权限</el-button>-->
-                        <el-button type="text" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                    </template>
-                </el-table-column>
+                <el-table-column prop="roleName" label="模块一" align="center" min-width="200"></el-table-column>
+                <el-table-column prop="remark" label="模块二"  align="left" min-width="300"></el-table-column>
+                <el-table-column prop="userId" label="模块三" align="left" min-width="300"></el-table-column>
+<!--                <el-table-column label="操作" width="180" align="center">-->
+<!--                    <template slot-scope="scope">-->
+<!--                        &lt;!&ndash;<el-button type="text" icon="el-icon-edit" class="edit" @click="handleEdit(scope.$index, scope.row)">编辑权限</el-button>&ndash;&gt;-->
+<!--                        <el-button type="text" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
+<!--                    </template>-->
+<!--                </el-table-column>-->
             </el-table>
             <Pagination :pageIndex="pageObj.pageIndex" :total="pageObj.total" :pageSize="pageObj.pageSize" @PageTurning="PageTurning"></Pagination>
         </div>
@@ -100,7 +99,7 @@
 					method: 'get',
 					url: this.API.leansite.roleListByRoleName,
 					params: {
-						'roleName':this.searchText.trim(),
+						'roleName':this.searchText,
 						'pageNum': this.pageObj.pageIndex,
 						'pageSize': this.pageObj.pageSize
 					}
@@ -122,13 +121,6 @@
 					});
 				})
 			},
-            /**
-             * 点击搜索
-             */
-             searchImgClick(){
-                this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
-                this.getData();
-            },
 			/**
 			 * 按回车键搜索
 			 */
@@ -268,11 +260,6 @@
 	        		.el-icon-search{
 	        			color: #68c161;
 	        		}
-                .search{
-                    position: relative;
-                    left: -30px;
-                    top: -2px;
-                }
 	        	}
 	        }
 	    }
@@ -283,11 +270,21 @@
 	        .el-table{
 	    	color: #303030;
 	    	font-size: 14px;
+	    	.warning-row{
+	    		background: #f2f4f6;
+	    	}
+
+	    .edit{
+	    	border: solid 1px #68c161;
+	    	color: #6ecd8b;
+	    	font-size: 12px;
+			/*padding: 9px 7px;*/
+	    	}
     		.delete{
     			border-radius: 4px;
 				border: solid 1px #ec5555;
 				color: #ed5151;
-				font-size: 14px;
+				font-size: 12px;
 				width: 80px;
 				height: 30px;
 				padding-top: 8px;
