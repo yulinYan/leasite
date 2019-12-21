@@ -363,11 +363,9 @@
         box-shadow: 0px 1px 20px 0px
         rgba(0, 0, 0, 0.2);
         border-radius:16px;
-
-    /deep/ .el-dialog__header{
-
-        padding: 12px 40px;
-        border-bottom: 1px solid #d9e3f3;
-    }
-    }
+    	.el-dialog__header{
+	        padding: 12px 40px;
+	        border-bottom: 1px solid #d9e3f3;
+	    }
+}
 </style>

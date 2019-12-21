@@ -4,7 +4,7 @@
 			<div class="centers"><span>{{appObj.appName}}</span></div>
 			<div class="icons">
 				<i class="el-icon-minus"  @click="minimize"></i>
-				<i :class="isfullscreen? 'iconfont leansite-suoxiao' : 'iconfont leansite-fangda' " style="font-size: 24px" @click="IsFullscreen"></i>
+				<i :class="isfullscreen? 'iconfont leansite-suoxiao' : 'iconfont leansite-fangda' " style="font-size: 16px" @click="IsFullscreen"></i>
 				<i class="el-icon-close"  @click="closeDialog"></i>
 			</div>
 		</div>
@@ -193,9 +193,8 @@
 						display: flex;
 						justify-content: flex-end;
 						i{
-							font-size: 24px;
 							color: #5f6368;
-							font-size: 18px!important;
+							font-size: 18px;
 							display: block;
 							padding: 0 7px;
 						}

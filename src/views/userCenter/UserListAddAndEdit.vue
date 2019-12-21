@@ -358,6 +358,7 @@
 			}
 			.el-button:first-child{
 				margin-right: 70px;
+				color: #FFFFFF;
                 background-color: #c4d4e7;
 			}
 		}

@@ -3,13 +3,13 @@
 		<div v-show="!isminimize" slot="title" class="medium">
 			<div class="centers"><span>{{appObj.appName}}</span></div>
 			<div class="icons">
-				<i class="el-icon-minus" style="font-size: 24px" @click="minimize"></i>
-				<i :class="isfullscreen? 'iconfont leansite-suoxiao' : 'iconfont leansite-fangda' " style="font-size: 24px" @click="IsFullscreen"></i>
-				<i class="el-icon-close" style="font-size: 24px" @click="closeDialog"></i>
+				<i class="el-icon-minus"  @click="minimize"></i>
+				<i :class="isfullscreen? 'iconfont leansite-suoxiao' : 'iconfont leansite-fangda' "  style="font-size: 16px;" @click="IsFullscreen"></i>
+				<i class="el-icon-close"  @click="closeDialog"></i>
 			</div>
 		</div>
 		<div v-show="!isminimize" class="dialogBody">
-			<iframe :src="appObj.appUrl" id="mobsf" scrolling="no" frameborder="0" style="width: 100%;height: 100%;"></iframe>
+			<iframe :src="appObj.appUrl" id="mobsf" scrolling="no" sandbox="allow-same-origin allow-top-navigation allow-forms allow-scripts" frameborder="0"></iframe>
 		</div>
 	</el-dialog>
 </template>
@@ -124,6 +124,7 @@
 	}
 	
 	.xhzqDialog{
+		height: 600px;
 		min-height: 600px;
 		.is-fullscreen{
 			width: 100% !important;
@@ -136,11 +137,15 @@
 				cursor: auto!important;
 			}
 			.el-dialog__body{
-				height: 100%;
+				height: 100% !important;
 				.dialogBody{
-					height: 100%!important;
-					max-height: none!important;
+					height: 100% !important;
+					min-height: calc(80vh-50px) !important;
 					padding-bottom: 120px!important;
+					iframe{
+						width: 100%;
+						height: 100%;
+					}
 				}
 			}
 			.dialogFooter{
@@ -180,7 +185,7 @@
 						justify-content: flex-end;
 						i{
 							color: #5f6368;
-							font-size: 18px!important;
+							font-size: 18px;
 							display: block;
 							padding: 0 7px;
 						}
@@ -234,11 +239,17 @@
 			}
 			.el-dialog__body {
 				padding: 1px !important;
+				height: 100% !important;
 				.dialogBody {
-					max-height: calc(80vh - 50px);
+					height: 100% !important;
+					min-height: calc(80vh - 50px) !important;
 					overflow: auto;
 					padding: 0 !important;
 					background: #f7f9fc;
+					iframe{
+						width: 100%;
+						height: 100%;
+					}
 					&::-webkit-scrollbar {
 						width: 4px;
 						height: 8px;
@@ -281,6 +292,10 @@
 				}
 			.el-dialog__body{
 				padding: 0;
+				iframe{
+					width: 100%;
+					height: 100%;
+				}
 			}
 		}
 	}
