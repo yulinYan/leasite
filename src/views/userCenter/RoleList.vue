@@ -21,7 +21,7 @@
         </el-header>
         <div class="container">
             <el-table stripe :data="tableData" class="table" :row-class-name="tableRowClassName" ref="multipleTable" @selection-change="handleSelectionChange" :cell-style="cellStyle"  :header-cell-style="{background:'#f2f4f6',color:'#101010'}">
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
+                <el-table-column type="selection"  width="55" align="center"></el-table-column>
                 <el-table-column prop="roleName" label="角色名称" align="center" min-width="200"></el-table-column>
                 <el-table-column prop="remark" label="角色描述"  align="left" min-width="300"></el-table-column>
                 <el-table-column prop="userId" label="用户列表" align="left" min-width="300" show-overflow-tooltip></el-table-column>
@@ -301,7 +301,7 @@
 	        height: 100%;
 	        padding: 27px 40px 0;
 	        .el-table{
-                
+
 	    	color: #303030;
 	    	font-size: 14px;
     		.delete{
@@ -326,7 +326,7 @@
         rgba(0, 0, 0, 0.2);
         border-radius:16px;
 	     .el-dialog__header{
-	
+
 	        padding: 12px 40px;
 	        border-bottom: 1px solid #d9e3f3;
 	    }

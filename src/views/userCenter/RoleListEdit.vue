@@ -10,6 +10,7 @@
 
         <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
             <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
+
         </el-checkbox-group>
     </div>
 </div>
@@ -17,6 +18,7 @@
 
 <script>
     const cityOptions = ['上海', '北京', '广州', '深圳'];
+
     export default {
         name: "RoleListEdit",
         data() {
@@ -50,6 +52,14 @@
         margin-top: 5%;
         background-color: #fff;
         border-radius:16px;
+        .header{
+            display: flex;
+            justify-content: space-around;
+            background-color: #fff;
+            height: 100px;
+            align-items: center;
+
+        }
         .model{
             display: flex;
             justify-content: center;
