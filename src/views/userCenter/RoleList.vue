@@ -124,7 +124,7 @@
 			},
             /**
              * 点击搜索
-             * /
+             */
              searchImgClick(){
                 this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
                 this.getData();
@@ -283,21 +283,11 @@
 	        .el-table{
 	    	color: #303030;
 	    	font-size: 14px;
-	    	.warning-row{
-	    		background: #f2f4f6;
-	    	}
-
-	    .edit{
-	    	border: solid 1px #68c161;
-	    	color: #6ecd8b;
-	    	font-size: 12px;
-			/*padding: 9px 7px;*/
-	    	}
     		.delete{
     			border-radius: 4px;
 				border: solid 1px #ec5555;
 				color: #ed5151;
-				font-size: 12px;
+				font-size: 14px;
 				width: 80px;
 				height: 30px;
 				padding-top: 8px;
