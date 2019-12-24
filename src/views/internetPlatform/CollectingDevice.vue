@@ -81,7 +81,7 @@
                             <el-input title="请勿修改" readonly v-model="currentTableData.id==null?'':currentTableData.id.id"></el-input>
                         </el-form-item>
                         <el-form-item label="访问令牌：">
-                            <el-input title="请勿修改" readonly v-model="currentTableData.credentialsId"></el-input>
+                            <el-input title="点击按钮修改" readonly v-model="currentTableData.credentialsId"></el-input><button class="changeCredentialsId" @click="changeCredentialsId(currentTableData.id.id)">修改</button>
                         </el-form-item>
                         <el-form-item label="设备标签：">
                             <el-input v-model="currentTableData.label" maxlength="10" placeholder="请输入十位以内字符"></el-input>
@@ -139,6 +139,17 @@
             </el-tabs>
         </div>
     </el-drawer>
+    <el-dialog title="修改令牌" :visible.sync="credentialsIdVisible" width="500px" :modal="false" :close-on-click-modal="false">
+        <el-form :model="currentCredentialsId" label-position="left" label-width="110px" size="small" style="margin:25px auto 0">
+            <el-form-item label="令牌" label-width="50px">
+                <el-input v-model="currentCredentialsId.credentialsId" :disabled="editAttrFlag" maxlength="20" placeholder="请输入二十位以内字符"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="credentialsIdVisible = false">取 消</el-button>
+            <el-button type="primary" @click="saveCredentialsId">确 定</el-button>
+        </div>
+    </el-dialog>
     <el-dialog :title="editAttrFlag?'编辑属性':'添加属性'" :visible.sync="attributeVisible" width="500px" :modal="false" :close-on-click-modal="false">
         <el-form :model="currentAttribute" label-position="left" label-width="110px" size="small" style="margin:25px auto 0">
             <el-form-item label="键" label-width="50px">
@@ -213,6 +224,7 @@ export default {
             multipleSelection: [],
             tableDataHeight: 0, //设备列表高度
             currentTableDataType: [], //设备类型
+            currentCredentialsId: {}, //令牌
             searchInp: '', //设备搜索
             rules: {
                 name: [{
@@ -229,6 +241,7 @@ export default {
             dialogFormVisible: false, //添加设备,
             attributeVisible: false, //添加属性,
             editAttrFlag: false, //是否编辑属性,
+            credentialsIdVisible: false, //是否编辑令牌,
             attrTableHeight: 0, //属性列表高度
             currentAttribute: {
                 key: '',
@@ -545,6 +558,53 @@ export default {
             } else if (this.activeName === 'third') {
                 this.getTelemetry();
             }
+        },
+        //修改令牌
+        changeCredentialsId(id) {
+            this.$axios.internet({
+                loading: {
+                    isShow: false,
+                },
+                method: 'get',
+                url: `${this.ajaxMsg.url}api/device/${id}/credentials`,
+                //请求头配置
+                headers: {
+                    'X-Authorization': this.ajaxMsg.Authorization,
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(this.currentTableData)
+            }).then(res => {
+                this.currentCredentialsId = res.data;
+                this.credentialsIdVisible = true;
+            }).catch(function(err) {
+                console.log(err.response);
+            })
+        },
+        //保存令牌
+        saveCredentialsId() {
+            this.$axios.internet({
+                loading: {
+                    isShow: false,
+                },
+                method: 'post',
+                url: `${this.ajaxMsg.url}api/device/credentials`,
+                //请求头配置
+                headers: {
+                    'X-Authorization': this.ajaxMsg.Authorization,
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(this.currentCredentialsId)
+            }).then(res => {
+                this.$message({
+                    type: 'success',
+                    message: '成功'
+                });
+                this.currentTableData.credentialsId = this.currentCredentialsId.credentialsId;
+                this.getDevice();
+                this.credentialsIdVisible = false;
+            }).catch(function(err) {
+                console.log(err.response);
+            })
         },
         //取消保存
         cancelDevice() {
@@ -865,6 +925,17 @@ export default {
             box-sizing: border-box;
         }
     }
+    .changeCredentialsId {
+        position: absolute;
+        right: -60px;
+        height: 32px;
+        line-height: 32px;
+        border: none;
+        top: 2px;
+        border-radius: 4px;
+        padding: 0px 8px;
+        cursor: pointer;
+    }
     /deep/ .el-table {
         td .cell {
             overflow: hidden;
@@ -901,7 +972,7 @@ export default {
         position: absolute;
     }
     /deep/ .el-drawer {
-        @media screen and (max-width: 900px) {
+        @media screen and (max-width: 1080px) {
             width: 600px !important;
         }
         top: 0px;

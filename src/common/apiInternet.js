@@ -4,7 +4,7 @@ import axios from 'axios'
  */
 const interface_s = {
 	baseURL: 'http://192.168.2.59:9050/',//非生产环境
-	//prodBaseURL:window.configs.internetAPI,//生产环境
+	// prodBaseURL:window.configs.internetAPI,//生产环境
 	//登录模块
 	login: "api/auth/login", //登录
     devicesNumber: "api/plugins/telemetry", //overview
@@ -24,6 +24,7 @@ const interface_s = {
             "api/tenant/devices",//搜索设备
             "api/assets",//删除资产
             "api/devices",//删除设备
+            "api/auth/logout",//退出
             "internetPlatform",
             "Overview",
             "Asset",

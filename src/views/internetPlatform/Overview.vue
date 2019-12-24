@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import bus from '../../common/bus';
 export default {
     name: 'Overview', //物联网平台
     components: {},
@@ -265,9 +266,12 @@ export default {
             //动态图
             window.addEventListener("resize", this.eventListener);
         })
+        bus.$on("resize", this.eventListener)
     },
     destroyed() {
         window.removeEventListener('resize', this.eventListener);
+        this.deviceMessageCharts = null;
+        this.deviceTimeCharts = null;
     },
     computed: {
 
@@ -362,8 +366,10 @@ export default {
             this.deviceTimeCharts && this.deviceTimeCharts.setOption(this.deviceTimeOption, true);
         },
         eventListener() {
-            this.deviceMessageCharts && this.deviceMessageCharts.resize();
-            this.deviceTimeCharts && this.deviceTimeCharts.resize();
+            setTimeout(() => {
+                this.deviceMessageCharts && this.deviceMessageCharts.resize();
+                this.deviceTimeCharts && this.deviceTimeCharts.resize();
+            }, 0)
         }
     }
 }

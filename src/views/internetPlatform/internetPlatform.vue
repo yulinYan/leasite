@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import bus from '../../common/bus';
 export default {
     name: 'internetPlatform', //物联网平台
     components: {
@@ -67,15 +68,33 @@ export default {
         }
     },
     created() {
-        console.log(process.env.NODE_ENV)
     },
     mounted() {
         this.loginCheck()
+        bus.$on("loginout", this.loginout)
     },
     computed: {
 
     },
     methods: {
+        //退出
+        loginout() {
+            this.$axios.internet({
+                loading: {
+                    isShow: false,
+                },
+                method: 'post',
+                url: `${this.ajaxMsg.url}api/auth/logout`,
+                //请求头配置
+                headers: {
+                    'X-Authorization': this.ajaxMsg.Authorization
+                }
+            }).then(res => {
+
+            }).catch(function(err) {
+                console.log(err.response);
+            })
+        },
         //点击侧边栏
         asideClick(index) {
             this.$nextTick(() => {
