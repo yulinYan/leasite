@@ -3,14 +3,14 @@ name: default
 
 steps:
 - name: node
-  image: guoxudongdocker/node-drone
+  image: guoxudongdocker/drone-node
   commands:
   - rm -rf ./dist/static/ && rm -rf ./dist/index.html
   - npm install
   - npm run build
   volumes:
   - name: npmcache
-    path: /drone/src/node_modules
+    path: /root/.npm-cache
 
 
 - name: build
