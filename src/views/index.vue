@@ -1,14 +1,14 @@
 <template>
 <div class="index">
     <!--桌面-->
-    <div class="main-block">
+    <div class="main-block" @click="systemMenuBlur">
         <div v-for="app in thirdAppList" :class="app.available=='0'?'block-item noActive':'block-item'" @click="openDialog(app)" :title="app.available=='0'?'您没有'+app.appName+'的操作权限':app.appName">
             <img :src="app.appIcon" />
             <span class="demonstration">{{app.appName}}</span>
         </div>
     </div>
     <!--状态栏-->
-    <div class="status-bar">
+    <div class="status-bar" >
         <!--状态栏系统菜单-->
         <div v-show="systemMenuVisible" class="systemMenu">
             <ul class="leftMenus">
@@ -17,7 +17,7 @@
                 </li>
             </ul>
             <ul class="rightMenus">
-                <li v-for="menus in systemModules" @click="alertComponent(menus)">
+                <li v-for="menus in systemModuleList" @click="alertComponent(menus)">
                     <img :src="menus.appIcon" :tile="menus.appName" />
                     <span>{{menus.appName}}</span>
                 </li>
@@ -57,20 +57,43 @@
 				systemMenuVisible:false,//是否显示状态栏系统菜单
 				thirdAppList:[],//桌面第三方应用
 				systemMenus:[//系统菜单项目
-					{ appName:'个人中心',appUrl:'/gerenzhongxin',appIcon:require("../assets/img/yonghu.png")},
+					{ appName:'个人中心',appUrl:'',appIcon:require("../assets/img/yonghu.png")},
 //					{ appName:'设置中心',appUrl:'/gerenzhongxin',appIcon:require("../assets/img/shezhi.png")},
 					{ appName:'退出系统',appUrl:'/logout',appIcon:require("../assets/img/tuichu.png")}
 				],
 				systemModules:[//系统功能模块
-					{ appName:'用户中心',appUrl:'/userCenterHome',appIcon:require("../assets/img/yonghuzhongxin.png")},
-					{ appName:'物联网中心',appUrl:'/internetPlatform',appIcon:require("../assets/img/wulianwang.png")},
-					{ appName:'运维中心',appUrl:this.API.appPlatform.baseURL,appIcon:require("../assets/img/yunweizhongxin.png")}
+					{ 
+						appName:'用户中心',
+						appUrl:'/userCenterHome',
+						appIcon:require("../assets/img/yonghuzhongxin.png"),
+                    	powerName:'user:view',
+                    	isAuth:false//是否有权限
+					},
+					{ 
+						appName:'物联网中心',
+						appUrl:'/internetPlatform',
+						appIcon:require("../assets/img/wulianwang.png"),
+                    	powerName:'iot',
+                    	isAuth:false//是否有权限
+					},
+					{ 
+						appName:'运维中心',
+						appUrl:this.API.appPlatform.baseURL,
+						appIcon:require("../assets/img/yunweizhongxin.png"),
+                    	powerName:'ops',
+                    	isAuth:false//是否有权限
+					}
 				],
 				activeApps: [],//状态栏显示打开的app数组
 			}
 		},
 		computed:{
-
+			systemModuleList:function(){
+				let filterSystemModules = this.systemModules.filter(function(currentValue, index){
+					return currentValue.isAuth == true;
+				});
+				return filterSystemModules;
+			}
 		},
 		created() {
 			if(!this.$store.state.token && this.$store.state.token.length <=0){
@@ -79,19 +102,41 @@
         	}else{
         		this.getData();
         	}
+        	this.menuPower();//左侧菜单权限
 		},
 		mounted(){
 		},
 		methods: {
+	    	/**
+	    	 * 系统菜单右侧权限
+	    	 */
+	    	menuPower(){
+	    		var self = this;
+	    		let powerList = this.$store.state.operationAuthority;
+	    		if(powerList.length > 0){
+	    			self.systemModules.forEach(function(item,index){
+	    				let bMenuExist = self.hasPermission(item.powerName);
+	    				if(bMenuExist){
+	    					self.systemModules[index].isAuth = true;
+	    				}
+	    			});
+	    		}
+	    	},
 			/**
-			 * 获取列表数据
+			 * 系统菜单失去焦点事件
+			 */
+			systemMenuBlur(){
+				this.systemMenuVisible = false;
+			},
+			/**
+			 * 获取应用列表数据
 			 */
 			getData() {
 				this.$axios.leansite({
 					method: 'get',
 					url: this.API.leansite.getThirdApp,
 					params: {
-						'project_id':1,
+						'roleNames':this.$store.state.roles.toString(),
 					}
 				}).then((res) => {
 					var resData = res.data;
