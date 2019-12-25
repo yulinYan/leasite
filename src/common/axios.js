@@ -56,10 +56,6 @@ instance.interceptors.request.use(config => {
 // http响应拦截器
 instance.interceptors.response.use(
 	function(response){
-<<<<<<< HEAD
-
-=======
->>>>>>> 4126b6254bdbc0491383b924cdb50fd82aa58d7a
 		if (response.data.status) {
 	        switch (response.data.message) {
 	            case "token过期"://token过期
