@@ -23,7 +23,10 @@ const interface_s = {
     saveMenuState:"/role/addRoleAndMenu",  //保存角色权限
 	getDepts:'/dept',//获取所有部门
 	addDept:'/dept',//新增部门
-	getUserByDeptId:'/dept/getUserByDeptId',//根据部门id获取用户
+    getUserByDeptId:'/dept/getUserByDeptId',//根据部门id获取用户
+    addDeptUsers: '/dept/addUser',//新增部门人员
+    notGroupUser: '/dept/notGroupUser',//没有部门人员
+    delDeptUser: '/dept/deleteUser',//删除部门人员
 	//常量对象
 	constObj: {
 		pageIndex:1,
