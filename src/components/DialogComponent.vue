@@ -104,7 +104,26 @@ export default {
     }
 }
 </script>
+<style lang="scss" type="text/css" scoped>
+	.el-dialog {
+		margin-top: 10vh!important;
+		height: 60vh;
+	}
 
+	.no_select {
+		-webkit-touch-callout: none;
+		/* iOS Safari */
+		-webkit-user-select: none;
+		/* Chrome/Safari/Opera */
+		-khtml-user-select: none;
+		/* Konqueror */
+		-moz-user-select: none;
+		/* Firefox */
+		-ms-user-select: none;
+		/* Internet Explorer/Edge */
+		user-select: none;
+		/* Non-prefixed version, currently */
+	}
 	.isminimize {
 		left: 80px;
     	bottom: -355px;
@@ -129,31 +148,6 @@ export default {
 			bottom: 0;
 		}
 	}
-
-.isminimize {
-    left: 20px;
-    bottom: 20px;
-    top: auto;
-    right: auto;
-    overflow: hidden;
-    .el-dialog {
-        margin: 0 !important;
-        width: 240px !important;
-        height: 40px;
-        top: 0 !important;
-        left: 0 !important;
-    }
-    .el-dialog__header {
-        cursor: auto!important;
-        .el-dialog__headerbtn {
-            display: none;
-        }
-    }
-    .dialogFooter {
-        position: absolute;
-        bottom: 0;
-    }
-}
 
 .systemModuleDialog {
     min-height: 600px;
