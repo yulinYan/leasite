@@ -3,7 +3,7 @@ import axios from 'axios'
  * Leansite Paas平台和用户中心接口api
  */
 const interface_s = {
-	baseURL: 'http://192.168.2.59:9527/',//非生产环境
+	baseURL: 'http://192.168.2.41:9527/',//非生产环境
 	//prodBaseURL:window.configs.leansiteAPI,//生产环境
 	//登录模块
 	login: "login", //登录
@@ -14,11 +14,13 @@ const interface_s = {
 	userListByNameOrUserName:'user',//用户列表
 	deleteUsers:'user',//批量删除用户
 	addUsers:'user',//新增用户
-	updateUser:'user/update',//修改用户
+    updateUser:'user/update',//修改用户
 	roleListByRoleName:'role',//用户列表
 	deleteRoles:'role',//批量删除角色
 	addRoleAndUser:'role/addRoleAndUser',//新增角色并添加用户
 	getDeptAndUser:'/dept/getListAndUser',//获取部门和用户
+    getMenuByRoleId:"/menu",  //根据roleId获取角色权限
+    saveMenuState:"/role/addRoleAndMenu",  //保存角色权限
 	//常量对象
 	constObj: {
 		pageIndex:1,
@@ -32,7 +34,9 @@ const interface_s = {
         operationAuthority:'LEANSITEPAAS-OPTAUTHORITY',//功能操作权限
         token:"LEANSITEPAAS-TOKEN",//token
         roles:"LEANSITEPAAS-ROLES",//role
-        loginUser:"LEANSITEPAAS-LOGINUSER"//登录信息
+        loginUser:"LEANSITEPAAS-LOGINUSER",//登录信息,
+
+
 	}
 }
 //配置生产环境和非生产环境之间的切换

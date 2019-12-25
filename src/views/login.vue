@@ -50,13 +50,13 @@
         },
         methods: {
         	/**
-        	  * 登录 
+        	  * 登录
         	  */
         	 submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (!valid) {
                         return false;
-                    } 
+                    }
                     let oLogin={
                     	sUsername:this.ruleForm.usersName.trim(),
                     	sPassword:this.ruleForm.loginPassword.trim()
@@ -89,7 +89,7 @@
                     	sPassword:this.commonFun.uncompileStr(userObj.psw)
                     };
                     setTimeout(()=>{
-                    	this.login(oLogin);	
+                    	this.login(oLogin);
                     },2000);
             	}
             },
@@ -98,7 +98,9 @@
              */
             login(loginObj){
             	let self = this;
+            	console.log(this.API.leansite.login)
 				this.$axios.leansite({
+
 					url: this.API.leansite.login,//不需要再添加ip和端口
 					method: 'post',//提交方式：get和post，同 params 和 data配合使用
 					data: {
@@ -110,7 +112,7 @@
 					let resCode = parseInt(resData.status);
 					if(resCode == 200){
 						if(self.ruleForm.autoLogin){
-							this.$store.commit('saveStoreByNameLocal',{name:this.API.leansite.constObj.loginUser,storeName:'user',storeInfo:{'user':loginObj.sUsername,'psw':self.commonFun.compileStr(loginObj.sPassword)}});	
+							this.$store.commit('saveStoreByNameLocal',{name:this.API.leansite.constObj.loginUser,storeName:'user',storeInfo:{'user':loginObj.sUsername,'psw':self.commonFun.compileStr(loginObj.sPassword)}});
 						}else{
 							this.$store.commit('removeStoreByNameLocal',{name:this.API.leansite.constObj.loginUser,storeName:'loginUser'});
 						}
@@ -124,8 +126,8 @@
 						  	self.$router.push({name:'index'});  // 正常登录
 						}
 					}else{
-						self.$alert(resData.message);	
-					}	
+						self.$alert(resData.message);
+					}
 				}).catch(function(err) {
 					console.log("连接错误" + err);
 				})

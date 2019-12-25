@@ -23,35 +23,43 @@
             <el-table stripe :data="tableData" class="table" ref="multipleTable" @selection-change="handleSelectionChange" :cell-style="cellStyle"  :header-cell-style="{background:'#f2f4f6',color:'#101010'}">
                 <el-table-column type="selection"  width="55" align="center"></el-table-column>
                 <el-table-column prop="roleName" label="角色名称" align="center" min-width="200"></el-table-column>
-                <el-table-column prop="remark" label="角色描述"  align="left" min-width="300"></el-table-column>
-                <el-table-column prop="userId" label="用户列表" align="left" min-width="300" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="remark" label="角色描述"  align="center" min-width="300"></el-table-column>
+                <el-table-column prop="userId" label="用户列表" align="center" min-width="300" show-overflow-tooltip></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <!--<el-button type="text" icon="el-icon-edit" class="edit" @click="handleEdit(scope.$index, scope.row)">编辑权限</el-button>-->
+                        <el-button type="text" icon="el-icon-edit" class="edit" @click="handleEdit(scope.$index, scope.row)">编辑权限</el-button>
                         <el-button type="text" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <Pagination :pageIndex="pageObj.pageIndex" :total="pageObj.total" :pageSize="pageObj.pageSize" @PageTurning="PageTurning"></Pagination>
         </div>
-        <el-dialog class="outDialog" key="roleDialog"  :title='dialogTitle' :visible.sync="roleDialogVisible" v-if="roleDialogVisible" width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
+        <el-dialog class="outDialog" key="roleDialog"  :title='dialogTitle' :visible.sync="roleDialogVisible"  width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
        		<!-- 新增/编辑弹出框 -->
-       		<RoleListAdd :roleObj="roleObj" @RoleCallBack="RoleCallBack" ></RoleListAdd>
+            <RoleListAdd :roleObj="roleObj" @RoleCallBack="RoleCallBack" ></RoleListAdd>
        	</el-dialog>
+        <el-dialog class="outRoleAuthDialog" key="roleAuthDialog"  :visible.sync="roleAuthDialogVisible"   append-to-body  :close-on-click-modal="false" :show-close="false">
+<!--编辑权限-->
+            <RoleListEdit :roleObj="roleObj"  @RoleAuthCallBack="RoleAuthCallBack"></RoleListEdit>
+        </el-dialog>
+<!--        <RoleListEdit class="roleAuthDialogVisible" v-if="roleAuthDialogVisible"  @RoleAuthCallBack="RoleAuthCallBack"></RoleListEdit>-->
     </div>
 </template>
 
 <script>
 	import Pagination from '../../components/Pagination.vue';
 	import RoleListAdd from '../../views/userCenter/RoleListAdd.vue';
+	import RoleListEdit from "./RoleListEdit";
     export default {
         name: 'RoleList',//角色列表
         components: {
 			Pagination, //分页组件
-			RoleListAdd//新增角色
+			RoleListAdd,//新增角色
+            RoleListEdit, //编辑权限
 		},
         data() {
             return {
+
                 tableData: [],
                 multipleSelection: [],//选中项
                 pageObj: {
@@ -60,6 +68,7 @@
 					pageSize: this.API.leansite.constObj.pageSize, //页大小
 				},
 				roleDialogVisible:false,//是否显示角色信息弹框
+                roleAuthDialogVisible:false,//是否显示角色权限信息弹框
 				searchText:'',//搜索字段
 				roleObj:{},//添加和编辑时的角色信息
 				dialogTitle:'添加角色'
@@ -92,6 +101,13 @@
 					this.getData();
 				}
 			},
+            RoleAuthCallBack(isRefresh){
+                this.roleAuthDialogVisible = false;
+                if(isRefresh){
+                    this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
+                    this.getData();
+                }
+            },
 			/**
 			 * 获取列表数据
 			 */
@@ -108,6 +124,7 @@
 					var resData = res.data;
 					if(resData.status == 200) {
 						this.tableData = resData.data.rows;
+						console.log (this.tableData);
 						this.pageObj.total = resData.data.total;
 					} else {
 						this.$message({
@@ -121,6 +138,7 @@
 						message: '请求异常，请检查网络！'
 					});
 				})
+
 			},
             /**
              * 点击搜索
@@ -171,9 +189,11 @@
              * 角色编辑
              */
             handleEdit(index, row) {
-            	this.dialogTitle = "编辑角色";
+            	// this.dialogTitle = "编辑角色";
 				this.roleObj = this.tableData[index];
-                this.roleDialogVisible = true;
+                this.roleAuthDialogVisible = true;
+                // this.roleDialogVisible = false;
+                // this.$router.push("/roleListEdit");
             },
             /**
              * 删除单个角色
@@ -224,13 +244,7 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            tableRowClassName(row, rowIndex) {
-		        let index = rowIndex + 1;
-					if(index %2 == 1){
-					    return 'warning-row'
-					}
 
-			      },
             /**
              * 改变隔行变色 颜色
              */
@@ -312,23 +326,41 @@
 				width: 80px;
 				height: 30px;
 				padding-top: 8px;
-
     		}
 	    	}
 	    }
 	    .el-main {
 	        padding: 30px;
 	    }
+        .roleAuthDialogVisible{
+
+           /*margin-top: -700px;*/
+        }
 	}
     /deep/ .el-dialog{
         background-color: #ffffff;
         box-shadow: 0px 1px 20px 0px
         rgba(0, 0, 0, 0.2);
         border-radius:16px;
-	     .el-dialog__header{
-
-	        padding: 12px 40px;
-	        border-bottom: 1px solid #d9e3f3;
-	    }
+        width:auto;
+        height: auto;
+    .el-dialog__header{
+        height: 0!important;
+        padding: 0;
+        margin: 0;
     }
+    }
+    .outDialog{
+    .el-dialog__header{
+        padding: 12px 40px;
+        border-bottom: 1px solid #d9e3f3;
+    }
+    }
+    /deep/ .outRoleAuthDialog{
+
+    .el-dialog__body {
+        padding: 0;
+    }
+    }
+
 </style>

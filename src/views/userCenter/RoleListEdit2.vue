@@ -5,24 +5,24 @@
         <div class="top"><div class="text">超级管理员</div></div>
         <div class="RoleListEdit" v-if="menuList.children">
             <!-- 表头-->
-            <div class="model" >
+            <div class="model" style="width: 1600px">
                 <div style="width: 154px">模块1</div>
                 <div style="width: 154px">模块2</div>
                 <div style="width: 1154px">模块3</div>
             </div>
             <!--表身-->
-            <div v-for="(item,index) in menuList.children" :key="item.title+index" class="models" >
-                <div class="model_1"  style="width: 154px">
-                    <el-checkbox class="model1_checkbox"    @change="model_1_selectAll(arguments,index)" v-model="item.checked"  >{{item.title}}</el-checkbox>
+            <div v-for="(item,index) in menuList.children" :key="item.title+index" class="models">
+                <div class="model_1" style="width: 154px" >
+                    <el-checkbox class="model1_checkbox"   @change="model_1_selectAll(arguments,index)" v-model="item.checked"  >{{item.title}}</el-checkbox>
                 </div>
-                <!--                右边模块2 和模块3-->
+<!--                右边模块2 和模块3-->
                 <div>
-                    <div class="model_2"  v-for="(item2,index2) in item.children" :key="index2">
-                        <!--   模块2-->
+                    <div class="model_2" v-for="(item2,index2) in item.children" :key="index2">
+                <!--   模块2-->
                         <div class="model_2_2" style="width: 154px">
                             <el-checkbox class="model2_checkbox"  v-model="item2.checked" @change="model_2_selectAll(item,index2)" >{{item2.title}}</el-checkbox>
                         </div>
-                        <!--  模块3-->
+                <!--  模块3-->
                         <div class="model_2_3" style="width: 1154px">
                             <el-checkbox class="model3_checkbox"   @change="model_3_select(item,item2,index3)" v-model="item3.checked" v-for="(item3,index3) in item2.children"  :key="index3">{{item3.title}}</el-checkbox>
                         </div>
@@ -30,29 +30,30 @@
                 </div>
             </div>
         </div>
+
         <!--按钮-->
-        <div class="btn">
-            <el-button @click="cancelOpt" >取消</el-button>
-            <el-button type="primary" @click="save">保存</el-button>
-        </div>
+            <el-row>
+                <el-button @click="asas">取消</el-button>
+                <el-button @click="save">保存</el-button>
+            </el-row>
     </div>
+
 </template>
 
 <script>
     export default {
-        name: "RoleListEdut",
-        props:{
-            roleObj:{
-                type:Object,
-                required:true
-            }
-        },
+        name: "RoleListEdut2",
+        // props:{
+        //     roleId:{
+        //         type:integer,
+        //         required:true
+        //     }
+        // },
         data() {
-            return{
-                "menuList": null,
-                "menuIds":[],
-                "ApplicationEntry":[]
-            }
+           return{
+               "menuList": null,
+               "menuIds":[]
+           }
         },
 
         methods: {
@@ -68,28 +69,27 @@
                     children.checked = checked;
                     if(children.children){
                         children.children.forEach((children2)=>{
-                            children2.checked = checked;
-                        })
+                        children2.checked = checked;
+                    })
                     }
                 })
                 this.model_2_selectAll(item,index2)
                 this.model_3_select(item,item2,index3)
-            },
+                },
             /**
              * 二级全选
              */
             model_2_selectAll(item,index2){
                 let checked = item.children[index2].checked;
-                if(item.children[index2].children){
-                    item.children[index2].children.forEach((children)=>{
-                        children.checked = checked;
-                    })
-                }
+                item.children[index2].children.forEach((children)=>{
+                    children.checked = checked;
+                })
 
                 let model1_checcked = item.children.every((model2)=>{
                     return model2.checked == true;
                 })
                 item.checked = model1_checcked;
+
             },
 
             /**
@@ -114,7 +114,7 @@
                     method: 'get',
                     url: this.API.leansite.getMenuByRoleId,
                     params: {
-                        'roleId':this.roleObj.roleId*1
+                        'roleId':1
                     }
                 }).then((res) => {
                     var resData = res.data;
@@ -142,15 +142,13 @@
                     method: 'POST',
                     url: this.API.leansite.saveMenuState,
                     params: {
-                        'roleId':this.roleObj.roleId*1,
-                        'menuIds':this.menuIds.toString(),
-                        'appIds':this.ApplicationEntry.toString()
+                        'roleId':1,
+                        'menuIds':this.menuIds.toString()
                     }
                 }).then((res) => {
                     var resData = res.data;
                     if (resData.status == 200) {
                         alert("保存成功");
-
                     } else {
                         this.$message({
                             type: 'error',
@@ -163,8 +161,6 @@
                         message: '请求异常，请检查网络！'
                     });
                 })
-                centerDialogVisible = false;
-                this.$emit("RoleAuthCallBack",false);
             },
 
             /**
@@ -176,7 +172,7 @@
                         if(this.menuIds.indexOf(children1.id)==-1){
                             this.menuIds.push(children1.id);
                         }
-                };
+                    };
                     if(children1.children){
                         children1.children.forEach((children2)=>{
                             if(children2.checked==true){
@@ -193,52 +189,30 @@
                                         }
                                     }
                                 })
-                            };
-                            if(children2.title=="应用入口列表"){
-                                if(this.ApplicationEntry.indexOf(children2.id)==-1){
-                                    this.ApplicationEntry.push(children2.id);
-                                };
-                                if(children2.children){
-                                    children2.children.forEach((children3)=>{
-                                        if(children3.checked==true){
-                                            if(this.ApplicationEntry.indexOf(children3.id)==-1){
-                                                this.ApplicationEntry.push(children3.id);
-                                                console.log(this.ApplicationEntry)
-                                            }
-                                        }
-                                    })
-                                }
                             }
                         })
-
                     }
                 })
 
+            }
             },
-            /**
-             * 取消
-             */
-            cancelOpt(){
-                // this.resetForm();//重置表单
-                // //调用父组件方法--isRefresh=false不需要刷新父组件的数据
-                this.$emit("RoleAuthCallBack",false);
-                centerDialogVisible = false;
-            },
-        },
         created() {
             this.getData();
             this.model_1_selectAll(args,index);
         },
+
+
     };
 </script>
 <style lang="scss" scoped type="text/css">
 
     .box{
-        /*min-width: 1462px;*/
-        /*height: 90%;*/
+        width: 1680px;
+        height: 974px;
         background-color: #ffffff;
         border-radius: 8px;
-
+        margin: 0 auto;
+        margin-top: 5%;
     .top{
         height:59px;
         border-bottom:solid 2px #d9e3f3 ;
@@ -250,58 +224,51 @@
     }
     }
     .RoleListEdit{
-
+        width: 1600px;
         background-color: #ffffff;
         margin: 16px auto;
         border:solid 1px #d2d5dc;
-    .model{
+        .model{
+            display: flex;
+            align-items: center;
+            div{
+                text-align: center;
+                border-right: 1px solid #d2d5d4;
+                border-bottom: 1px solid #d2d5d4;
+            }
+        }
+        .models{
+            display: flex;
+            align-items: center;
+            border-bottom:1px solid #d2d5d4;
+            div{
+                border-right: 1px solid #d2d5d4;
+                text-align: center;
+            }
+            .model_2{
+                display: flex;
+                align-items: center;
+                border-bottom: 1px solid #d2d5d4;
+                border-left: 1px solid #d2d5d4;
+            }
+            .model_2_3{
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: left;
+                text-align: center;
+            }
+            /deep/ .el-checkbox__label{
 
-        display: flex;
-        align-items: center;
-    div{
-
-        text-align: center;
-        border-right: 1px solid #d2d5d4;
-        border-bottom: 1px solid #d2d5d4;
+                width: 85px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                float: right;
+                margin-top: 4px;
+            }
+        }
     }
-    }
-    .models{
-
-        display: flex;
-        align-items: center;
-        /*border-bottom:1px solid #d2d5d4;*/
-    div{
-        /*border-right: 1px solid #d2d5d4;*/
-        text-align: center;
-    }
-    .model_2{
-        display: flex;
-        align-items: center;
-        border-bottom: 1px solid #d2d5d4;
-        border-left: 1px solid #d2d5d4;
-    }
-    .model_2_3{
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: left;
-        text-align: center;
-    .el-checkbox__label{
-        margin-left: 80px;
-        margin-top: 10px;
-        text-align: left;
-    }
-    }
-    /deep/ .el-checkbox__label{
-        width: 85px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        float: right;
-        margin-top: 4px;
-    }
-    }
-    }
-    }
+}
 
 </style>
 

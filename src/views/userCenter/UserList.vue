@@ -22,7 +22,7 @@
         </el-header>
         <div class="container">
             <el-table stripe :data="tableData"   class="table" ref="multipleTable" @selection-change="handleSelectionChange" :cell-style="cellStyle" :header-cell-style="{background:'#f2f4f6',color:'#101010'}" >
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
+                <el-table-column type="selection"  width="55" align="center"></el-table-column>
                 <el-table-column prop="nickname"  label="员工姓名" align="center" width="120" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="username" label="用户" align="center" width="120" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="roleName" label="角色名称" align="center" width="150" show-overflow-tooltip></el-table-column>
@@ -77,7 +77,6 @@
             this.getData();
         },
         methods: {
-
             /*
 			 * 分页组件回调方法--子组件回传数据的方法
 			 * @page_obj {Object} 分页信息

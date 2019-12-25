@@ -83,6 +83,7 @@ const routes = [
             requiresAuth: true
         }
     },
+
 	{
 		path: '/404',
 		component: error404
