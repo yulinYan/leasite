@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import bus from '../../common/bus';
 export default {
     name: 'internetPlatform', //物联网平台
     components: {
@@ -45,8 +46,8 @@ export default {
                 Authorization: '', //接口令牌
             },
             activeName: '信息总览', //当前侧边栏
-            //侧边栏
-            asideList: [{
+            //原始侧边栏菜单
+            oldAsideList: [{
                     icon: [require('../../assets/img/internetPlatform/shouye1.png'), require('../../assets/img/internetPlatform/shouye2.png')],
                     name: '信息总览',
                     com: 'Overview',
@@ -64,18 +65,37 @@ export default {
                     isactive: false
                 },
             ],
+            asideList:[],//显示的菜单列表
         }
     },
     created() {
-        console.log(process.env.NODE_ENV)
     },
     mounted() {
         this.loginCheck()
+        bus.$on("loginout", this.loginout)
     },
     computed: {
 
     },
     methods: {
+        //退出
+        loginout() {
+            this.$axios.internet({
+                loading: {
+                    isShow: false,
+                },
+                method: 'post',
+                url: `${this.ajaxMsg.url}api/auth/logout`,
+                //请求头配置
+                headers: {
+                    'X-Authorization': this.ajaxMsg.Authorization
+                }
+            }).then(res => {
+
+            }).catch(function(err) {
+                console.log(err.response);
+            })
+        },
         //点击侧边栏
         asideClick(index) {
             this.$nextTick(() => {

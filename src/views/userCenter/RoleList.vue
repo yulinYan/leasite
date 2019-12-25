@@ -6,12 +6,11 @@
 			  	<span>角色管理</span>
 			  </el-col>
 			  <el-col :span="16" class="rightHeader">
-			  	<el-button type="text" icon="el-icon-plus" class="addRole" @click="handleAddRole">新增角色</el-button>
-			  	<el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button>
+			  	<el-button type="text" v-if="hasPermission('role:add')" icon="el-icon-plus" class="addRole" @click="handleAddRole">新增角色</el-button>
+			  	<el-button type="text" v-if="hasPermission('role:delete')" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button>
 			  	<el-input
 			  		style="width:200px;"
 				   placeholder="输入角色名搜索"
-
 				   v-model="searchText"
 				   @keyup.enter.native="searchEnterFun">
 				</el-input>
@@ -23,12 +22,14 @@
             <el-table stripe :data="tableData" class="table" ref="multipleTable" @selection-change="handleSelectionChange" :cell-style="cellStyle"  :header-cell-style="{background:'#f2f4f6',color:'#101010'}">
                 <el-table-column type="selection"  width="55" align="center"></el-table-column>
                 <el-table-column prop="roleName" label="角色名称" align="center" min-width="200"></el-table-column>
-                <el-table-column prop="remark" label="角色描述"  align="center" min-width="300"></el-table-column>
-                <el-table-column prop="userId" label="用户列表" align="center" min-width="300" show-overflow-tooltip></el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column prop="remark" label="角色描述"  header-align="center" align="left" min-width="300"></el-table-column>
+                <el-table-column prop="userId" label="用户列表" header-align="center" align="center" min-width="300" show-overflow-tooltip></el-table-column>
+                <el-table-column label="操作" width="220" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" class="edit" @click="handleEdit(scope.$index, scope.row)">编辑权限</el-button>
-                        <el-button type="text" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        <el-button type="text" v-if="hasPermission('role:update')" class="edit" @click="handleEdit(scope.$index, scope.row)">
+                        	<img src='../../assets/img/internetPlatform/bianji.png' class="edit-img" alt="">编辑权限
+                        </el-button>
+                        <el-button type="text" v-if="hasPermission('role:delete')" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -318,6 +319,18 @@
 
 	    	color: #303030;
 	    	font-size: 14px;
+		    .edit{
+		    	border: solid 1px #68c161;
+		    	color: #6ecd8b;
+		    	font-size: 14px;
+				padding: 9px 7px;
+				/*width: 80px;*/
+				height: 30px;
+				padding-top: 8px;
+	            .edit-img{
+	                margin-right: 6px;
+	            }
+		    }
     		.delete{
     			border-radius: 4px;
 				border: solid 1px #ec5555;

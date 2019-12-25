@@ -7,7 +7,7 @@ const interface_s = {
 	//prodBaseURL:window.configs.leansiteAPI,//生产环境
 	//登录模块
 	login: "login", //登录
-	logout:"kickout",//退出系统
+	logout:"logout",//退出系统
 	//公共模块
 	getThirdApp: 'app/getAll', //获取主页第三方应用菜单
 	//用户中心
@@ -21,6 +21,9 @@ const interface_s = {
 	getDeptAndUser:'/dept/getListAndUser',//获取部门和用户
     getMenuByRoleId:"/menu",  //根据roleId获取角色权限
     saveMenuState:"/role/addRoleAndMenu",  //保存角色权限
+	getDepts:'/dept',//获取所有部门
+	addDept:'/dept',//新增部门
+	getUserByDeptId:'/dept/getUserByDeptId',//根据部门id获取用户
 	//常量对象
 	constObj: {
 		pageIndex:1,

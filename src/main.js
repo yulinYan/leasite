@@ -14,6 +14,7 @@ import api from "./common/api.js" //引入接口
 import apiInternet from "./common/apiInternet.js" //引入接口
 import apiAppPlatform from "./common/apiAppPlatform.js" //引入接口
 import commonFun from "./common/commonFun.js" //引入接口
+import hasPermission from "./common/hasPermission.js" //引入接口
 import ZkTable from 'vue-table-with-tree-grid'
 import TreeTable from 'tree-table-vue'
 import moment from "moment";
@@ -45,7 +46,8 @@ Vue.prototype.API = {
 };
 Vue.prototype.qs = qs
 Vue.prototype.commonFun = commonFun;
-Vue.prototype.$store = store
+Vue.prototype.$store = store;
+Vue.prototype.hasPermission = hasPermission;
 Vue.prototype.$axios = {
 	leansite:axios, //Leansite Paas axios
 	internet:axiosInternet //物联网 axios

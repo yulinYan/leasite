@@ -1,43 +1,44 @@
 <template>
-	<div class="index">
-		<!--桌面-->
-		<div class="main-block" >
-			<div  v-for="app in thirdAppList" :class="app.available=='0'?'block-item noActive':'block-item'" @click="openDialog(app)" :title="app.available=='0'?'您没有'+app.appName+'的操作权限':app.appName">
-			    <img :src="app.appIcon"/>
-			    <span class="demonstration">{{app.appName}}</span>
-			</div>
-		</div>
-		<!--状态栏-->
-		<div class="status-bar">
-			<!--状态栏系统菜单-->
-			<div v-show="systemMenuVisible" class="systemMenu">
-				<ul class="leftMenus">
-					<li v-for="menus in systemMenus" @click="alertComponent(menus)" :title="menus.appName">
-						<img :src="menus.appIcon" :alt="menus.appName"/>
-					</li>
-				</ul><ul class="rightMenus">
-					<li v-for="menus in systemModules" @click="alertComponent(menus)">
-						<img :src="menus.appIcon" :tile="menus.appName"/>
-						<span>{{menus.appName}}</span>
-					</li>
-				</ul>
-			</div>
-			<img class="menuLogo" @click="clickSystemMenu" src="../assets/img/logo_icon.png" alt="菜单图标" title="打开系统菜单"/>
-			<!--<el-input
+<div class="index">
+    <!--桌面-->
+    <div class="main-block">
+        <div v-for="app in thirdAppList" :class="app.available=='0'?'block-item noActive':'block-item'" @click="openDialog(app)" :title="app.available=='0'?'您没有'+app.appName+'的操作权限':app.appName">
+            <img :src="app.appIcon" />
+            <span class="demonstration">{{app.appName}}</span>
+        </div>
+    </div>
+    <!--状态栏-->
+    <div class="status-bar">
+        <!--状态栏系统菜单-->
+        <div v-show="systemMenuVisible" class="systemMenu">
+            <ul class="leftMenus">
+                <li v-for="menus in systemMenus" @click="alertComponent(menus)" :title="menus.appName">
+                    <img :src="menus.appIcon" :alt="menus.appName" />
+                </li>
+            </ul>
+            <ul class="rightMenus">
+                <li v-for="menus in systemModules" @click="alertComponent(menus)">
+                    <img :src="menus.appIcon" :tile="menus.appName" />
+                    <span>{{menus.appName}}</span>
+                </li>
+            </ul>
+        </div>
+        <img class="menuLogo" @click="clickSystemMenu" src="../assets/img/logo_icon.png" alt="菜单图标" title="打开系统菜单" />
+        <!--<el-input
 			    placeholder="在此处搜索应用"
 			    prefix-icon="el-icon-search"
 			    v-model="searchApp">
 			</el-input>-->
-			<!--显示活动的app图标-->
-			<el-tooltip v-if="activeApps.length > 0" v-for="app in activeApps" :content="`${app.appName}`" placement="top" visible-arrow="false" :key="`${app.appName}`" @click.native="clickMinimizedApp(app)">
-  				<img class="statusIcon" v-bind:src="app.appIcon" />
-			</el-tooltip>
-		</div>
-		<!--弹框打开第三方应用-->
-		<DialogUrl  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 2" width="80%" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogUrl'+index"></DialogUrl>
-		<!--弹框打开组件-->
-		<DialogComponent  v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 1" width="80%" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogComponent'+index"></DialogComponent>
-	</div>
+        <!--显示活动的app图标-->
+        <el-tooltip v-if="activeApps.length > 0" v-for="app in activeApps" :content="`${app.appName}`" placement="top" visible-arrow="false" :key="`${app.appName}`" @click.native="clickMinimizedApp(app)">
+            <img class="statusIcon" v-bind:src="app.appIcon" />
+        </el-tooltip>
+    </div>
+    <!--弹框打开第三方应用-->
+    <DialogUrl v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 2" width="80%" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogUrl'+index"></DialogUrl>
+    <!--弹框打开组件-->
+    <DialogComponent v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 1" width="80%" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogComponent'+index"></DialogComponent>
+</div>
 </template>
 
 <script>
@@ -58,12 +59,12 @@
 				systemMenus:[//系统菜单项目
 					{ appName:'个人中心',appUrl:'/gerenzhongxin',appIcon:require("../assets/img/yonghu.png")},
 //					{ appName:'设置中心',appUrl:'/gerenzhongxin',appIcon:require("../assets/img/shezhi.png")},
-					{ appName:'退出系统',appUrl:'/logout',appIcon:require("../assets/img/tuichu.png")},
+					{ appName:'退出系统',appUrl:'/logout',appIcon:require("../assets/img/tuichu.png")}
 				],
 				systemModules:[//系统功能模块
 					{ appName:'用户中心',appUrl:'/userCenterHome',appIcon:require("../assets/img/yonghuzhongxin.png")},
 					{ appName:'物联网中心',appUrl:'/internetPlatform',appIcon:require("../assets/img/wulianwang.png")},
-					{ appName:'运维中心',appUrl:this.API.appPlatform.baseURL,appIcon:require("../assets/img/yunweizhongxin.png")},
+					{ appName:'运维中心',appUrl:this.API.appPlatform.baseURL,appIcon:require("../assets/img/yunweizhongxin.png")}
 				],
 				activeApps: [],//状态栏显示打开的app数组
 			}
@@ -80,7 +81,6 @@
         	}
 		},
 		mounted(){
-
 		},
 		methods: {
 			/**
@@ -261,11 +261,8 @@
              */
             logoutRequest(){
 				this.$axios.leansite({
-					method: 'delete',
-					url: this.API.leansite.logout,
-					params: {
-						'id':this.$store.state.user.userId
-					}
+					method: 'get',
+					url: this.API.leansite.logout+"/id="+this.$store.state.user.userId,
 				}).then((res) => {
 					var resData = res.data;
 					this.commonFun.againLogin();
@@ -277,133 +274,132 @@
 	}
 </script>
 <style lang="scss" scoped type="text/css">
-	.index{
-		height: 100vh;
-		width: 100vw;
-		overflow-y: auto;
-		overflow-x: auto;
-		.main-block{
-			width: 100vw;
-			height: 95vh;
-			display: flex;
-			flex-direction: column;
-			flex-wrap: wrap;
-			align-items:center;
-			justify-content: flex-start;
-			align-content:flex-start;
-			background:#FFFFFF url(../assets/img/index_bg.png) no-repeat center;
-			background-size: cover;
-			.block-item{
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				flex-direction: column;
-				width:10vh;
-				cursor: pointer;
-				margin-top: 3.5vh;
-				margin-left: 2vw;
-				img{
-					width: 80px;
-    				height: 80px;
-    				margin-bottom:10px;
-				}
-			}
-			.block-item.noActive{
-				opacity: 0.3;
-			}
-		}
-		.status-bar{
-			width: 100%;
-		    height: 5vh;
-		    line-height: 5vh;
-		    background-color: #31353f;
-		    position: fixed;
-		    z-index: 9999;
-			.systemMenu{
-				width: 346px;
-				height: 39vh;
-				background-color: #31353f;
-				box-shadow: 0px 1px 10px 0px rgba(0, 0, 0, 0.1);
-				position: absolute;
-				left: 0;
-				top:-39vh;
+.index {
+    height: 100vh;
+    width: 100vw;
+    overflow-y: auto;
+    overflow-x: auto;
+    .main-block {
+        width: 100vw;
+        height: 95vh;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+        align-content: flex-start;
+        background: #FFFFFF url(../assets/img/index_bg.png) no-repeat center;
+        background-size: cover;
+        .block-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 10vh;
+            cursor: pointer;
+            margin-top: 3.5vh;
+            margin-left: 2vw;
+            img {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 10px;
+            }
+        }
+        .block-item.noActive {
+            opacity: 0.3;
+        }
+    }
+    .status-bar {
+        width: 100%;
+        height: 5vh;
+        line-height: 5vh;
+        background-color: #31353f;
+        position: fixed;
+        z-index: 9999;
+        .systemMenu {
+            width: 346px;
+            height: 39vh;
+            background-color: #31353f;
+            box-shadow: 0px 1px 10px 0px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            left: 0;
+            top: -39vh;
+            .leftMenus {
+                display: inline-block;
+                /*height: 95%;*/
+                padding-top: 5%;
+                width: 16.76%;
+                text-align: center;
+                cursor: pointer;
+                position: absolute;
+                bottom: 5%;
+                li {
+                    height: 42px;
+                }
+                li:hover {
+                    background-color: #4c5363;
+                }
+            }
+            .rightMenus {
+                display: inline-block;
+                cursor: pointer;
+                height: 95%;
+                padding-top: 5%;
+                width: 81.5%;
+                text-align: left;
+                border-left: 1px solid #4c5363;
+                float: right;
+                li {
+                    padding-left: 8.5%;
+                    height: 42px;
+                    span {
+                        margin-left: 10px;
+                        color: #ffffff;
+                    }
+                }
+                li:hover {
+                    background-color: #4c5363;
+                }
+            }
+        }
+        img.menuLogo {
+            width: 30px;
+            height: 30px;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        img.menuLogo:hover {
+            background-color: #202020;
+        }
+        .el-input {
+            width: 276px;
+            height: 36px;
+            line-height: 36px;
+            background-color: #eeeeee;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        .el-tooltip {
+            cursor: pointer;
+            margin: 0 5px;
+            height: 45px;
+            border: none;
+            border-bottom: 3px solid #a0a9b5;
+            img.statusIcon {
+                cursor: pointer;
+                width: 40px;
+                height: 40px;
+            }
+        }
+        .el-tooltip:hover {
+            background-color: #4c5363;
+        }
+    }
+}
 
-				.leftMenus{
-					display: inline-block;
-				    /*height: 95%;*/
-
-				    padding-top: 5%;
-				    width: 16.76%;
-				    text-align: center;
-				    cursor: pointer;
-				    position: absolute;
-				    bottom: 5%;
-				    li{
-				    	height: 42px;
-				    }
-				    li:hover{
-				    	background-color: #4c5363;
-				    }
-				}
-				.rightMenus{
-					display: inline-block;
-					cursor: pointer;
-				    height: 95%;
-				    padding-top: 5%;
-				    width: 81.5%;
-				    text-align: left;
-				    border-left: 1px solid #4c5363;
-				    float: right;
-				    li{
-				    	padding-left: 8.5%;
-				    	height: 42px;
-				    	span{
-				    		margin-left: 10px;
-				    		color: #ffffff;
-				    	}
-				    }
-				    li:hover{
-				    	background-color: #4c5363;
-				    }
-				}
-			}
-			img.menuLogo{
-				width: 30px;
-			    height: 30px;
-			    padding: 10px 15px;
-			    cursor: pointer;
-			    margin-right: 10px;
-			}
-			img.menuLogo:hover{
-				background-color: #202020;
-			}
-			.el-input{
-				width:276px;
-				height: 36px;
-				line-height: 36px;
-				background-color: #eeeeee;
-				border-radius: 4px;
-				margin-right: 10px;
-			}
-			.el-tooltip{
-				cursor: pointer;
-				margin: 0 5px;
-				height: 45px;
-				border: none;
-				border-bottom: 3px solid #a0a9b5;
-				img.statusIcon{
-					cursor: pointer;
-					width: 40px;
-					height: 40px;
-				}
-			}
-			.el-tooltip:hover{
-				background-color: #4c5363;
-			}
-		}
-	}
-	::-webkit-scrollbar{
-		width: 1px;
-    	background-color: transparent;
+::-webkit-scrollbar {
+    width: 1px;
+    background-color: transparent;
 }
 </style>

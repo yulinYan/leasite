@@ -6,8 +6,8 @@
 			  	<span>用户管理</span>
 			  </el-col>
 			  <el-col :span="16" class="rightHeader">
-			  	<el-button type="text" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增用户</el-button>
-			  	<el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button>
+			  	<el-button type="text" v-if="hasPermission('user:add')" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增用户</el-button>
+			  	<el-button type="text" v-if="hasPermission('user:delete')" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button>
 			  	<el-input
 			  		style="width:200px;"
 				   placeholder="输入用户名搜索"
@@ -31,10 +31,10 @@
                 <el-table-column prop="lastLoginTime" label="最后登录时间" align="center" min-width="180"  show-overflow-tooltip></el-table-column>
                 <el-table-column label="操作" width="200" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text"  class="edit" @click="handleEdit(scope.$index, scope.row)">
+                        <el-button type="text" v-if="hasPermission('user:update')" class="edit" @click="handleEdit(scope.$index, scope.row)">
                             <img src='../../assets/img/internetPlatform/bianji.png' class="edit-img" alt="">编辑
                         </el-button>
-                        <el-button type="text" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        <el-button type="text" v-if="hasPermission('user:delete')" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -327,28 +327,28 @@
 	    		background: #f2f4f6;
 	    	}
 
-	    .edit{
-	    	border: solid 1px #68c161;
-	    	color: #6ecd8b;
-	    	font-size: 14px;
-			padding: 9px 7px;
-			width: 80px;
-			height: 30px;
-			padding-top: 8px;
-            .edit-img{
-                margin-right: 6px;
-            }
-	    	}
-    		.delete{
-    			border-radius: 4px;
-				border: solid 1px #ec5555;
-				color: #ed5151;
-				font-size: 14px;
+		    .edit{
+		    	border: solid 1px #68c161;
+		    	color: #6ecd8b;
+		    	font-size: 14px;
 				padding: 9px 7px;
 				width: 80px;
 				height: 30px;
 				padding-top: 8px;
-    		}
+	            .edit-img{
+	                margin-right: 6px;
+	            }
+		    }
+	    	.delete{
+	    			border-radius: 4px;
+					border: solid 1px #ec5555;
+					color: #ed5151;
+					font-size: 14px;
+					padding: 9px 7px;
+					width: 80px;
+					height: 30px;
+					padding-top: 8px;
+	    		}
 	    	}
 	    }
 

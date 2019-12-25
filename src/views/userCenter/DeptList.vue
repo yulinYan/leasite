@@ -1,44 +1,62 @@
 <template>
-    <div class="deptList">
-        <el-header>
-            <el-row>
-			  <el-col :span="8" class="leftHeader">
-			  	<span>用户管理</span>
-			  </el-col>
-			  <el-col :span="16" class="rightHeader">
-			  	<el-button type="text" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增用户</el-button><el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button><el-input
-			  		style="width:200px;"
-				   placeholder="输入姓名或用户名搜索"
-				   suffix-icon="el-icon-search"
-				   v-model="searchText"
-				   @keyup.enter.native="searchEnterFun">
-				</el-input>
-			  </el-col>
-			</el-row>
-        </el-header>
-        <div class="container">
-            <el-table stripe :data="tableData" class="table" ref="multipleTable" @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="nickname" label="员工姓名" align="center" width="120"></el-table-column>
-                <el-table-column prop="username" label="用户" align="center" width="120"></el-table-column>
-                <el-table-column prop="roleName" label="角色名称" align="center" width="150"></el-table-column>
-                <el-table-column prop="mobile" label="电话"  align="center" width="120"></el-table-column>
-                <el-table-column prop="email" label="邮箱" align="center" min-width="200"></el-table-column>
-                <el-table-column prop="lastLoginTime" label="最后登录时间" align="center" min-width="180" ></el-table-column>
-                <el-table-column label="操作" width="160" align="center">
-                    <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <Pagination :pageIndex="pageObj.pageIndex" :total="pageObj.total" :pageSize="pageObj.pageSize" @PageTurning="PageTurning"></Pagination>
-        </div>
-        <el-dialog class="outDialog" key="userDialog"  :title='dialogTitle' :visible.sync="userDialogVisible" v-if="userDialogVisible" width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
-       		<!-- 新增/编辑弹出框 -->
-       		<UserListAddAndEdit :userObj="userObj" @UserCallBack="UserCallBack" ></UserListAddAndEdit>
-       	</el-dialog>
-    </div>
+    <el-container class="deptList">
+	  	<el-aside class="outAside" width="241px">
+	  		<el-button type="text" icon="el-icon-plus" @click="addDept">新增集团</el-button>
+	  		<el-tree
+		      :data="aDeptDatas.children"
+		      node-key="id"
+		      :props="defaultProps"
+		      default-expand-all
+		      highlight-current
+		      current-node-key="0"
+		      indent="10"
+		      @node-click="treeClick"
+		      :expand-on-click-node="false"
+		      :render-content="renderContent">
+		    </el-tree>
+	  	</el-aside>
+	  	<el-container>
+	        <el-header>
+	            <el-row>
+				  <el-col :span="8" class="leftHeader">
+				  	<span>{{showDeptName}}</span>
+				  </el-col>
+				  <el-col :span="16" class="rightHeader">
+				  	<el-button type="text" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增人员</el-button><el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button><el-input
+				  		style="width:200px;"
+					   placeholder="输入姓名搜索"
+					   suffix-icon="el-icon-search"
+					   v-model="searchText"
+					   @keyup.enter.native="searchEnterFun">
+					</el-input>
+				  </el-col>
+				</el-row>
+	        </el-header>
+	        <div class="container">
+	            <el-table stripe :data="tableData" class="table" ref="multipleTable" @selection-change="handleSelectionChange">
+	                <el-table-column type="selection" width="55" align="center"></el-table-column>
+	                <el-table-column prop="nickname" label="员工姓名" align="center" width="120"></el-table-column>
+	                <el-table-column prop="username" label="用户" align="center" width="120"></el-table-column>
+	                <el-table-column prop="roleName" label="角色名称" align="center" width="150"></el-table-column>
+	                <el-table-column prop="mobile" label="电话"  align="center" width="120"></el-table-column>
+	                <el-table-column prop="email" label="邮箱" align="center" min-width="200"></el-table-column>
+	                <el-table-column prop="lastLoginTime" label="最后登录时间" align="center" min-width="180" ></el-table-column>
+	                <el-table-column label="操作" width="160" align="center">
+	                    <template slot-scope="scope">
+	                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+	                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+	                    </template>
+	                </el-table-column>
+	            </el-table>
+	            <Pagination :pageIndex="pageObj.pageIndex" :total="pageObj.total" :pageSize="pageObj.pageSize" @PageTurning="PageTurning"></Pagination>
+	        </div>
+	    </el-container>
+	    <el-dialog class="outDialog" key="userDialog"  :title='dialogTitle' :visible.sync="userDialogVisible" v-if="userDialogVisible" width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
+	   		<!-- 新增/编辑弹出框 -->
+	   		<UserListAddAndEdit :userObj="userObj" @UserCallBack="UserCallBack" ></UserListAddAndEdit>
+	   	</el-dialog>
+	</el-container>
+
 </template>
 
 <script>
@@ -52,6 +70,12 @@
 		},
         data() {
             return {
+            	aDeptDatas:{},
+		        defaultProps: {//tree与data字段映射
+		          children: 'children',
+		          label: 'text',
+		          id:'id'
+		        },
                 tableData: [],
                 multipleSelection: [],//选中项
                 pageObj: {
@@ -60,14 +84,16 @@
 					pageSize: this.API.leansite.constObj.pageSize, //页大小
 				},
 				userDialogVisible:false,//是否显示用户信息弹框
+				deptId:'',//选中的部门id
 				searchText:'',//搜索字段
 				userObj:{},//添加和编辑时的用户信息
-				dialogTitle:'添加用户'
+				dialogTitle:'添加用户',
+				showDeptName:'显示选中的部门名称'
             }
         },
 
         created() {
-            this.getData();
+        	this.getDeptData();//获取部门数据
         },
         methods: {
 			/*
@@ -92,15 +118,96 @@
 					this.getData();
 				}
 			},
+			treeClick(nodeObj,nodes,nodeSelf){
+				this.deptId = nodeObj.id;
+				this.showDeptName = nodeObj.text;
+				this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
+				this.getData();
+			},
 			/**
-			 * 获取列表数据
+			 * 新增部门
+			 */
+			addDept(){
+				this.$prompt('请输入部门名称', '新增部门', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+		          inputErrorMessage: '邮箱格式不正确'
+		        }).then(({ value }) => {
+		          this.addDeptRequest({parentId:this.aDeptDatas.id,name:value.trim()});
+		        }).catch(() => {});
+			},
+			/**
+			 * 新增部门请求
+			 */
+			addDeptRequest(oDept){
+				this.$axios.leansite({
+					method: 'post',
+					url: this.API.leansite.addDept,
+					data:{
+						'parentId':oDept.parentId,
+						'deptName':oDept.name
+					}
+				}).then((res) => {
+					var resData = res.data;
+					if(resData.status == 200) {
+						this.getDeptData();//获取部门数据
+					} else {
+						this.$message({
+							type: 'error',
+							message: '添加部门失败，请重新添加！'
+						});
+					}
+				}).catch((err) => {
+					let res = err.response.data;
+					if(res.data == "部门名称重复录入"){
+						this.$message({
+							type: 'error',
+							message: '部门名称重复!'
+						});	
+					}
+					this.$message({
+						type: 'error',
+						message: '请求异常，请检查网络！'
+					});
+				})
+			},
+			/**
+			 * 获取部门数据
+			 */
+			getDeptData() {
+				this.$axios.leansite({
+					method: 'get',
+					url: this.API.leansite.getDepts,
+				}).then((res) => {
+					var resData = res.data;
+					if(resData.status == 200) {
+						this.aDeptDatas = resData.data.rows;
+						this.deptId = this.aDeptDatas.id;
+						this.showDeptName = this.aDeptDatas.text;
+						this.getData();
+					} else {
+						this.$message({
+							type: 'error',
+							message: '获取部门失败，请刷新重试！'
+						});
+					}
+				}).catch((err) => {
+					this.$message({
+						type: 'error',
+						message: '请求异常，请检查网络！'
+					});
+				})
+			},
+			/**
+			 * 根据部门id获取人员数据
 			 */
 			getData() {
 				this.$axios.leansite({
 					method: 'get',
-					url: this.API.leansite.userListByNameOrUserName,
+					url: this.API.leansite.getUserByDeptId,
 					params: {
-						'param':this.searchText,
+						'id':this.deptId,
+						'username':this.searchText,
 						'pageNum': this.pageObj.pageIndex,
 						'pageSize': this.pageObj.pageSize
 					}
@@ -219,7 +326,41 @@
              */
             handleSelectionChange(val) {
                 this.multipleSelection = val;
-            }
+            },
+            /**
+             * 新增部门
+             */
+			append(data) {
+				this.$prompt('请输入部门名称', '新增部门', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+		          inputErrorMessage: '邮箱格式不正确'
+		        }).then(({ value }) => {
+		          this.addDeptRequest({parentId:data.id,name:value.trim()});
+		        }).catch(() => {});
+		    },
+			/**
+			 * 删除部门
+			 */
+	        remove(node, data) {
+		        const parent = node.parent;
+		        const children = parent.data.children || parent.data;
+		        const index = children.findIndex(d => d.id === data.id);
+		        children.splice(index, 1);
+	        },
+			/**
+			 * tree添加功能
+			 */
+	      	renderContent(h, { node, data, store }) {
+		        return (
+		          <span class="custom-tree-node">
+		            <span style="display:inline-block;width:164px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{node.label}</span>
+		            <span>
+		              <el-button size="mini" type="text" on-click={ () => this.append(data) }>+</el-button>
+		              <el-button size="mini" type="text" on-click={ () => this.remove(node, data) }>-</el-button>
+		            </span>
+		          </span>);
+	      	}
         }
     }
 
@@ -228,6 +369,25 @@
 <style lang="scss" scoped type="text/css">
     .deptList {
 	    height: 100%;
+	    background-color: #eef1f7;
+	    .outAside{
+	    	height: 100%;
+	    	background-color: #eef1f7;
+	    	.el-tree{
+	    		height: 100%;
+	    		background-color: #eef1f7;	
+	    	}
+	    	
+	    }
+	    /deep/ .el-tree-node__content{
+	    	height: 33px !important;
+	    	line-height: 13px;
+	    	font-size: 14px;
+	    }
+	    /deep/ .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
+	    		background-color: #FFFFFF;
+	    		color: #3f78f6;
+	    	}
 	    .el-header {
 	        height: 60px;
 	        line-height: 60px;

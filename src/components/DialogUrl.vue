@@ -83,7 +83,7 @@
 		margin-top: 10vh!important;
 		height: 60vh;
 	}
-	
+
 	.no_select {
 		-webkit-touch-callout: none;
 		/* iOS Safari */
@@ -98,7 +98,7 @@
 		user-select: none;
 		/* Non-prefixed version, currently */
 	}
-	
+
 	.isminimize{
 		left: 80px;
     	bottom: -355px;
@@ -123,7 +123,7 @@
 			bottom: 0;
 		}
 	}
-	
+
 	.xhzqDialog{
 		min-height: 600px;
 		.is-fullscreen{

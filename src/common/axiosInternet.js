@@ -21,7 +21,7 @@ instanceInternet.interceptors.request.use(config => {
     if (aaa) { //拦截的请求
         let stateObj = window.vm.$store.state;
         let submitToken = stateObj.internetToken;
-        config.headers.leansiteToken = (submitToken);
+        config.headers['X-Authorization'] = submitToken;
         return config;
     } else {
         //清除登录信息并跳转到登录页面
