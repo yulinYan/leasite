@@ -57,7 +57,7 @@
 				systemMenuVisible:false,//是否显示状态栏系统菜单
 				thirdAppList:[],//桌面第三方应用
 				systemMenus:[//系统菜单项目
-					{ appName:'个人中心',appUrl:'',appIcon:require("../assets/img/yonghu.png")},
+//					{ appName:'个人中心',appUrl:'',appIcon:require("../assets/img/yonghu.png")},
 //					{ appName:'设置中心',appUrl:'/gerenzhongxin',appIcon:require("../assets/img/shezhi.png")},
 					{ appName:'退出系统',appUrl:'/logout',appIcon:require("../assets/img/tuichu.png")}
 				],
@@ -70,7 +70,7 @@
                     	isAuth:false//是否有权限
 					},
 					{ 
-						appName:'物联网中心',
+						appName:'物联网',
 						appUrl:'/internetPlatform',
 						appIcon:require("../assets/img/wulianwang.png"),
                     	powerName:'iot',
@@ -84,6 +84,7 @@
                     	isAuth:false//是否有权限
 					}
 				],
+				systemList:[],//系统应用
 				activeApps: [],//状态栏显示打开的app数组
 			}
 		},
@@ -101,8 +102,8 @@
         		return;
         	}else{
         		this.getData();
+        		this.getSystemData();
         	}
-        	this.menuPower();//左侧菜单权限
 		},
 		mounted(){
 		},
@@ -121,12 +122,49 @@
 	    				}
 	    			});
 	    		}
+	    		if(this.systemList.length >0){
+	    			this.systemList.forEach((item,index)=>{
+	    				this.systemModules.forEach((item2,index2)=>{
+	    					if(item.appName == item2.appName){
+		    					this.systemModules[index2].isAuth = true;	
+		    				}	
+	    				});
+	    			});
+	    		}
 	    	},
 			/**
 			 * 系统菜单失去焦点事件
 			 */
 			systemMenuBlur(){
 				this.systemMenuVisible = false;
+			},
+			/**
+			 * 获取系统应用列表数据
+			 */
+			getSystemData() {
+				this.$axios.leansite({
+					method: 'get',
+					url: this.API.leansite.getSysApp,
+					params: {
+						'roleNames':this.$store.state.roles.toString(),
+					}
+				}).then((res) => {
+					var resData = res.data;
+					if(resData.status == 200) {
+						this.systemList = resData.data;
+						this.menuPower();//左侧菜单权限
+					} else {
+						this.$message({
+							type: 'error',
+							message: '查询失败，请刷新重试！'
+						});
+					}
+				}).catch((err) => {
+					this.$message({
+						type: 'error',
+						message: '请求异常，请检查网络！'
+					});
+				})
 			},
 			/**
 			 * 获取应用列表数据

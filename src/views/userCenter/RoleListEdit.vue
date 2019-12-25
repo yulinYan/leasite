@@ -187,8 +187,10 @@
 			foreachMenu(childMenu){
 				let self = this;
             	childMenu.forEach(function(item,index){
-                    if( item.title=="获取应用入口列表" && item.checked){
-                        self.menuIds.push(item.id);
+                    if( item.title=="获取应用入口列表"){
+                    	if(item.checked){
+                    		self.menuIds.push(item.id);	
+                    	}
                         self.appParentId = item.id;
                 	}else if( self.appParentId == item.parentId && item.checked){
                         self.ApplicationEntry.push(item.id);

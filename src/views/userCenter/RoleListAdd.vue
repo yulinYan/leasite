@@ -12,7 +12,7 @@
 						<el-input v-model="roleForm.remark" minLength="2" maxLength="100" placeholder="请输入角色描述"></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :span="23">
+				<!--<el-col :span="23">
 					<el-form-item label="用户"  prop="userId">
 						<el-cascader
 							style="width: 100%;"
@@ -23,7 +23,7 @@
 					    @change="handleChange"
 					    filterable></el-cascader>
 					</el-form-item>
-				</el-col>
+				</el-col>-->
 			</el-row>
 		</el-form>
 		<div slot="footer" class="dialog-footer">
@@ -49,7 +49,7 @@
 					id:'',//角色id  编辑提交时使用
 					remark: '', //角色id
 					roleName:'',//角色名
-					userId:'',//用户id 以逗号分隔
+					//userId:'',//用户id 以逗号分隔
 				},
 				treeProps:{
 					value:'userId',
@@ -77,13 +77,14 @@
 							message: '请输入角色描述',
 							trigger: 'blur'
 						}
-					],
-					userId: [{
-							required: true,
-							message: '请选择用户',
-							trigger: 'change'
-						}
 					]
+//					,
+//					userId: [{
+//							required: true,
+//							message: '请选择用户',
+//							trigger: 'change'
+//						}
+//					]
 				}
 			}
 		},
@@ -96,7 +97,7 @@
 			}else{
 				this.pageType ='add';
 			}
-			this.getDeptAndUser();
+			//this.getDeptAndUser();
 		},
 		computed: {
 			
@@ -135,7 +136,7 @@
 					if(valid) {
 		                self.$axios.leansite({
 		            		method:'post',
-		                	url:self.API.leansite.addRoleAndUser, 
+		                	url:self.API.leansite.addRole, 
 		                	data:self.roleForm
 		                }).then((res) => {
 		                    var resData = res.data;

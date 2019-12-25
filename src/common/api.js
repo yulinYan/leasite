@@ -17,7 +17,7 @@ const interface_s = {
     updateUser:'user/update',//修改用户
 	roleListByRoleName:'role',//用户列表
 	deleteRoles:'role',//批量删除角色
-	addRoleAndUser:'role/addRoleAndUser',//新增角色并添加用户
+	addRole:'role',//新增角色
 	getDeptAndUser:'/dept/getListAndUser',//获取部门和用户
     getMenuByRoleId:"/menu",  //根据roleId获取角色权限
     saveMenuState:"/role/addRoleAndMenu",  //保存角色权限
@@ -27,6 +27,7 @@ const interface_s = {
     addDeptUsers: '/dept/addUser',//新增部门人员
     notGroupUser: '/dept/notGroupUser',//没有部门人员
     delDeptUser: '/dept/deleteUser',//删除部门人员
+    getSysApp: '/app/getSysApp',//获取系统应用
 	//常量对象
 	constObj: {
 		pageIndex:1,

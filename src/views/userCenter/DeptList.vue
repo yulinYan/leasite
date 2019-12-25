@@ -1,6 +1,6 @@
 <template>
     <el-container class="deptList">
-	  	<el-aside class="outAside" width="auto" style="padding-right: 10px;">
+	  	<el-aside class="outAside" width="auto">
 	  		<el-button type="text" v-if="hasPermission('dept:add')" icon="el-icon-plus" @click="addDept">新增集团</el-button>
 	  		<el-tree
 		      :data="aDeptDatas.children"
@@ -22,7 +22,7 @@
 				  	{{showDeptName}}
 				  </div>
 				  <div class="rightHeader">
-				  	<el-button type="text" v-if="hasPermission('dept:addUser')" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增人员</el-button><el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button><el-input
+				  	<el-button type="text" v-if="hasPermission('dept:addUser')" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增人员</el-button><el-button type="text" v-if="hasPermission('dept:deleteUser')" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button><el-input
 				  		style="width:200px;"
 				  		v-if="hasPermission('dept:deleteUser')"
 					   placeholder="输入用户名搜索"
@@ -395,11 +395,11 @@
 			 */
 	      	renderContent(h, { node, data, store }) {
 		        return (
-		          <span class="custom-tree-node">
-		            <span style="display:inline-block;width:164px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{node.label}</span>
+		          <span class="custom-tree-node" style="padding-right:10px;">
+		            <span style="display:inline-block;width:124px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{node.label}</span>
 		            <span>
-		              <el-button size="mini" v-if="hasPermission('dept:add')"  type="text" on-click={ () => this.append(data) }>+</el-button>
-		              <el-button size="mini" type="text" on-click={ () => this.remove(node, data) }>-</el-button>
+		              <el-button size="mini" v-if="hasPermission('dept:add')"  type="text" icon="el-icon-plus" on-click={ () => this.append(data) }></el-button>
+		              <el-button size="mini" v-if="hasPermission('dept:delete')"  type="text" icon="el-icon-delete"  on-click={ () => this.remove(node, data) }></el-button>
 		            </span>
 		          </span>);
 	      	}

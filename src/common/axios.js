@@ -26,8 +26,20 @@ const err = (error) => {
 	          	});
 	           //清除token信息并跳转到登录页面
 	           window.vm.commonFun.againLogin();
+        	}else{
+        		window.vm.$message({
+		            type: 'error',
+		            message: '用户名或密码不正确!'
+	          	});
         	}
         break;
+        case "您没有操作权限！":
+	    	window.vm.$message({
+	            type: 'error',
+	            message: '您没有操作权限！'
+          	});
+        break;
+        
     }
   }
   return Promise.reject(error)
