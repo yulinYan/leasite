@@ -2,17 +2,17 @@
 
 <template >
     <div class="box">
-        <div class="top"><div class="text">超级管理员</div></div>
+<!--        <div class="top"><div class="text">超级管理员</div></div>-->
         <div class="RoleListEdit" v-if="menuList.children">
             <!-- 表头-->
             <div class="model" >
                 <div style="width: 154px">模块1</div>
                 <div style="width: 154px">模块2</div>
-                <div style="width: 1154px">模块3</div>
+                <div style="width: calc(100% - 310px)">模块3</div>
             </div>
             <!--表身-->
             <div v-for="(item,index) in menuList.children" :key="item.title+index" class="models" >
-                <div class="model_1"  style="width: 154px">
+                <div class="model_1"  style="width: 154px;">
                     <el-checkbox class="model1_checkbox"    @change="model_1_selectAll(arguments,index)" v-model="item.checked"  >{{item.title}}</el-checkbox>
                 </div>
                 <!--                右边模块2 和模块3-->
@@ -23,7 +23,7 @@
                             <el-checkbox class="model2_checkbox"  v-model="item2.checked" @change="model_2_selectAll(item,index2)" >{{item2.title}}</el-checkbox>
                         </div>
                         <!--  模块3-->
-                        <div class="model_2_3" style="width: 1154px">
+                        <div class="model_2_3" style="width: calc(100% - 154px)">
                             <el-checkbox class="model3_checkbox"   @change="model_3_select(item,item2,index3)" v-model="item3.checked" v-for="(item3,index3) in item2.children"  :key="index3">{{item3.title}}</el-checkbox>
                         </div>
                     </div>
@@ -42,6 +42,10 @@
     export default {
         name: "RoleListEdut",
         props:{
+            // menuIds:{
+            //     type:Object,
+            //     required:true
+            // },
             roleObj:{
                 type:Object,
                 required:true
@@ -50,8 +54,9 @@
         data() {
             return{
                 "menuList": null,
-                "menuIds":[],
-                "ApplicationEntry":[]
+                "ApplicationEntry":[],
+                "centerDialogVisible":true,
+                "menuIds":[]
             }
         },
 
@@ -109,7 +114,10 @@
             /**
              * 二级单选改变状态
              */
-            getData() {
+            /**
+             * 获取角色权限列表数据
+             */
+            getAuthData() {
                 this.$axios.leansite({
                     method: 'get',
                     url: this.API.leansite.getMenuByRoleId,
@@ -149,7 +157,10 @@
                 }).then((res) => {
                     var resData = res.data;
                     if (resData.status == 200) {
-                        alert("保存成功");
+                        this.$message({
+                            type: 'success',
+                            message: '权限编辑成功！'
+                        });
 
                     } else {
                         this.$message({
@@ -163,7 +174,7 @@
                         message: '请求异常，请检查网络！'
                     });
                 })
-                centerDialogVisible = false;
+
                 this.$emit("RoleAuthCallBack",false);
             },
 
@@ -189,25 +200,28 @@
                                     if(children3.checked==true){
                                         if(this.menuIds.indexOf(children3.id)==-1){
                                             this.menuIds.push(children3.id);
-                                            console.log(this.menuIds)
+
                                         }
                                     }
                                 })
                             };
-                            if(children2.title=="应用入口列表"){
-                                if(this.ApplicationEntry.indexOf(children2.id)==-1){
-                                    this.ApplicationEntry.push(children2.id);
-                                };
+                            // 获取应用入口所对应的id
+                            if(children2.title=="获取应用入口列表"){
+                                // if(this.ApplicationEntry.indexOf(children2.id)==-1){
+                                //     this.ApplicationEntry.push(children2.id);
+                                // };
                                 if(children2.children){
                                     children2.children.forEach((children3)=>{
                                         if(children3.checked==true){
                                             if(this.ApplicationEntry.indexOf(children3.id)==-1){
                                                 this.ApplicationEntry.push(children3.id);
-                                                console.log(this.ApplicationEntry)
+                                                    console.log(this.ApplicationEntry)
                                             }
                                         }
                                     })
                                 }
+                            }else{
+                                return this.ApplicationEntry;
                             }
                         })
 
@@ -226,9 +240,11 @@
             },
         },
         created() {
-            this.getData();
-            this.model_1_selectAll(args,index);
+            this.getAuthData();
         },
+        beforeMount() {
+            this.model_1_selectAll(args,index);
+        }
     };
 </script>
 <style lang="scss" scoped type="text/css">
@@ -236,9 +252,12 @@
     .box{
         /*min-width: 1462px;*/
         /*height: 90%;*/
-        background-color: #ffffff;
-        border-radius: 8px;
 
+        background-color: #ffffff;
+        border-radius: 8px!important;
+        margin-top:-30px;
+        padding:0;
+        overflow:hidden;
     .top{
         height:59px;
         border-bottom:solid 2px #d9e3f3 ;
@@ -254,52 +273,88 @@
         background-color: #ffffff;
         margin: 16px auto;
         border:solid 1px #d2d5dc;
+        border-radius: 8px!important;
+        overflow:hidden;
     .model{
-
         display: flex;
         align-items: center;
     div{
-
         text-align: center;
-        border-right: 1px solid #d2d5d4;
-        border-bottom: 1px solid #d2d5d4;
+        border-right: 1px solid #d2d5dc;
+        border-bottom: 1px solid #d2d5dc;
+        height: 40px;
+        line-height: 40px;
+        font-size: 16px;
+        color: #101010;
     }
     }
     .models{
-
+        height: 100%;
         display: flex;
         align-items: center;
-        /*border-bottom:1px solid #d2d5d4;*/
+        border-bottom:1px solid #d2d5dc;
+
     div{
-        /*border-right: 1px solid #d2d5d4;*/
+        border-right: 1px solid #d2d5dc;
+        border-left: 1px solid #d2d5dc;
         text-align: center;
+        width: calc(100% - 154px);
+
+    }
+    .model_1{
+        border-right: none!important;
     }
     .model_2{
         display: flex;
         align-items: center;
         border-bottom: 1px solid #d2d5d4;
-        border-left: 1px solid #d2d5d4;
+        border-left: 1px solid #d2d5dc;
+        width: 100%;
+    .el-checkbox{
+        margin: 10px 30px 0;
+    }
+    }
+    .model_2_2{
+        display: flex;
+        justify-content: left;
     }
     .model_2_3{
         display: flex;
         flex-wrap: wrap;
         justify-content: left;
         text-align: center;
-    .el-checkbox__label{
-        margin-left: 80px;
-        margin-top: 10px;
-        text-align: left;
+        border-left:1px solid #d2d5dc;
+        .el-checkbox{
+            margin: 10px 30px 0;
+        }
+        .el-checkbox__label{
+            margin-top: 10px;
+            text-align: left;
+        }
     }
+    .el-checkbox__inner{
+        float: left;
     }
     /deep/ .el-checkbox__label{
-        width: 85px;
+        max-width: 85px;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
         float: right;
-        margin-top: 4px;
+        font-size: 14px;
+        color: #303030;
+        margin-top: -1px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+
     }
     }
+    }
+    .btn{
+        width: 200px;
+        margin: 0 auto;
+        text-align: center;
+        .btn:first-Child{
+             background-color: #c4d4e7;
+         }
     }
     }
 

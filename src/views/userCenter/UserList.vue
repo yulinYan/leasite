@@ -323,10 +323,6 @@
 	    .el-table{
 	    	color: #303030;
 	    	font-size: 14px;
-	    	.warning-row{
-	    		background: #f2f4f6;
-	    	}
-
 		    .edit{
 		    	border: solid 1px #68c161;
 		    	color: #6ecd8b;
