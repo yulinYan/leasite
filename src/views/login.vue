@@ -98,9 +98,7 @@
              */
             login(loginObj){
             	let self = this;
-            	console.log(this.API.leansite.login)
 				this.$axios.leansite({
-
 					url: this.API.leansite.login,//不需要再添加ip和端口
 					method: 'post',//提交方式：get和post，同 params 和 data配合使用
 					data: {
