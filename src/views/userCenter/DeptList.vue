@@ -1,7 +1,7 @@
 <template>
     <el-container class="deptList">
 	  	<el-aside class="outAside" width="241px">
-	  		<el-button type="text" icon="el-icon-plus" @click="addDept">新增集团</el-button>
+	  		<el-button type="text" v-if="hasPermission('dept:add')" icon="el-icon-plus" @click="addDept">新增集团</el-button>
 	  		<el-tree
 		      :data="aDeptDatas.children"
 		      node-key="id"
@@ -22,8 +22,9 @@
 				  	<span>{{showDeptName}}</span>
 				  </el-col>
 				  <el-col :span="16" class="rightHeader">
-				  	<el-button type="text" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增人员</el-button><el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button><el-input
+				  	<el-button type="text" v-if="hasPermission('/dept/addUser')" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增人员</el-button><el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button><el-input
 				  		style="width:200px;"
+				  		v-if="hasPermission('/dept/deleteUser')"
 					   placeholder="输入姓名搜索"
 					   suffix-icon="el-icon-search"
 					   v-model="searchText"
@@ -44,7 +45,7 @@
 	                <el-table-column label="操作" width="160" align="center">
 	                    <template slot-scope="scope">
 	                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-	                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+	                        <el-button type="text" v-if="hasPermission('/dept/deleteUser')" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
 	                    </template>
 	                </el-table-column>
 	            </el-table>
@@ -356,7 +357,7 @@
 		          <span class="custom-tree-node">
 		            <span style="display:inline-block;width:164px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{node.label}</span>
 		            <span>
-		              <el-button size="mini" type="text" on-click={ () => this.append(data) }>+</el-button>
+		              <el-button size="mini" v-if="hasPermission('dept:add')"  type="text" on-click={ () => this.append(data) }>+</el-button>
 		              <el-button size="mini" type="text" on-click={ () => this.remove(node, data) }>-</el-button>
 		            </span>
 		          </span>);

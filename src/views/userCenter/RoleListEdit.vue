@@ -40,12 +40,8 @@
 
 <script>
     export default {
-        name: "RoleListEdut",
+        name: "RoleListEdut",//编辑角色权限
         props:{
-            // menuIds:{
-            //     type:Object,
-            //     required:true
-            // },
             roleObj:{
                 type:Object,
                 required:true
@@ -56,7 +52,8 @@
                 "menuList": null,
                 "ApplicationEntry":[],
                 "centerDialogVisible":true,
-                "menuIds":[]
+                "menuIds":[],
+                "appParentId":''//获取应用入口列表的id
             }
         },
 
@@ -145,7 +142,10 @@
              * 保存所选状态
              */
             save(){
-                this.getMenusId();
+                this.menuIds = [];
+            	this.ApplicationEntry = [];
+            	this.appParentId = '';
+            	this.foreachMenu(this.menuList.children);
                 this.$axios.leansite({
                     method: 'POST',
                     url: this.API.leansite.saveMenuState,
@@ -177,57 +177,24 @@
 
                 this.$emit("RoleAuthCallBack",false);
             },
-
-            /**
+ 			/**
              * 获取所有被选中的权限的id
              */
-            getMenusId(){
-                this.menuList.children.forEach((children1)=>{
-                    if(children1.checked==true){
-                        if(this.menuIds.indexOf(children1.id)==-1){
-                            this.menuIds.push(children1.id);
-                        }
-                };
-                    if(children1.children){
-                        children1.children.forEach((children2)=>{
-                            if(children2.checked==true){
-                                if(this.menuIds.indexOf(children2.id)==-1){
-                                    this.menuIds.push(children2.id);
-                                }
-                            };
-                            if(children2.children){
-                                children2.children.forEach((children3)=>{
-                                    if(children3.checked==true){
-                                        if(this.menuIds.indexOf(children3.id)==-1){
-                                            this.menuIds.push(children3.id);
-
-                                        }
-                                    }
-                                })
-                            };
-                            // 获取应用入口所对应的id
-                            if(children2.title=="获取应用入口列表"){
-                                // if(this.ApplicationEntry.indexOf(children2.id)==-1){
-                                //     this.ApplicationEntry.push(children2.id);
-                                // };
-                                if(children2.children){
-                                    children2.children.forEach((children3)=>{
-                                        if(children3.checked==true){
-                                            if(this.ApplicationEntry.indexOf(children3.id)==-1){
-                                                this.ApplicationEntry.push(children3.id);
-                                                    console.log(this.ApplicationEntry)
-                                            }
-                                        }
-                                    })
-                                }
-                            }else{
-                                return this.ApplicationEntry;
-                            }
-                        })
-
-                    }
+			foreachMenu(childMenu){
+				let self = this;
+            	childMenu.forEach(function(item,index){
+                    if( item.title=="获取应用入口列表" && item.checked){
+                        self.menuIds.push(item.id);
+                        self.appParentId = item.id;
+                	}else if( self.appParentId == item.parentId && item.checked){
+                        self.ApplicationEntry.push(item.id);
+                	}else if( item.title!="获取应用入口列表" && item.checked){
+                        self.menuIds.push(item.id);
+                	}
+                	if(item.children && item.children.length > 0){
+                		self.foreachMenu(item.children);
+                	}
                 })
-
             },
             /**
              * 取消
