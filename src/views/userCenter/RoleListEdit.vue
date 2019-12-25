@@ -6,24 +6,24 @@
         <div class="RoleListEdit" v-if="menuList.children">
             <!-- 表头-->
             <div class="model" >
-                <div style="width: 154px">模块1</div>
-                <div style="width: 154px">模块2</div>
+                <div style="width: 157px">模块1</div>
+                <div style="width: 175px">模块2</div>
                 <div style="width: calc(100% - 310px)">模块3</div>
             </div>
             <!--表身-->
-            <div v-for="(item,index) in menuList.children" :key="item.title+index" class="models" >
+            <div v-for="(item,index) in menuList.children" :key="index" class="models" >
                 <div class="model_1"  style="width: 154px;">
-                    <el-checkbox class="model1_checkbox"    @change="model_1_selectAll(arguments,index)" v-model="item.checked"  >{{item.title}}</el-checkbox>
+                    <el-checkbox class="model1_checkbox"    @change="model_1_selectAll(index)" v-model="item.checked"  >{{item.title}}</el-checkbox>
                 </div>
                 <!--                右边模块2 和模块3-->
-                <div>
+                <div v-if="item.children">
                     <div class="model_2"  v-for="(item2,index2) in item.children" :key="index2">
                         <!--   模块2-->
-                        <div class="model_2_2" style="width: 154px">
+                        <div class="model_2_2" style="width: 175px">
                             <el-checkbox class="model2_checkbox"  v-model="item2.checked" @change="model_2_selectAll(item,index2)" >{{item2.title}}</el-checkbox>
                         </div>
                         <!--  模块3-->
-                        <div class="model_2_3" style="width: calc(100% - 154px)">
+                        <div class="model_2_3" style="width: calc(100% - 154px)" v-if="item2.children">
                             <el-checkbox class="model3_checkbox"   @change="model_3_select(item,item2,index3)" v-model="item3.checked" v-for="(item3,index3) in item2.children"  :key="index3">{{item3.title}}</el-checkbox>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
         </div>
         <!--按钮-->
         <div class="btn">
-            <el-button @click="cancelOpt" >取消</el-button>
+            <el-button class="cancelBtn" @click="cancelOpt" >取消</el-button>
             <el-button type="primary" @click="save">保存</el-button>
         </div>
     </div>
@@ -64,19 +64,19 @@
             /**
              * 一级全选
              */
-            model_1_selectAll(args,index){
-                args=args;
+            model_1_selectAll(index){
                 let checked = this.menuList.children[index].checked;
                 // console.log(checked);
-
-                this.menuList.children[index].children.forEach((children)=>{
-                    children.checked = checked;
-                    if(children.children){
-                        children.children.forEach((children2)=>{
-                            children2.checked = checked;
-                        })
-                    }
-                })
+                if(this.menuList.children){
+                    this.menuList.children[index].children.forEach((children)=>{
+                        children.checked = checked;
+                        if(children.children){
+                            children.children.forEach((children2)=>{
+                                children2.checked = checked;
+                            })
+                        }
+                    })
+                }
                 this.model_2_selectAll(item,index2)
                 this.model_3_select(item,item2,index3)
             },
@@ -101,14 +101,17 @@
              * 单选改变状态
              */
             model_3_select(item,item2,index3){
-                let checked = item2.children.every((model3)=>{
-                    return model3.checked==true
-                })
+                if(item2.children){
+                    let checked = item2.children.every((model3)=>{
+                        return model3.checked==true
+                    })
+                }
                 item2.checked = checked;
-
+                if(item.children){
                 let one_checked = item.children.every((model2)=>{
                     return model2.checked==true;
                 })
+                }
                 item.checked = one_checked;
             },
             /**
@@ -236,15 +239,12 @@
                 // this.resetForm();//重置表单
                 // //调用父组件方法--isRefresh=false不需要刷新父组件的数据
                 this.$emit("RoleAuthCallBack",false);
-                centerDialogVisible = false;
+                // centerDialogVisible = false;
             },
         },
         created() {
             this.getAuthData();
         },
-        beforeMount() {
-            this.model_1_selectAll(args,index);
-        }
     };
 </script>
 <style lang="scss" scoped type="text/css">
@@ -269,10 +269,9 @@
     }
     }
     .RoleListEdit{
-
         background-color: #ffffff;
         margin: 16px auto;
-        border:solid 1px #d2d5dc;
+        border:solid 2px #d2d5dc;
         border-radius: 8px!important;
         overflow:hidden;
     .model{
@@ -281,7 +280,7 @@
     div{
         text-align: center;
         border-right: 1px solid #d2d5dc;
-        border-bottom: 1px solid #d2d5dc;
+        border-bottom: 2px solid #d2d5dc;
         height: 40px;
         line-height: 40px;
         font-size: 16px;
@@ -293,16 +292,18 @@
         display: flex;
         align-items: center;
         border-bottom:1px solid #d2d5dc;
-
     div{
-        border-right: 1px solid #d2d5dc;
-        border-left: 1px solid #d2d5dc;
+        /*border-right: 1px solid #d2d5dc;*/
+        /*border-left: 1px solid #d2d5dc;*/
+
         text-align: center;
         width: calc(100% - 154px);
-
     }
     .model_1{
         border-right: none!important;
+    .el-checkbox{
+        padding: 10px ;
+    }
     }
     .model_2{
         display: flex;
@@ -311,7 +312,7 @@
         border-left: 1px solid #d2d5dc;
         width: 100%;
     .el-checkbox{
-        margin: 10px 30px 0;
+        margin: 10px 30px 10px;
     }
     }
     .model_2_2{
@@ -326,6 +327,19 @@
         border-left:1px solid #d2d5dc;
         .el-checkbox{
             margin: 10px 30px 0;
+            padding:  0 0 10px;
+
+            .el-checkbox__label{
+                margin-top: 10px;
+                margin: 0;
+                padding: 0;
+                float: right;
+            }
+            .el-checkbox__inner{
+                float: left;
+                margin: 0;
+                padding: 0;
+            }
         }
         .el-checkbox__label{
             margin-top: 10px;
@@ -344,7 +358,6 @@
         margin-top: -1px;
         text-overflow: ellipsis;
         overflow: hidden;
-
     }
     }
     }
@@ -352,8 +365,9 @@
         width: 200px;
         margin: 0 auto;
         text-align: center;
-        .btn:first-Child{
-             background-color: #c4d4e7;
+        .cancelBtn{
+             background-color: #c4d4e7!important;
+            margin-right: 20px;
          }
     }
     }

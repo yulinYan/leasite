@@ -39,7 +39,7 @@
        		<!-- 新增/编辑弹出框 -->
             <RoleListAdd :roleObj="roleObj" @RoleCallBack="RoleCallBack" ></RoleListAdd>
        	</el-dialog>
-        <el-dialog class="outRoleAuthDialog" key="roleAuthDialog" :title='dialogAuthTitle'  v-if="roleAuthDialogVisible" :visible.sync="roleAuthDialogVisible"  width="1200px" height="730px" append-to-body  :close-on-click-modal="false" :show-close="false">
+        <el-dialog class="outRoleAuthDialog" key="roleAuthDialog" :title='dialogAuthTitle'  v-if="roleAuthDialogVisible" :visible.sync="roleAuthDialogVisible"  width="85%" height="730px" append-to-body  :close-on-click-modal="false" :show-close="false">
             <!--编辑权限-->
             <RoleListEdit :roleObj="roleObj"  @RoleAuthCallBack="RoleAuthCallBack"></RoleListEdit>
         </el-dialog>
