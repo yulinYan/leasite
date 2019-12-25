@@ -364,29 +364,31 @@
 			 * 删除部门
 			 */
 	        remove(node, data) {
-		        // const parent = node.parent;
-		        // const children = parent.data.children || parent.data;
-		        // const index = children.findIndex(d => d.id === data.id);
-                // children.splice(index, 1);
-                this.$axios.leansite({
-					method: 'delete',
-					url: this.API.leansite.addDept+'/'+data.id,
-				}).then((res) => {
-					var resData = res.data;
-					if(resData.status == 200) {
-						this.getDeptData();
-					} else {
+            	this.$confirm('确定删除选中的部门', '提示', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+		          type: 'warning'
+		        }).then(() => {
+	                this.$axios.leansite({
+						method: 'delete',
+						url: this.API.leansite.addDept+'/'+data.id,
+					}).then((res) => {
+						var resData = res.data;
+						if(resData.status == 200) {
+							this.getDeptData();
+						} else {
+							this.$message({
+								type: 'error',
+								message: '删除失败！'
+							});
+						}
+					}).catch((err) => {
 						this.$message({
 							type: 'error',
-							message: '删除失败！'
+							message: '请求异常，请检查网络！'
 						});
-					}
-				}).catch((err) => {
-					this.$message({
-						type: 'error',
-						message: '请求异常，请检查网络！'
-					});
-				})
+					})
+				}).catch(() => {});
 	        },
 			/**
 			 * tree添加功能
