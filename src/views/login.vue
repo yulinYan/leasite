@@ -4,10 +4,10 @@
         	<img src="../assets/img/logo.png" alt="logo" />
 			<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
 				<el-form-item label="" prop="usersName" >
-					<el-input prefix-icon="iconfont leansite-user" v-model="ruleForm.usersName" id="name" placeholder="用户名/邮箱"></el-input>
+					<el-input prefix-icon="iconfont leansite-user" v-model="ruleForm.usersName" id="name" placeholder="输入用户名"></el-input>
 				</el-form-item>
 				<el-form-item label="" prop="loginPassword">
-					<el-input prefix-icon="iconfont leansite-mima" v-model="ruleForm.loginPassword" type="password" placeholder="密码"></el-input>
+					<el-input prefix-icon="iconfont leansite-mima" v-model="ruleForm.loginPassword" type="password" placeholder="输入密码" show-password></el-input>
 				</el-form-item>
 				<el-form-item label="" prop="type">
 					<el-checkbox v-model="ruleForm.autoLogin">自动登录</el-checkbox>
@@ -119,9 +119,9 @@
 						this.$store.commit('saveStoreByName',{name:this.API.leansite.constObj.operationAuthority,storeName:'operationAuthority',storeInfo:resData.data.permissions});
 						this.$store.commit('saveStoreByName',{name:this.API.leansite.constObj.roles,storeName:'roles',storeInfo:resData.data.roles});
 						if (self.$route.query.redirect) {
-						  	self.$router.push(self.$route.query.redirect);  // 登录过期重新登录
+						  	self.$router.push(self.$route.query.redirect).go(0);  // 登录过期重新登录
 						} else {
-						  	self.$router.push({name:'index'});  // 正常登录
+						  	self.$router.push({name:'index'}); // 正常登录
 						}
 					}else{
 						self.$alert(resData.message);	
@@ -181,6 +181,9 @@
 				    }
 		        }
 	        }
+        }
+        /deep/ .el-input__prefix{
+        	left: 9px;
         }
     }
 </style>

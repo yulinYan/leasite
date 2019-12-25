@@ -45,8 +45,8 @@ export default {
                 Authorization: '', //接口令牌
             },
             activeName: '信息总览', //当前侧边栏
-            //侧边栏
-            asideList: [{
+            //原始侧边栏菜单
+            oldAsideList: [{
                     icon: [require('../../assets/img/internetPlatform/shouye1.png'), require('../../assets/img/internetPlatform/shouye2.png')],
                     name: '信息总览',
                     com: 'Overview',
@@ -64,10 +64,11 @@ export default {
                     isactive: false
                 },
             ],
+            asideList:[],//显示的菜单列表
         }
     },
     created() {
-        console.log(process.env.NODE_ENV)
+       
     },
     mounted() {
         this.loginCheck()

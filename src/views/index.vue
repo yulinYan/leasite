@@ -58,12 +58,12 @@
 				systemMenus:[//系统菜单项目
 					{ appName:'个人中心',appUrl:'/gerenzhongxin',appIcon:require("../assets/img/yonghu.png")},
 //					{ appName:'设置中心',appUrl:'/gerenzhongxin',appIcon:require("../assets/img/shezhi.png")},
-					{ appName:'退出系统',appUrl:'/logout',appIcon:require("../assets/img/tuichu.png")},
+					{ appName:'退出系统',appUrl:'/logout',appIcon:require("../assets/img/tuichu.png")}
 				],
 				systemModules:[//系统功能模块
 					{ appName:'用户中心',appUrl:'/userCenterHome',appIcon:require("../assets/img/yonghuzhongxin.png")},
 					{ appName:'物联网中心',appUrl:'/internetPlatform',appIcon:require("../assets/img/wulianwang.png")},
-					{ appName:'运维中心',appUrl:this.API.appPlatform.baseURL,appIcon:require("../assets/img/yunweizhongxin.png")},
+					{ appName:'运维中心',appUrl:this.API.appPlatform.baseURL,appIcon:require("../assets/img/yunweizhongxin.png")}
 				],
 				activeApps: [],//状态栏显示打开的app数组
 			}
@@ -80,7 +80,6 @@
         	}
 		},
 		mounted(){
-
 		},
 		methods: {
 			/**
@@ -261,11 +260,8 @@
              */
             logoutRequest(){
 				this.$axios.leansite({
-					method: 'delete',
-					url: this.API.leansite.logout,
-					params: {
-						'id':this.$store.state.user.userId
-					}
+					method: 'get',
+					url: this.API.leansite.logout+"/id="+this.$store.state.user.userId,
 				}).then((res) => {
 					var resData = res.data;
 					this.commonFun.againLogin();
@@ -330,16 +326,17 @@
 
 				.leftMenus{
 					display: inline-block;
-				    /*height: 95%;*/
-
-				    padding-top: 5%;
-				    width: 16.76%;
+				    width: 17.4%;
+				    height: 96%;
+				    padding: 5% 0 0;
 				    text-align: center;
 				    cursor: pointer;
 				    position: absolute;
-				    bottom: 5%;
+				    bottom: 0;
+				    overflow-y: auto;
 				    li{
-				    	height: 42px;
+				    	height: 51px;
+    					line-height: 51px;
 				    }
 				    li:hover{
 				    	background-color: #4c5363;
@@ -347,16 +344,19 @@
 				}
 				.rightMenus{
 					display: inline-block;
-					cursor: pointer;
-				    height: 95%;
-				    padding-top: 5%;
-				    width: 81.5%;
+				    cursor: pointer;
+				    height: 91%;
+				    padding: 5% 0;
+				    width: 82.6%;
 				    text-align: left;
 				    border-left: 1px solid #4c5363;
+				    border-bottom: 1px solid #4c5363;
 				    float: right;
+				    overflow-y: auto;
 				    li{
 				    	padding-left: 8.5%;
 				    	height: 42px;
+				    	line-height: 42px;
 				    	span{
 				    		margin-left: 10px;
 				    		color: #ffffff;
@@ -373,6 +373,7 @@
 			    padding: 10px 15px;
 			    cursor: pointer;
 			    margin-right: 10px;
+			    background-color: #202020;
 			}
 			img.menuLogo:hover{
 				background-color: #202020;
@@ -388,6 +389,7 @@
 			.el-tooltip{
 				cursor: pointer;
 				margin: 0 5px;
+				padding: 0 8px;
 				height: 45px;
 				border: none;
 				border-bottom: 3px solid #a0a9b5;

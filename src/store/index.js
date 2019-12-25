@@ -22,6 +22,7 @@ let store = new Vuex.Store({
 				state[i] = '';
 			}
 			sessionStorage.clear();
+			localStorage.clear();
 		},
 		/**
 		 * 批量移除存储的信息--推荐使用

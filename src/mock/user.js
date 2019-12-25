@@ -44,7 +44,7 @@ export default {
 			});
 		});
 		//退出系统
-		mock.onDelete('kickout').reply(config => {
+		mock.onGet('logout').reply(config => {
 			let {
 				id
 			} = config.params;

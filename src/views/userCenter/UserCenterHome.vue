@@ -6,23 +6,13 @@
     </el-header>
     <el-container class="platformContainer">
         <el-tabs type="border-card" tab-position="left" :before-leave="beforeLeave">
-            <el-tab-pane>
+            <el-tab-pane v-for="(aside,index) in asideList" :key="aside.name+index">
                 <span slot="label">
-				    	<img :src="activeIndex == 0 ? asideList[0].icon[1] : asideList[0].icon[0]" alt="菜单图标">{{asideList[0].name}}
+				    	<img :src="activeIndex == index ? aside.icon[1] : aside.icon[0]" alt="菜单图标">{{aside.name}}
 				    </span>
-                <el-row>
+                <el-row v-if="activeIndex == index">
                     <el-col :span="24">
-                        <UserList></UserList>
-                    </el-col>
-                </el-row>
-            </el-tab-pane>
-            <el-tab-pane>
-                <span slot="label">
-				    	<img :src="activeIndex == 1 ? asideList[1].icon[1] : asideList[1].icon[0]" alt="菜单图标">{{asideList[1].name}}
-				    </span>
-                <el-row>
-                    <el-col :span="24">
-                        <RoleList></RoleList>
+                        <currMenu :key="aside.name+index"></currMenu>
                     </el-col>
                 </el-row>
             </el-tab-pane>
@@ -33,8 +23,6 @@
 
 <script>
 import Vue from 'vue'
-import UserList from '../../views/userCenter/UserList.vue';
-import RoleList from '../../views/userCenter/RoleList.vue';
 export default {
     name: 'UserCenterHome', //用户中心首页
     props: {
@@ -48,43 +36,46 @@ export default {
         }
     },
     components: {
-        UserList, //用户列表
-        RoleList //角色列表
+
     },
     data() {
         return {
-            //侧边栏
-            asideList: [{
+            oldAsideList: [//原始侧边栏菜单
+            	{
                     icon: [
                         require('../../assets/img/userCenter/yonghu1.png'),
                         require('../../assets/img/userCenter/yonghu2.png')
                     ],
                     name: '用户管理',
-                    links: '/userList'
-                }, {
+                    links: '/userList',
+                    powerName:'user:view',
+                }, 
+                {
                     icon: [
                         require('../../assets/img/userCenter/quanxianguanli1.png'),
                         require('../../assets/img/userCenter/quanxianguanli2.png')
                     ],
                     name: '权限管理',
                     links: '/roleList',
-                    isShow: false
+                    powerName:'role:view'
+                }, 
+                {
+                    icon: [
+                    	require('../../assets/img/userCenter/zuzhijiagou1.png'),
+                    	require('../../assets/img/userCenter/zuzhijiagou2.png')
+                    ],
+                    name: '组织架构',
+                    links: '/deptList',
+                    powerName:'dept:view'
                 }
-                //          , {
-                //              icon: [
-                //              	require('../../assets/img/userCenter/zuzhijiagou1.png'),
-                //              	require('../../assets/img/userCenter/zuzhijiagou2.png')
-                //              ],
-                //              name: '组织架构',
-                //              link: 'Overview'
-                //          }
             ],
-            //点击当前元素的index
-            activeIndex: 0
+            asideList:[],//显示的菜单列表
+            activeIndex: 0//点击当前元素的index
         }
     },
     created() {
-
+    	this.menuPower();//左侧菜单权限
+		this.loadComponent(this.asideList[0].links);//加载组件
     },
     mounted() {
 
@@ -93,6 +84,25 @@ export default {
 
     },
     methods: {
+    	/**
+    	 * 左侧菜单权限
+    	 */
+    	menuPower(){
+    		var self = this;
+    		let powerList = this.$store.state.operationAuthority;
+    		if(powerList.length > 0){
+    			let newList = [];
+    			self.oldAsideList.forEach(function(item,index){
+    				let bMenuExist = self.hasPermission(item.powerName);
+    				if(bMenuExist){
+    					newList.push(item);
+    				}
+    			});
+    			self.asideList = newList;
+    		}else{
+    			self.asideList = newList;
+    		}
+    	},
         /**
          * 点击侧边栏
          */
@@ -107,7 +117,7 @@ export default {
          */
         beforeLeave(activeName, oldActiveName) {
             this.activeIndex = activeName * 1;
-
+			this.loadComponent(this.asideList[this.activeIndex].links);//加载组件
         },
         /**
          * 点击弹出组件
@@ -139,7 +149,21 @@ export default {
             }).catch(function(err) {
                 console.log("连接错误" + err);
             })
-        }
+        },
+        /**
+         * 加载组件
+         */
+		loadComponent(componentPath) {
+			let routers = this.$router.options.routes;
+			let currComponent = '';
+			for(let i=0;i<routers.length;i++){
+				if(componentPath == routers[i].path){
+					currComponent = routers[i].component;
+					break;
+				}
+			}
+			Vue.component('currMenu',currComponent);
+		}
     }
 }
 </script>

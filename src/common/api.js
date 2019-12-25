@@ -3,11 +3,11 @@ import axios from 'axios'
  * Leansite Paas平台和用户中心接口api
  */
 const interface_s = {
-	baseURL: 'http://192.168.2.59:9527/',//非生产环境
+	baseURL: 'http://192.168.2.41:9527/',//非生产环境
 	//prodBaseURL:window.configs.leansiteAPI,//生产环境
 	//登录模块
 	login: "login", //登录
-	logout:"kickout",//退出系统
+	logout:"logout",//退出系统
 	//公共模块
 	getThirdApp: 'app/getAll', //获取主页第三方应用菜单
 	//用户中心
@@ -19,6 +19,10 @@ const interface_s = {
 	deleteRoles:'role',//批量删除角色
 	addRoleAndUser:'role/addRoleAndUser',//新增角色并添加用户
 	getDeptAndUser:'/dept/getListAndUser',//获取部门和用户
+	getDepts:'/dept',//获取所有部门
+	addDept:'/dept',//新增部门
+	getUserByDeptId:'/dept/getUserByDeptId',//根据部门id获取用户
+	
 	//常量对象
 	constObj: {
 		pageIndex:1,
