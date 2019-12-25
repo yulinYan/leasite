@@ -22,10 +22,10 @@
 				  	{{showDeptName}}
 				  </div>
 				  <div class="rightHeader">
-				  	<el-button type="text" v-if="hasPermission('/dept/addUser')" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增人员</el-button><el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button><el-input
+				  	<el-button type="text" v-if="hasPermission('dept:addUser')" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增人员</el-button><el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button><el-input
 				  		style="width:200px;"
-				  		v-if="hasPermission('/dept/deleteUser')"
-					   placeholder="输入姓名搜索"
+				  		v-if="hasPermission('dept:deleteUser')"
+					   placeholder="输入用户名搜索"
 					   suffix-icon="el-icon-search"
 					   v-model="searchText"
 					   @keyup.enter.native="searchEnterFun">
@@ -44,7 +44,7 @@
 	                <el-table-column label="操作" width="160" align="center">
 	                    <template slot-scope="scope">
 	                        <!--<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
-	                        <el-button type="text" v-if="hasPermission('/dept/deleteUser')" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+	                        <el-button type="text" v-if="hasPermission('dept:deleteUser')" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
 	                    </template>
 	                </el-table-column>
 	            </el-table>
@@ -119,12 +119,10 @@
 				}
 			},
 			treeClick(nodeObj,nodes,nodeSelf){
-                if(!nodeObj.hasChildren){
-                    this.deptId = nodeObj.id;
-                    this.showDeptName = nodeObj.text;
-                    this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
-				    this.getData();
-                }
+                this.deptId = nodeObj.id;
+                this.showDeptName = nodeObj.text;
+                this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
+			    this.getData();
 			},
 			/**
 			 * 新增部门
