@@ -678,7 +678,7 @@ export default {
                 this.tableData = res.data.data;
                 this.dialogFormVisible = false;
                 this.$nextTick(() => {
-                    this.tableDataHeight = document.querySelector('.con').offsetHeight - 56;
+                    this.tableDataHeight = document.querySelector('.con').offsetHeight - 105;
                 })
             }).catch(function(err) {
                 console.log(err.response);
@@ -740,7 +740,7 @@ export default {
             return style;
         },
         resize() {
-            document.querySelector('.con') == null ? '' : this.tableDataHeight = document.querySelector('.con').offsetHeight - 56;
+            document.querySelector('.con') == null ? '' : this.tableDataHeight = document.querySelector('.con').offsetHeight - 105;
             document.querySelector('.con') == null ? '' : this.attrTableHeight = document.querySelector('.el-tabs').offsetHeight - 170;
         }
     }

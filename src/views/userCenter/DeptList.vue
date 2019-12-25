@@ -1,6 +1,6 @@
 <template>
     <el-container class="deptList">
-	  	<el-aside class="outAside" width="241px">
+	  	<el-aside class="outAside" width="auto" style="padding-right: 10px;">
 	  		<el-button type="text" v-if="hasPermission('dept:add')" icon="el-icon-plus" @click="addDept">新增集团</el-button>
 	  		<el-tree
 		      :data="aDeptDatas.children"
@@ -9,7 +9,7 @@
 		      default-expand-all
 		      highlight-current
 		      current-node-key="0"
-		      indent="10"
+		      :indent="10"
 		      @node-click="treeClick"
 		      :expand-on-click-node="false"
 		      :render-content="renderContent">
@@ -18,10 +18,10 @@
 	  	<el-container>
 	        <el-header>
 	            <el-row>
-				  <el-col :span="8" class="leftHeader">
-				  	<span>{{showDeptName}}</span>
-				  </el-col>
-				  <el-col :span="16" class="rightHeader">
+				  <div class="leftHeader" :title="showDeptName">
+				  	{{showDeptName}}
+				  </div>
+				  <div class="rightHeader">
 				  	<el-button type="text" v-if="hasPermission('/dept/addUser')" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增人员</el-button><el-button type="text" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button><el-input
 				  		style="width:200px;"
 				  		v-if="hasPermission('/dept/deleteUser')"
@@ -30,7 +30,7 @@
 					   v-model="searchText"
 					   @keyup.enter.native="searchEnterFun">
 					</el-input>
-				  </el-col>
+				  </div>
 				</el-row>
 	        </el-header>
 	        <div class="container">
@@ -41,10 +41,9 @@
 	                <el-table-column prop="roleName" label="角色名称" align="center" width="150"></el-table-column>
 	                <el-table-column prop="mobile" label="电话"  align="center" width="120"></el-table-column>
 	                <el-table-column prop="email" label="邮箱" align="center" min-width="200"></el-table-column>
-	                <el-table-column prop="lastLoginTime" label="最后登录时间" align="center" min-width="180" ></el-table-column>
 	                <el-table-column label="操作" width="160" align="center">
 	                    <template slot-scope="scope">
-	                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+	                        <!--<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
 	                        <el-button type="text" v-if="hasPermission('/dept/deleteUser')" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
 	                    </template>
 	                </el-table-column>
@@ -54,7 +53,7 @@
 	    </el-container>
 	    <el-dialog class="outDialog" key="userDialog"  :title='dialogTitle' :visible.sync="userDialogVisible" v-if="userDialogVisible" width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
 	   		<!-- 新增/编辑弹出框 -->
-	   		<UserListAddAndEdit :userObj="userObj" @UserCallBack="UserCallBack" ></UserListAddAndEdit>
+	   		<DeptListAddAndEdit :userObj="userObj" :deptId="deptId" @UserCallBack="UserCallBack" ></DeptListAddAndEdit>
 	   	</el-dialog>
 	</el-container>
 
@@ -62,12 +61,12 @@
 
 <script>
 	import Pagination from '../../components/Pagination.vue';
-	import UserListAddAndEdit from '../../views/userCenter/UserListAddAndEdit.vue';
+	import DeptListAddAndEdit from '../../views/userCenter/DeptListAddAndEdit.vue';
     export default {
         name: 'DeptList',//部门管理列表
         components: {
 			Pagination, //分页组件
-			UserListAddAndEdit//用户新增和编辑组件
+			DeptListAddAndEdit//用户新增和编辑组件
 		},
         data() {
             return {
@@ -120,10 +119,12 @@
 				}
 			},
 			treeClick(nodeObj,nodes,nodeSelf){
-				this.deptId = nodeObj.id;
-				this.showDeptName = nodeObj.text;
-				this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
-				this.getData();
+                if(!nodeObj.hasChildren){
+                    this.deptId = nodeObj.id;
+                    this.showDeptName = nodeObj.text;
+                    this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
+				    this.getData();
+                }
 			},
 			/**
 			 * 新增部门
@@ -131,8 +132,9 @@
 			addDept(){
 				this.$prompt('请输入部门名称', '新增部门', {
 		          confirmButtonText: '确定',
-		          cancelButtonText: '取消',
-		          inputErrorMessage: '邮箱格式不正确'
+                  cancelButtonText: '取消',
+                  inputPattern: /^[\S\n\s]{1,10}$/,
+		          inputErrorMessage: '请输入十位以内字符'
 		        }).then(({ value }) => {
 		          this.addDeptRequest({parentId:this.aDeptDatas.id,name:value.trim()});
 		        }).catch(() => {});
@@ -164,14 +166,28 @@
 						this.$message({
 							type: 'error',
 							message: '部门名称重复!'
-						});	
+						});
 					}
 					this.$message({
 						type: 'error',
 						message: '请求异常，请检查网络！'
 					});
 				})
-			},
+            },
+            //获取首个部门
+            getFirstDept(arr) {
+                for(let i = 0;i < arr.length;i++ ){
+                    if(arr[i].hasChildren){
+                        this.getFirstDept(arr[i].children);
+                        return;
+                    }else{
+                        this.deptId = arr[i].id;
+                        this.showDeptName = arr[i].text;
+                        this.getData();
+                        return;
+                    }
+                }
+            },
 			/**
 			 * 获取部门数据
 			 */
@@ -182,10 +198,14 @@
 				}).then((res) => {
 					var resData = res.data;
 					if(resData.status == 200) {
-						this.aDeptDatas = resData.data.rows;
-						this.deptId = this.aDeptDatas.id;
-						this.showDeptName = this.aDeptDatas.text;
-						this.getData();
+                        this.aDeptDatas = resData.data.rows;
+                        if(this.aDeptDatas.hasChildren){
+                            this.getFirstDept(this.aDeptDatas.children);
+                        }else{
+                            this.deptId = this.aDeptDatas.id;
+                            this.showDeptName = this.aDeptDatas.text;
+                            this.getData();
+                        }
 					} else {
 						this.$message({
 							type: 'error',
@@ -215,7 +235,7 @@
 				}).then((res) => {
 					var resData = res.data;
 					if(resData.status == 200) {
-						this.tableData = resData.data.rows;
+						this.tableData = resData.data.records;
 						this.pageObj.total = resData.data.total;
 					} else {
 						this.$message({
@@ -269,7 +289,7 @@
             	this.dialogTitle = "添加用户";
             	this.userObj = {};
                 this.userDialogVisible = true;
-                
+
             },
             /**
              * 用户编辑
@@ -296,9 +316,10 @@
              * 批量删除请求
              */
             deleteRequest(delUserText){
+                console.log(this.API.leansite.delDeptUser + '?deptId=' + this.deptId + '&userId=' + delUserText)
 				this.$axios.leansite({
-					method: 'delete',
-					url: this.API.leansite.deleteUsers+'/'+delUserText,
+					method: 'post',
+					url: this.API.leansite.delDeptUser + '?deptId=' + this.deptId + '&userId=' + delUserText,
 				}).then((res) => {
 					var resData = res.data;
 					if(resData.status == 200) {
@@ -335,7 +356,8 @@
 				this.$prompt('请输入部门名称', '新增部门', {
 		          confirmButtonText: '确定',
 		          cancelButtonText: '取消',
-		          inputErrorMessage: '邮箱格式不正确'
+                  inputPattern: /^[\S\n\s]{1,10}$/,
+		          inputErrorMessage: '请输入十位以内字符'
 		        }).then(({ value }) => {
 		          this.addDeptRequest({parentId:data.id,name:value.trim()});
 		        }).catch(() => {});
@@ -344,10 +366,29 @@
 			 * 删除部门
 			 */
 	        remove(node, data) {
-		        const parent = node.parent;
-		        const children = parent.data.children || parent.data;
-		        const index = children.findIndex(d => d.id === data.id);
-		        children.splice(index, 1);
+		        // const parent = node.parent;
+		        // const children = parent.data.children || parent.data;
+		        // const index = children.findIndex(d => d.id === data.id);
+                // children.splice(index, 1);
+                this.$axios.leansite({
+					method: 'delete',
+					url: this.API.leansite.addDept+'/'+data.id,
+				}).then((res) => {
+					var resData = res.data;
+					if(resData.status == 200) {
+						this.getDeptData();
+					} else {
+						this.$message({
+							type: 'error',
+							message: '删除失败！'
+						});
+					}
+				}).catch((err) => {
+					this.$message({
+						type: 'error',
+						message: '请求异常，请检查网络！'
+					});
+				})
 	        },
 			/**
 			 * tree添加功能
@@ -371,24 +412,33 @@
     .deptList {
 	    height: 100%;
 	    background-color: #eef1f7;
+        /deep/ .el-tree-node>.el-tree-node__children{
+            overflow: visible;
+        }
 	    .outAside{
 	    	height: 100%;
+            overflow: auto;
 	    	background-color: #eef1f7;
 	    	.el-tree{
 	    		height: 100%;
-	    		background-color: #eef1f7;	
+	    		background-color: #eef1f7;
 	    	}
-	    	
+
 	    }
 	    /deep/ .el-tree-node__content{
 	    	height: 33px !important;
-	    	line-height: 13px;
 	    	font-size: 14px;
 	    }
 	    /deep/ .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
 	    		background-color: #FFFFFF;
 	    		color: #3f78f6;
-	    	}
+	    }
+        /deep/ .custom-tree-node{
+            line-height: 12px;
+            span{
+                overflow: visible !important;
+            }
+        }
 	    .el-header {
 	        height: 60px;
 	        line-height: 60px;
@@ -396,25 +446,36 @@
 	        border-bottom: 1px solid #d9e3f3;
     		padding: 0 40px;
     		.leftHeader{
-    			span{
-    				font-size: 16px;
-    				color: #424956;
-    			}
+    			font-size: 16px;
+    			color: #424956;
+                width: calc(100% - 397px);
+                float: left;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                cursor: pointer;
     		}
-	        .el-col.rightHeader{
+	        .rightHeader{
+                float: right;
+                width: 397px;
 	        	text-align: right !important;
 	        	.addUser{
-	        		margin-right: 23px;
+	        		// margin-right: 23px;
 	        		font-size: 16px;
 	        		color: #2c5ac2;
+                    float: left;
+                    height: 60px;
 	        	}
 	        	.batchDel{
 	        		font-size: 16px;
 	        		color: #ed5151;
+                    float: left;
+                    height: 60px;
 	        	}
 	        	.el-input{
-	        		margin-left: 23px;
-	        		width: 200px;
+	        		margin-left: 13px;
+                    float: left;
+	        		width: calc(100% - 197px);
 	        		.el-icon-search{
 	        			color: #68c161;
 	        		}
@@ -431,7 +492,7 @@
 	    }
 	     .el-dialog{
 	    	background-color: #ffffff;
-			box-shadow: 0px 1px 20px 0px 
+			box-shadow: 0px 1px 20px 0px
 				rgba(0, 0, 0, 0.2);
 			border-radius: 16px;
 			 /deep/ .el-dialog__header{
