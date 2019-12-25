@@ -3,14 +3,14 @@ name: default
 
 steps:
 - name: node
-  image: guoxudongdocker/node-drone
+  image: guoxudongdocker/drone-node
   commands:
   - rm -rf ./dist/static/ && rm -rf ./dist/index.html
   - npm install
   - npm run build
   volumes:
   - name: npmcache
-    path: /drone/src/node_modules
+    path: /root/.npm-cache
 
 
 - name: build
@@ -40,18 +40,13 @@ steps:
       from_secret: ssh_password
     port: 22
     script:
-    - bash /root/webtag.sh ${DRONE_BUILD_NUMBER}
+    - bash /usr/local/bin/webtag.sh ${DRONE_BUILD_NUMBER}
 
 - name: 钉钉通知
-  image: lddsb/drone-dingtalk-message
+  image: hub.dh.com/library/dingtalk:1
   settings:
-    token:
-      from_secret: dingding
-    type: markdown
-    tpl: "http://192.168.1.22"
-    tips_title: "sssssss"
-    success_color: "000000"
-    failure_color: "FF0000"
+    tpl: "http://192.168.2.59"
+
 
 
 volumes:

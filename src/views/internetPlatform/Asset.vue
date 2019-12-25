@@ -859,7 +859,7 @@ export default {
     /deep/ .el-drawer {
         top: 0px;
         height: 100%;
-        @media screen and (max-width: 900px) {
+        @media screen and (max-width: 1080px) {
             width: 600px !important;
         }
         >section>div {
