@@ -49,7 +49,7 @@ export default {
                     name: '用户管理',
                     links: '/userList',
                     powerName:'user:view',
-                }, 
+                },
                 {
                     icon: [
                         require('../../assets/img/userCenter/quanxianguanli1.png'),
@@ -58,7 +58,7 @@ export default {
                     name: '权限管理',
                     links: '/roleList',
                     powerName:'role:view'
-                }, 
+                },
                 {
                     icon: [
                     	require('../../assets/img/userCenter/zuzhijiagou1.png'),
@@ -191,6 +191,8 @@ export default {
         height: calc(100% - 60px);
         .el-tabs {
             width: 100%;
+            height: 100%;
+            overflow: auto;
             background-color: #ffffff;
             .el-tabs__header {
                 width: 180px;
@@ -226,6 +228,7 @@ export default {
     /deep/ .el-tabs--border-card>.el-tabs__content {
         background-color: #eef1f7;
         padding: 30px;
+        min-height: calc(100% - 60px);
     }
     /deep/ .el-tabs--border-card>.el-tabs__header .el-tabs__item {
         border-left: solid 5px #FFFFFF;

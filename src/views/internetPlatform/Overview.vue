@@ -123,9 +123,8 @@ export default {
                 yAxis: {
                     name: '',
                     nameTextStyle: {
-                        // align: 'left',
+                        align: 'left',
                         fontFamily: 'Microsoft YaHei',
-                        align: 'right'
                     },
                     type: 'value',
                     nameGap: 20,
@@ -188,7 +187,9 @@ export default {
                         }
                     },
                     axisLabel: { //坐标轴刻度标签的相关设置。
-                        color: '#505050'
+                        color: '#505050',
+                        margin: 70,
+                        align: 'left'
                     },
                     axisTick: { //坐标轴刻度相关设置。
                         show: false,
@@ -199,12 +200,11 @@ export default {
                             color: '#eee'
                         }
                     },
-                    name: ''
+                    name: '',
                 },
                 xAxis: {
                     name: '时',
                     nameTextStyle: {
-                        // align: 'left',
                         color: '#505050',
                         fontFamily: 'Microsoft YaHei',
                         align: 'right'
@@ -217,7 +217,7 @@ export default {
                         }
                     },
                     axisLabel: { //坐标轴刻度标签的相关设置。
-                        color: '#505050'
+                        color: '#505050',
                     },
                     axisTick: { //坐标轴刻度相关设置。
                         show: false,
@@ -272,6 +272,7 @@ export default {
         window.removeEventListener('resize', this.eventListener);
         this.deviceMessageCharts = null;
         this.deviceTimeCharts = null;
+        bus.$off();
     },
     computed: {
 
@@ -329,7 +330,7 @@ export default {
                 this.deviceMessageOption.xAxis.data = [];
                 this.deviceMessageOption.series = [];
                 res.data.forEach((v, i) => {
-                    v.deviceSet.forEach((vD, iD) => {
+                    v.deviceRes.forEach((vD, iD) => {
                         if (i === 0) {
                             this.deviceMessageOption.series.push({
                                 name: vD.name,
@@ -343,7 +344,6 @@ export default {
                         }
                     })
                     this.deviceMessageOption.xAxis.data.push(this.deviceMessageModel === 'month' ? this.$moment(v.ts).format('DD') : this.$moment(v.ts).format('HH'));
-
                 })
                 this.deviceMessageCharts.setOption(this.deviceMessageOption, true)
             }).catch(function(err) {
@@ -358,7 +358,7 @@ export default {
         getDeviceTime(res) {
             this.deviceTimeOption.yAxis.data = [];
             this.deviceTimeOption.series[0].data = [];
-            this.deviceTimeOption.grid.left = '100px';
+            this.deviceTimeOption.grid.left = '70px';
             res.devices.forEach((v, i) => {
                 this.deviceTimeOption.yAxis.data.push(v.name);
                 this.deviceTimeOption.series[0].data.push(this.sToH(v.totaltime));
