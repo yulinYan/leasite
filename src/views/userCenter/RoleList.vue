@@ -26,7 +26,7 @@
                 <el-table-column prop="userId" label="用户列表" header-align="center" align="center" min-width="300" show-overflow-tooltip></el-table-column>
                 <el-table-column label="操作" width="220" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" v-if="hasPermission('role:update')" class="edit" @click="handleEdit(scope.$index, scope.row)">
+                        <el-button type="text" slot="reference" v-if="hasPermission('role:update')" class="edit" @click="handleEdit(scope.$index, scope.row)" >
                         	<img src='../../assets/img/internetPlatform/bianji.png' class="edit-img" alt="">编辑权限
                         </el-button>
                         <el-button type="text" v-if="hasPermission('role:delete')" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -35,12 +35,12 @@
             </el-table>
             <Pagination :pageIndex="pageObj.pageIndex" :total="pageObj.total" :pageSize="pageObj.pageSize" @PageTurning="PageTurning"></Pagination>
         </div>
-        <el-dialog class="outDialog" key="roleDialog"  :title='dialogTitle' :visible.sync="roleDialogVisible"  width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
+        <el-dialog class="outDialog" key="roleDialog"  :title='dialogTitle' :visible.sync="roleDialogVisible" v-if="roleDialogVisible" width="580px" height="430px" append-to-body  :close-on-click-modal="false" :show-close="false">
        		<!-- 新增/编辑弹出框 -->
             <RoleListAdd :roleObj="roleObj" @RoleCallBack="RoleCallBack" ></RoleListAdd>
        	</el-dialog>
-        <el-dialog class="outRoleAuthDialog" key="roleAuthDialog"  :visible.sync="roleAuthDialogVisible"   append-to-body  :close-on-click-modal="false" :show-close="false">
-<!--编辑权限-->
+        <el-dialog class="outRoleAuthDialog" key="roleAuthDialog" :title='dialogAuthTitle'  v-if="roleAuthDialogVisible" :visible.sync="roleAuthDialogVisible"  width="1200px" height="730px" append-to-body  :close-on-click-modal="false" :show-close="false">
+            <!--编辑权限-->
             <RoleListEdit :roleObj="roleObj"  @RoleAuthCallBack="RoleAuthCallBack"></RoleListEdit>
         </el-dialog>
 <!--        <RoleListEdit class="roleAuthDialogVisible" v-if="roleAuthDialogVisible"  @RoleAuthCallBack="RoleAuthCallBack"></RoleListEdit>-->
@@ -72,12 +72,15 @@
                 roleAuthDialogVisible:false,//是否显示角色权限信息弹框
 				searchText:'',//搜索字段
 				roleObj:{},//添加和编辑时的角色信息
-				dialogTitle:'添加角色'
+				dialogTitle:'添加角色',
+                dialogAuthTitle:'权限编辑',
+
             }
         },
 
         created() {
             this.getData();
+
         },
         methods: {
 			/*
@@ -125,7 +128,7 @@
 					var resData = res.data;
 					if(resData.status == 200) {
 						this.tableData = resData.data.rows;
-						console.log (this.tableData);
+						// console.log (this.tableData);
 						this.pageObj.total = resData.data.total;
 					} else {
 						this.$message({
@@ -141,6 +144,7 @@
 				})
 
 			},
+
             /**
              * 点击搜索
              */
@@ -316,7 +320,6 @@
 	        height: 100%;
 	        padding: 27px 40px 0;
 	        .el-table{
-
 	    	color: #303030;
 	    	font-size: 14px;
 		    .edit{
@@ -355,25 +358,28 @@
         box-shadow: 0px 1px 20px 0px
         rgba(0, 0, 0, 0.2);
         border-radius:16px;
-        width:auto;
-        height: auto;
-    .el-dialog__header{
-        height: 0!important;
-        padding: 0;
-        margin: 0;
-    }
-    }
-    .outDialog{
+
     .el-dialog__header{
         padding: 12px 40px;
         border-bottom: 1px solid #d9e3f3;
     }
-    }
-    /deep/ .outRoleAuthDialog{
 
-    .el-dialog__body {
-        padding: 0;
     }
+
+    /deep/ .outRoleAuthDialog{
+        /*width: 88% !important;*/
+        /*min-width: 70%;*/
+        /*!*height: 80%;*!*/
+        /*min-height: 60%;*/
+        border-radius: 8px;
+        margin: 0 auto;
+        overflow: hidden;
+        overflow-x: auto;
+        overflow-y: auto;
+        /deep/ .el-dialog__body{
+            padding: 0 20px!important;
+
+        }
     }
 
 </style>

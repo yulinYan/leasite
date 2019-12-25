@@ -10,7 +10,7 @@
     <!--状态栏-->
     <div class="status-bar">
         <!--状态栏系统菜单-->
-        <div v-show="systemMenuVisible" class="systemMenu">
+        <div v-show="systemMenuVisible" class="systemMenu"  >
             <ul class="leftMenus">
                 <li v-for="menus in systemMenus" @click="alertComponent(menus)" :title="menus.appName">
                     <img :src="menus.appIcon" :alt="menus.appName" />

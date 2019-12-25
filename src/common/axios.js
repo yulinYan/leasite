@@ -56,7 +56,7 @@ instance.interceptors.request.use(config => {
 // http响应拦截器
 instance.interceptors.response.use(
 	function(response){
-		console.log(response);
+
 		if (response.data.status) {
 	        switch (response.data.message) {
 	            case "token过期"://token过期
