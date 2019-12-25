@@ -7,11 +7,11 @@
             <!-- 表头-->
             <div class="model" >
                 <div style="width: 157px">模块1</div>
-                <div style="width: 175px">模块2</div>
+                <div style="width: 174px">模块2</div>
                 <div style="width: calc(100% - 310px)">模块3</div>
             </div>
             <!--表身-->
-            <div v-for="(item,index) in menuList.children" :key="index" class="models" >
+            <div  v-for="(item,index) in menuList.children" :key="index" class="models" >
                 <div class="model_1"  style="width: 154px;">
                     <el-checkbox class="model1_checkbox"    @change="model_1_selectAll(index)" v-model="item.checked"  >{{item.title}}</el-checkbox>
                 </div>
@@ -56,7 +56,6 @@
                 "appParentId":''//获取应用入口列表的id
             }
         },
-
         methods: {
             /**
              * 一级全选
@@ -65,7 +64,7 @@
                 if(this.menuList.children){
                     let checked = this.menuList.children[index].checked;
                     // console.log(checked);
-                    if(this.menuList.children){
+                    if(this.menuList.children[index].children){
                         this.menuList.children[index].children.forEach((children)=>{
                             children.checked = checked;
                             if(children.children){
@@ -90,13 +89,12 @@
                             children.checked = checked;
                         })
                     }
-                    let model1_checcked = item.children.every((model2)=>{
+                    let model1_checked = item.children.every((model2)=>{
                         return model2.checked == true;
                     })
-                    item.checked = model1_checcked;
+                    item.checked = model1_checked;
                 }
             },
-
             /**
              * 单选改变状态
              */
@@ -107,14 +105,12 @@
                     })
                     item2.checked = checked;
                 }
-
                 if(item.children){
                 let one_checked = item.children.every((model2)=>{
                     return model2.checked==true;
                 })
                     item.checked = one_checked;
                 }
-
             },
             /**
              * 二级单选改变状态
@@ -214,7 +210,7 @@
                 // centerDialogVisible = false;
             },
         },
-        created() {
+        beforeMount() {
             this.getAuthData();
         },
     };
@@ -230,29 +226,36 @@
         margin-top:-30px;
         padding:0;
         overflow:hidden;
-    .top{
-        height:59px;
-        border-bottom:solid 2px #d9e3f3 ;
-        overflow:hidden;
-    .text{
-        margin: 15px 0 0 30px;
-        font-size: 16px;
-        color: #424956;
-    }
-    }
+    /*.top{*/
+    /*    height:59px;*/
+    /*    border-bottom:solid 2px #d9e3f3 ;*/
+    /*    overflow:hidden;*/
+    /*.text{*/
+    /*    margin: 15px 0 0 30px;*/
+    /*    font-size: 16px;*/
+    /*    color: #424956;*/
+    /*}*/
+    /*}*/
     .RoleListEdit{
         background-color: #ffffff;
         margin: 16px auto;
-        border:solid 2px #d2d5dc;
+        border:solid 1px #d2d5dc;
         border-radius: 8px!important;
         overflow:hidden;
+    & :last-child{
+        border-bottom: none!important;
+      }
     .model{
         display: flex;
         align-items: center;
+    & :last-child{
+          border-bottom: 1px solid #d2d5dc!important;
+        border-right: none;
+      }
     div{
         text-align: center;
         border-right: 1px solid #d2d5dc;
-        border-bottom: 2px solid #d2d5dc;
+        border-bottom: 1px solid #d2d5dc;
         height: 40px;
         line-height: 40px;
         font-size: 16px;
@@ -280,7 +283,7 @@
     .model_2{
         display: flex;
         align-items: center;
-        border-bottom: 1px solid #d2d5d4;
+        border-bottom: 1px solid #d2d5dc;
         border-left: 1px solid #d2d5dc;
         width: 100%;
     .el-checkbox{
@@ -342,6 +345,7 @@
             margin-right: 20px;
          }
     }
+
     }
 
 </style>
