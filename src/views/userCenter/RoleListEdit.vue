@@ -19,7 +19,7 @@
                 <div v-if="item.children">
                     <div class="model_2"  v-for="(item2,index2) in item.children" :key="index2">
                         <!--   模块2-->
-                        <div class="model_2_2" style="width: 175px" v-if="item2.checked">
+                        <div class="model_2_2" style="width: 175px" >
                             <el-checkbox class="model2_checkbox"  v-model="item2.checked" @change="model_2_selectAll(item,index2)" >{{item2.title}}</el-checkbox>
                         </div>
                         <!--  模块3-->
@@ -62,36 +62,39 @@
              * 一级全选
              */
             model_1_selectAll(index){
-                let checked = this.menuList.children[index].checked;
-                // console.log(checked);
                 if(this.menuList.children){
-                    this.menuList.children[index].children.forEach((children)=>{
-                        children.checked = checked;
-                        if(children.children){
-                            children.children.forEach((children2)=>{
-                                children2.checked = checked;
-                            })
-                        }
-                    })
+                    let checked = this.menuList.children[index].checked;
+                    // console.log(checked);
+                    if(this.menuList.children){
+                        this.menuList.children[index].children.forEach((children)=>{
+                            children.checked = checked;
+                            if(children.children){
+                                children.children.forEach((children2)=>{
+                                    children2.checked = checked;
+                                })
+                            }
+                        })
+                    }
+                    // this.model_2_selectAll(item,index2)
+                    // this.model_3_select(item,item2,index3)
                 }
-                this.model_2_selectAll(item,index2)
-                this.model_3_select(item,item2,index3)
             },
             /**
              * 二级全选
              */
             model_2_selectAll(item,index2){
-                let checked = item.children[index2].checked;
-                if(item.children[index2].children){
-                    item.children[index2].children.forEach((children)=>{
-                        children.checked = checked;
+                if(item.children){
+                    let checked = item.children[index2].checked;
+                    if(item.children[index2].children){
+                        item.children[index2].children.forEach((children)=>{
+                            children.checked = checked;
+                        })
+                    }
+                    let model1_checcked = item.children.every((model2)=>{
+                        return model2.checked == true;
                     })
+                    item.checked = model1_checcked;
                 }
-
-                let model1_checcked = item.children.every((model2)=>{
-                    return model2.checked == true;
-                })
-                item.checked = model1_checcked;
             },
 
             /**
@@ -102,14 +105,16 @@
                     let checked = item2.children.every((model3)=>{
                         return model3.checked==true
                     })
+                    item2.checked = checked;
                 }
-                item2.checked = checked;
+
                 if(item.children){
                 let one_checked = item.children.every((model2)=>{
                     return model2.checked==true;
                 })
+                    item.checked = one_checked;
                 }
-                item.checked = one_checked;
+
             },
             /**
              * 二级单选改变状态
