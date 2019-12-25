@@ -324,77 +324,83 @@
             position: absolute;
             left: 0;
             top: -39vh;
-            .leftMenus {
-                display: inline-block;
-                /*height: 95%;*/
-                padding-top: 5%;
-                width: 16.76%;
-                text-align: center;
-                cursor: pointer;
-                position: absolute;
-                bottom: 5%;
-                li {
-                    height: 42px;
-                }
-                li:hover {
-                    background-color: #4c5363;
-                }
-            }
-            .rightMenus {
-                display: inline-block;
-                cursor: pointer;
-                height: 95%;
-                padding-top: 5%;
-                width: 81.5%;
-                text-align: left;
-                border-left: 1px solid #4c5363;
-                float: right;
-                li {
-                    padding-left: 8.5%;
-                    height: 42px;
-                    span {
-                        margin-left: 10px;
-                        color: #ffffff;
-                    }
-                }
-                li:hover {
-                    background-color: #4c5363;
-                }
-            }
+            .leftMenus{
+					display: inline-block;
+				    width: 17.4%;
+				    padding: 5% 0 0;
+				    text-align: center;
+				    cursor: pointer;
+				    position: absolute;
+				    bottom: 0;
+				    overflow-y: auto;
+				    li{
+				    	height: 51px;
+    					line-height: 51px;
+				    }
+				    li:hover{
+				    	background-color: #4c5363;
+				    }
+				}
+				.rightMenus{
+					display: inline-block;
+				    cursor: pointer;
+				    height: 91%;
+				    padding: 5% 0;
+				    width: 82.6%;
+				    text-align: left;
+				    border-left: 1px solid #4c5363;
+				    border-bottom: 1px solid #4c5363;
+				    float: right;
+				    overflow-y: auto;
+				    li{
+				    	padding-left: 8.5%;
+				    	height: 42px;
+				    	line-height: 42px;
+				    	span{
+				    		margin-left: 10px;
+				    		color: #ffffff;
+				    	}
+				    }
+				    li:hover{
+				    	background-color: #4c5363;
+				    }
+				}
         }
-        img.menuLogo {
-            width: 30px;
-            height: 30px;
-            padding: 10px 15px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-        img.menuLogo:hover {
-            background-color: #202020;
-        }
-        .el-input {
-            width: 276px;
-            height: 36px;
-            line-height: 36px;
-            background-color: #eeeeee;
-            border-radius: 4px;
-            margin-right: 10px;
-        }
-        .el-tooltip {
-            cursor: pointer;
-            margin: 0 5px;
-            height: 45px;
-            border: none;
-            border-bottom: 3px solid #a0a9b5;
-            img.statusIcon {
-                cursor: pointer;
-                width: 40px;
-                height: 40px;
-            }
-        }
-        .el-tooltip:hover {
-            background-color: #4c5363;
-        }
+    	img.menuLogo{
+			width: 30px;
+		    height: 30px;
+		    padding: 10px 15px;
+		    cursor: pointer;
+		    margin-right: 10px;
+		    background-color: #202020;
+		}
+		img.menuLogo:hover{
+			background-color: #202020;
+		}
+		.el-input{
+			width:276px;
+			height: 36px;
+			line-height: 36px;
+			background-color: #eeeeee;
+			border-radius: 4px;
+			margin-right: 10px;
+		}
+		.el-tooltip{
+			cursor: pointer;
+			margin: 0 5px;
+			padding: 0 8px;
+			height: 45px;
+			border: none;
+			border-bottom: 3px solid #a0a9b5;
+			img.statusIcon{
+				cursor: pointer;
+				width: 40px;
+				height: 40px;
+			}
+		}
+		.el-tooltip:hover{
+			background-color: #4c5363;
+		}
     }
 }
 
