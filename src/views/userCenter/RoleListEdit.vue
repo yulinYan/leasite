@@ -19,7 +19,7 @@
                 <div v-if="item.children">
                     <div class="model_2"  v-for="(item2,index2) in item.children" :key="index2">
                         <!--   模块2-->
-                        <div class="model_2_2" style="width: 175px">
+                        <div class="model_2_2" style="width: 175px" v-if="item2.checked">
                             <el-checkbox class="model2_checkbox"  v-model="item2.checked" @change="model_2_selectAll(item,index2)" >{{item2.title}}</el-checkbox>
                         </div>
                         <!--  模块3-->
