@@ -26,10 +26,10 @@
                 <el-table-column prop="userId" label="用户列表" header-align="center" align="center" min-width="300" show-overflow-tooltip></el-table-column>
                 <el-table-column label="操作" width="220" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" slot="reference" v-if="hasPermission('role:update')" class="edit" @click="handleEdit(scope.$index, scope.row)" >
+                        <el-button type="text" slot="reference" v-if="hasPermission('role:update') && scope.row.roleId*1 != 1" class="edit" @click="handleEdit(scope.$index, scope.row)" >
                         	<img src='../../assets/img/internetPlatform/bianji.png' class="edit-img" alt="">编辑权限
                         </el-button>
-                        <el-button type="text" v-if="hasPermission('role:delete')" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        <el-button  type="text" v-if="hasPermission('role:delete') && scope.row.roleId*1 != 1" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -43,7 +43,7 @@
             <!--编辑权限-->
             <RoleListEdit :roleObj="roleObj"  @RoleAuthCallBack="RoleAuthCallBack"></RoleListEdit>
         </el-dialog>
-<!--        <RoleListEdit class="roleAuthDialogVisible" v-if="roleAuthDialogVisible"  @RoleAuthCallBack="RoleAuthCallBack"></RoleListEdit>-->
+
     </div>
 </template>
 
