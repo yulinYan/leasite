@@ -2,14 +2,21 @@
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
 
-const path = require('path')
+const path = require('path');
+const assetsPublicPath = '/';
+const productionSourceMap = false;
+//配置生产环境和非生产环境之间的切换
+if(process.env.NODE_ENV == 'production') { //生产环境
+	assetsPublicPath = './';
+	productionSourceMap = true;
+}
 
 module.exports = {
   dev: {
 
     // Paths
     assetsSubDirectory: 'static',
-    assetsPublicPath: './',//TODO 开发环境默认为/ , 打包生产代码前设置为./
+    assetsPublicPath: assetsPublicPath,//TODO 开发环境默认为/ , 打包生产代码前设置为./
     proxyTable: {},
 
     // Various Dev Server settings
@@ -52,13 +59,13 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: './',//TODO 开发环境默认为/ , 打包生产代码前设置为./
+    assetsPublicPath: assetsPublicPath,//TODO 开发环境默认为/ , 打包生产代码前设置为./
 
     /**
      * Source Maps
      */
 
-    productionSourceMap: false,//TODO 开发环境默认为true , 打包生产代码前设置为false
+    productionSourceMap: productionSourceMap,//TODO 开发环境默认为true , 打包生产代码前设置为false
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 
