@@ -12,18 +12,21 @@
             <!--表身-->
             <div  v-for="(item,index) in menuList.children" :key="index" class="models" >
                 <div class="model_1"  style="width: 154px;">
-                    <el-checkbox class="model1_checkbox"    @change="model_1_selectAll(index)" v-model="item.checked"  >{{item.title}}</el-checkbox>
+                    <el-checkbox class="model1_checkbox"  @click="one_click(index)"  @change="model_1_selectAll(index)"  v-model="item.checked"  >{{item.title}}</el-checkbox>
+<!--                    @change="model_1_selectAll(index)"-->
                 </div>
                 <!--                右边模块2 和模块3-->
                 <div v-if="item.children">
                     <div class="model_2"  v-for="(item2,index2) in item.children" :key="index2">
                         <!--   模块2-->
                         <div class="model_2_2" style="width: 175px" >
-                            <el-checkbox class="model2_checkbox"  v-model="item2.checked" @change="model_2_selectAll(item,index2)" >{{item2.title}}</el-checkbox>
+                            <el-checkbox class="model2_checkbox" @click="two_click(item,index2)" @change="model_2_selectAll(item,index2)" v-model="item2.checked"  >{{item2.title}}</el-checkbox>
+<!--                            @change="model_2_selectAll(item,index2)"-->
                         </div>
                         <!--  模块3-->
                         <div class="model_2_3" style="width: calc(100% - 154px)" v-if="item2.children">
-                            <el-checkbox class="model3_checkbox"   @change="model_3_select(item,item2,index3)" v-model="item3.checked" v-for="(item3,index3) in item2.children"  :key="index3">{{item3.title}}</el-checkbox>
+                            <el-checkbox class="model3_checkbox" @click="three_click(item,item2,index3)" @change="model_3_select(item,item2,index3)"  v-model="item3.checked" v-for="(item3,index3) in item2.children"  :key="index3">{{item3.title}}</el-checkbox>
+<!--                            @change="model_3_select(item,item2,index3)"-->
                         </div>
                     </div>
                 </div>
@@ -60,60 +63,109 @@
              * 一级全选
              */
             model_1_selectAll(index){
-                if(this.menuList.children){
-                    let checked = this.menuList.children[index].checked;
-                    // console.log(checked);
-                    if(this.menuList.children[index].children){
-                        this.menuList.children[index].children.forEach((children)=>{
-                            children.checked = checked;
-                            if(children.children){
-                                children.children.forEach((children2)=>{
-                                    children2.checked = checked;
-                                })
-                            }
-                        })
-                    }
-                    // this.model_2_selectAll(item,index2)
-                    // this.model_3_select(item,item2,index3)
-                }
+                // if(this.menuList.children){
+                //     let checked = this.menuList.children[index].checked;
+                //     // console.log(checked);
+                //     if(this.menuList.children[index].children){
+                //         this.menuList.children[index].children.forEach((children)=>{
+                //             children.checked = checked;
+                //             if(children.children){
+                //                 children.children.forEach((children2)=>{
+                //                     children2.checked = checked;
+                //                 })
+                //             }
+                //         })
+                //     }
+                //     // this.model_2_selectAll(item,index2)
+                //     // this.model_3_select(item,item2,index3)
+                // }
             },
             /**
              * 二级全选
              */
             model_2_selectAll(item,index2){
-                if(item.children){
-                    let checked = item.children[index2].checked;
-                    if(item.children[index2].children){
-                        item.children[index2].children.forEach((children)=>{
-                            children.checked = checked;
-                        })
-                    }
-                    let model1_checked = item.children.every((model2)=>{
-                        return model2.checked == true;
-                    })
-                    item.checked = model1_checked;
-                }
+                // if(item.children){
+                //     let checked = item.children[index2].checked;
+                //     if(item.children[index2].children){
+                //         item.children[index2].children.forEach((children)=>{
+                //             children.checked = checked;
+                //         })
+                //     }
+                //     let model1_checked = item.children.every((model2)=>{
+                //         return model2.checked == true;
+                //     })
+                //     item.checked = model1_checked;
+                // }
+                this.model_3_select(item,item2,index3)
             },
             /**
              * 三级单选改变状态
              */
             model_3_select(item,item2,index3){
-                if(item2.children){
-                    let checked = item2.children.every((model3)=>{
-                        return model3.checked==true
-                    })
-                    item2.checked = checked;
-                }
+                // if(item2.children){
+                //     let checked = item2.children.every((model3)=>{
+                //         return model3.checked==true
+                //     })
+                //     item2.checked = checked;
+                // }
+                // if(item.children){
+                // let one_checked = item.children.every((model2)=>{
+                //     return model2.checked==true;
+                // })
+                //     item.checked = one_checked;
+                // }
+                /**
+                 * 二级只要有一个被选中，一级被选中    chang监听二级变化  取消后面一级，前面一级不会被取消
+                 */
                 if(item.children){
-                let one_checked = item.children.every((model2)=>{
-                    return model2.checked==true;
-                })
+                    let one_checked = false;
+                    item.children.forEach((model2)=>{
+                        one_checked=true
+                    })
                     item.checked = one_checked;
+                };
+                /**
+                 * 三级只要有一个被选中，二级被选中    chang监听三级变化  取消后面一级，前面一级不会被取消
+                 */
+                if(item2.children){
+                    let checked = null;
+                        item2.children.forEach((model3)=>{
+                            // if(item2.children==true){
+                              checked=true
+                            // }else {
+                            //     checked=true
+                            // }
+                        })
+                        item2.checked = checked;
                 }
             },
+
+
             /**
-             * 二级单选改变状态
+             * 一级点击事件
              */
+            one_click(index){
+
+            },
+            /**
+             * 二级点击事件
+             */
+            two_click(item,index2){
+
+            },
+            /**
+             * 三级点击事件
+             */
+            three_click(item,item2,index3){
+                if(item2.children){
+                    item2.children.forEach((children3)=>{
+                        if(children3.checked==true){
+                            // this.model_3_select(item,item2,index3)
+                            item2.checked == true
+                        }
+                    })
+                }
+            },
             /**
              * 获取角色权限列表数据
              */
@@ -188,7 +240,7 @@
             	childMenu.forEach(function(item,index){
                     if( item.title=="获取应用入口列表"){
                     	if(item.checked){
-                    		self.menuIds.push(item.id);	
+                    		self.menuIds.push(item.id);
                     	}
                         self.appParentId = item.id;
                 	}else if( self.appParentId == item.parentId && item.checked){
