@@ -9,7 +9,7 @@ instance.defaults.headers = {
 const err = (error) => {
   if (error.response) {
     const data = error.response.data
-    switch (data.data) {
+    switch (data.message) {
         case "token已经过期"://token过期
             window.vm.$message({
 	            type: 'error',
@@ -19,7 +19,7 @@ const err = (error) => {
            window.vm.commonFun.againLogin();
         break;
         case "用户名或密码错误":
-        	if(window.vm._route.name !== "login"){
+        	if(window.vm._route.name != "login"){
         	    window.vm.$message({
 		            type: 'error',
 		            message: '登录信息过期，请重新登录!'
@@ -39,7 +39,6 @@ const err = (error) => {
 	            message: '您没有操作权限！'
           	});
         break;
-        
     }
   }
   return Promise.reject(error)
@@ -68,26 +67,6 @@ instance.interceptors.request.use(config => {
 // http响应拦截器
 instance.interceptors.response.use(
 	function(response){
-		if (response.data.status) {
-	        switch (response.data.message) {
-	            case "token过期"://token过期
-	                window.vm.$message({
-			            type: 'error',
-			            message: '登录信息过期，请重新登录!'
-		          	});
-		           //清除token信息并跳转到登录页面
-		           window.vm.commonFun.againLogin();
-		        break;
-	            case "用户名或密码错误":
-	                window.vm.$message({
-			            type: 'error',
-			            message: '登录信息过期，请重新登录!'
-		          	});
-		           //清除token信息并跳转到登录页面
-		           window.vm.commonFun.againLogin();
-		        break;
-	        }
-	    }
 		return response;
 	},err);
 export default instance;
