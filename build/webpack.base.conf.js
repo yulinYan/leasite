@@ -14,15 +14,15 @@ function resolve (dir) {
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
-  entry: {
+  entry: {// 配置webpack编译入口
     app: './src/main.js'
   },
-  output: {
-    path: config.build.assetsRoot,
-    filename: '[name].js',
+  output: {// 配置webpack输出路径和命名规则
+    path: config.build.assetsRoot,// webpack输出的目标文件夹路径（例如：/dist）
+    filename: '[name].js',// webpack输出bundle文件命名格式，基于文件的md5生成Hash名称的script来防止缓存
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath
+      : config.dev.assetsPublicPath // webpack编译输出的发布路径(判断是正式环境或者开发环境等)
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],

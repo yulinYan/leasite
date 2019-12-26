@@ -3,42 +3,30 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path');
-const assetsPublicPath = '/';
-const productionSourceMap = false;
-//配置生产环境和非生产环境之间的切换
-if(process.env.NODE_ENV == 'production') { //生产环境
-	assetsPublicPath = './';
-	productionSourceMap = true;
-}
 
 module.exports = {
-  dev: {
-
+  dev: {// dev 环境
+		env: require('./dev.env'),// 使用 config/dev.env.js 中定义的编译环境
     // Paths
-    assetsSubDirectory: 'static',
-    assetsPublicPath: assetsPublicPath,//TODO 开发环境默认为/ , 打包生产代码前设置为./
-    proxyTable: {},
+    assetsSubDirectory: 'static', // 编译输出的二级目录
+    assetsPublicPath: './',// 编译发布的根目录，可配置为资源服务器域名或 CDN 域名
+    proxyTable: {},//需要 proxyTable 代理的接口（可跨域）
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8000, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 8000, // 运行测试页面的端口
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
-
     /**
      * Source Maps
      */
-
     //https://webpack.js.org/configuration/devtool/#development
     devtool: 'cheap-module-eval-source-map',
-
     // If you have problems debugging vue-files in devtools,
     // set this to false - it *may* help
     // https://vue-loader.vuejs.org/en/options.html#cachebusting
     cacheBusting: true,
-
-    env: require('./dev.env'),
     autoOpenBrowser: true,
     cssSourceMap: false,
     proxyTable: {
@@ -52,20 +40,14 @@ module.exports = {
     },
   },
 
-  build: {
-    // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
-
+  build: {// production 环境
+    env: require('./prod.env'),// 使用 config/prod.env.js 中定义的编译环境
+    index: path.resolve(__dirname, '../dist/index.html'),// 编译输入的 index.html 文件
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
-    assetsPublicPath: assetsPublicPath,//TODO 开发环境默认为/ , 打包生产代码前设置为./
-
-    /**
-     * Source Maps
-     */
-
-    productionSourceMap: productionSourceMap,//TODO 开发环境默认为true , 打包生产代码前设置为false
+    assetsRoot: path.resolve(__dirname, '../dist'),// 编译输出的静态资源路径
+    assetsSubDirectory: 'static',// 编译输出的二级目录
+    assetsPublicPath: './',// 编译发布的根目录，可配置为资源服务器域名或 CDN 域名
+    productionSourceMap: false,//是否开启 cssSourceMap
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 
