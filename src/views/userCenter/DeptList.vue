@@ -1,7 +1,7 @@
 <template>
     <el-container class="deptList">
 	  	<el-aside class="outAside" width="auto">
-	  		<el-button type="text" v-if="hasPermission('dept:add')" icon="el-icon-plus" @click="addDept">新增集团</el-button>
+	  		<el-button type="text" v-if="hasPermission('dept:add')" icon="el-icon-plus" @click="addDept" style="padding-left: 10px;">新增集团</el-button>
 	  		<el-tree
 		      :data="aDeptDatas.children"
 		      node-key="id"
@@ -11,9 +11,28 @@
 		      current-node-key="0"
 		      :indent="10"
 		      @node-click="treeClick"
-		      :expand-on-click-node="false"
-		      :render-content="renderContent">
-		    </el-tree>
+		      :expand-on-click-node="false">
+		       <span class="custom-tree-node" slot-scope="{ node, data }"  style="padding-right:10px;">
+		        <i :class="node.level == 1?'iconfont leansite-ziyuan':'iconfont leansite-bumen'" style="color:#aee4fa;"></i>
+		        <span style="display:inline-block;margin-left:5px;width:104px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{ node.label }}</span>
+		        <span>
+		          <el-button
+		          	v-if="hasPermission('dept:add')"
+		            type="text"
+		            size="mini"
+		            icon="el-icon-plus"
+		            @click="() => append(data)">
+		          </el-button>
+		          <el-button
+		          	v-if="hasPermission('dept:delete')"
+		            type="text"
+		            size="mini"
+		            icon="el-icon-delete"
+		            @click="() => remove(node, data)">
+		          </el-button>
+		        </span>
+		      </span>
+		   </el-tree>
 	  	</el-aside>
 	  	<el-container>
 	        <el-header>
@@ -389,20 +408,7 @@
 						});
 					})
 				}).catch(() => {});
-	        },
-			/**
-			 * tree添加功能
-			 */
-	      	renderContent(h, { node, data, store }) {
-		        return (
-		          <span class="custom-tree-node" style="padding-right:10px;">
-		            <span style="display:inline-block;width:124px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{node.label}</span>
-		            <span>
-		              <el-button size="mini" v-if="hasPermission('dept:add')"  type="text" icon="el-icon-plus" on-click={ () => this.append(data) }></el-button>
-		              <el-button size="mini" v-if="hasPermission('dept:delete')"  type="text" icon="el-icon-delete"  on-click={ () => this.remove(node, data) }></el-button>
-		            </span>
-		          </span>);
-	      	}
+	        }
         }
     }
 

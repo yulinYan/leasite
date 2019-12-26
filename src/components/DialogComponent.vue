@@ -66,7 +66,7 @@ export default {
         closeDialog() {
             this.$emit('callBackFun', this.appObj);
             this.moduleDialogVisible = false;
-            if (this.appObj.appName === '物联网中心') {
+            if (this.appObj.appName === '物联网') {
                 bus.$emit("loginout", true);
             }
         },
@@ -76,7 +76,7 @@ export default {
         IsFullscreen() {
             this.isfullscreen = !this.isfullscreen
             if (this.isfullscreen) this.$emit('isfullscreen')
-            if (this.appObj.appName === '物联网中心') {
+            if (this.appObj.appName === '物联网') {
                 bus.$emit("resize", true);
             }
         },

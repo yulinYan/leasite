@@ -9,7 +9,7 @@ instance.defaults.headers = {
 const err = (error) => {
   if (error.response) {
     const data = error.response.data
-    switch (data.message) {
+    switch (data.data) {
         case "token已经过期"://token过期
             window.vm.$message({
 	            type: 'error',

@@ -2,7 +2,6 @@
 
 <template >
     <div class="box">
-<!--        <div class="top"><div class="text">超级管理员</div></div>-->
         <div class="RoleListEdit" v-if="menuList.children">
             <!-- 表头-->
             <div class="model" >
@@ -96,7 +95,7 @@
                 }
             },
             /**
-             * 单选改变状态
+             * 三级单选改变状态
              */
             model_3_select(item,item2,index3){
                 if(item2.children){
