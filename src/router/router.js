@@ -30,7 +30,7 @@ const routes = [
 	},
 	{
 		name: 'index',
-		path: '/index',
+		path: '/',
 		component:index,
 		meta: {
 			title: '首页',
@@ -101,7 +101,7 @@ const routes = [
 		component: error404
 	},
 	{
-		path: '/',
+		path: '/testView',
 		component: testView
 	},
 	{
