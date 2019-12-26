@@ -408,6 +408,12 @@ export default {
                 }
                 this.telemetryList = [...arr];
                 arr = null;
+                setTimeout(() => {
+                    if (document.querySelector('#pane-third').style.display != 'none') {
+                        console.log(document.querySelector('#pane-third').style.display)
+                        this.getTelemetry();
+                    }
+                }, 5000)
             }).catch(function(err) {
                 console.log(err.response);
             })
@@ -753,6 +759,9 @@ export default {
 }
 
 .Asset {
+    /deep/ .el-drawer__body {
+        height: 100%;
+    }
     height: 100%;
     .overview {
         width: 100%;
