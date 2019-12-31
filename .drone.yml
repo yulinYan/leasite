@@ -45,10 +45,14 @@ steps:
     - bash /usr/local/bin/webtag.sh ${DRONE_BUILD_NUMBER}
 
 - name: 钉钉通知
-  image: hub.dh.com/library/dingtalk:2
+  image: hub.dh.com/library/dingtalk:8
   settings:
-    tpl: "http://192.168.2.59"
-
+    token:
+      from_secret: dingding
+    type: markdown
+    message_color: true
+    message_pic: true
+    sha_link: true
 
 
 volumes:
