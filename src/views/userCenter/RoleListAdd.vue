@@ -4,12 +4,12 @@
 			<el-row :gutter="15">
 				<el-col :span="23">
 					<el-form-item label="角色名称" prop="roleName">
-						<el-input v-model="roleForm.roleName" minLength="2" maxLength="50" placeholder="请输入角色名"></el-input>
+						<el-input v-model="roleForm.roleName"  placeholder="请输入角色名"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="23">
 					<el-form-item label="角色描述" prop="remark">
-						<el-input v-model="roleForm.remark" minLength="2" maxLength="100" placeholder="请输入角色描述"></el-input>
+						<el-input v-model="roleForm.remark"  placeholder="请输入角色描述"></el-input>
 					</el-form-item>
 				</el-col>
 				<!--<el-col :span="23">
@@ -75,6 +75,12 @@
 					remark: [{
 							required: true,
 							message: '请输入角色描述',
+							trigger: 'blur'
+						},
+						{
+							min: 1,
+							max: 50,
+							message: '角色名称必须在 1-50 个字符',
 							trigger: 'blur'
 						}
 					]

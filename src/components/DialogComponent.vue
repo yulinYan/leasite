@@ -151,7 +151,7 @@ export default {
 
 .systemModuleDialog {
     min-height: 600px;
-    max-height: calc(100% - 5vh);
+    max-height: calc(100% - 15vh);
     .is-fullscreen {
         width: 100% !important;
         left: 0 !important;

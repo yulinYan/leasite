@@ -28,20 +28,22 @@
 		            type="text"
 		            size="mini"
 		            icon="el-icon-delete"
+		            style="color:red"
 		            @click="() => remove(node, data)">
 		          </el-button>
 		        </span>
 		      </span>
 		   </el-tree>
 	  	</el-aside>
-	  	<el-container>
+	  	<el-container class="rightContainer">
 	        <el-header>
 	            <el-row>
 				  <div class="leftHeader" :title="showDeptName">
 				  	{{showDeptName}}
 				  </div>
 				  <div class="rightHeader">
-				  	<el-button type="text" v-if="hasPermission('dept:addUser')" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增人员</el-button><el-button type="text" v-if="hasPermission('dept:deleteUser')" icon="el-icon-delete" class="batchDel" @click="datchDel">批量删除</el-button><el-input
+				  	<el-button type="text" v-if="hasPermission('dept:addUser')" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增人员</el-button>
+				  	<el-button type="text" v-if="hasPermission('dept:deleteUser')" icon="el-icon-error" class="batchDel" @click="datchDel">批量删除</el-button><el-input
 				  		style="width:200px;"
 				  		v-if="hasPermission('dept:deleteUser')"
 					   placeholder="输入用户名搜索"
@@ -53,7 +55,7 @@
 				</el-row>
 	        </el-header>
 	        <div class="container">
-	            <el-table stripe :data="tableData" class="table" ref="multipleTable" @selection-change="handleSelectionChange">
+	            <el-table stripe :data="tableData" class="table" ref="multipleTable" @selection-change="handleSelectionChange" :cell-style="cellStyle" :header-cell-style="{background:'#f2f4f6',color:'#101010'}">
 	                <el-table-column type="selection" width="55" align="center"></el-table-column>
 	                <el-table-column prop="nickname" label="员工姓名" align="center" width="120"></el-table-column>
 	                <el-table-column prop="username" label="用户" align="center" width="120"></el-table-column>
@@ -63,7 +65,7 @@
 	                <el-table-column label="操作" width="160" align="center">
 	                    <template slot-scope="scope">
 	                        <!--<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
-	                        <el-button type="text" v-if="hasPermission('dept:deleteUser')" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+	                        <el-button type="text" v-if="hasPermission('dept:deleteUser')" icon="el-icon-error" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
 	                    </template>
 	                </el-table-column>
 	            </el-table>
@@ -267,6 +269,7 @@
 					});
 				})
 			},
+			
 			/**
 			 * 按回车键搜索
 			 */
@@ -408,7 +411,29 @@
 						});
 					})
 				}).catch(() => {});
-	        }
+	       },
+	       /**
+             * 改变隔行变色 颜色
+             */
+
+            cellStyle({row, column, rowIndex, columnIndex}) {
+                let style = {
+                    'text-align': 'center',
+                    'font-size': '14px',
+                    // 'height': '70px',
+                    'background-color': '#ffffff',
+                    'color': '#303030',
+                    'font-family': 'MicrosoftYaHei',
+					'font-weight': 'normal',
+					'font-stretch': 'normal',
+					'line-height': '24px',
+					'letter-spacing': '0px',
+                }
+                if (rowIndex % 2 != 0) {
+                    style['background-color'] = '#f2f4f6';
+                }
+                return style;
+            }
         }
     }
 
@@ -444,6 +469,11 @@
             span{
                 overflow: visible !important;
             }
+        }
+        .rightContainer{
+        	border-radius: 16px;
+    		overflow: hidden;
+    		min-height: 640px;
         }
 	    .el-header {
 	        height: 60px;
@@ -482,16 +512,31 @@
 	        		margin-left: 13px;
                     float: left;
 	        		width: calc(100% - 197px);
-	        		.el-icon-search{
-	        			color: #68c161;
+	        		/deep/ .el-icon-search{
+	        			color: #68c161!important;
+	        			font-size: 20px;
+	        			font-weight: 500;
+	        			margin-top: 3px;
 	        		}
 	        	}
+	        	
 	        }
 	    }
 	    .container {
 	    	background-color: #FFFFFF;
 	        height: 100%;
 	        padding: 27px 40px 0;
+	        .el-table{
+	        	.red{
+	        		border-radius: 4px;
+				    border: solid 1px #ec5555;
+				    color: #ed5151;
+				    font-size: 14px;
+				    width: 80px;
+				    height: 30px;
+				    padding-top: 8px;
+	        	}
+	        }
 	    }
 	    .el-main {
 	        padding: 30px;
@@ -507,4 +552,9 @@
 			}
 	    }
 	}
+	/deep/ .el-table__header tr,
+  .el-table__header th {
+    padding: 0;
+    height: 50px!important;
+}
 </style>

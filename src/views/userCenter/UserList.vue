@@ -385,4 +385,9 @@
 	        border-bottom: 1px solid #d9e3f3;
 	    }
 }
+/deep/ .el-table__header tr,
+  .el-table__header th {
+    padding: 0;
+    height: 50px!important;
+}
 </style>

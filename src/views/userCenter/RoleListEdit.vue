@@ -9,8 +9,9 @@
 			</div>
 			<!--表身-->
 			<div v-for="(item,index) in menuList" :key="index" class="models">
-				<div class="model_1" style="width: 154px;">
-					<el-checkbox class="model1_checkbox" @change="model_1_selectAll(index)" v-model="item.checked">{{item.title}}</el-checkbox>
+				<!--   模块1-->
+				<div class="model_1" style="width: 154px;" @click="oneAllCheck(item)">
+					<el-checkbox class="model1_checkbox" @change="model_1_selectAll(index)"  v-model="item.checked">{{item.title}}</el-checkbox>
 				</div>
 				<!-- 右边模块2 和模块3-->
 				<div v-if="item.children && item.children.length > 0">
@@ -149,6 +150,18 @@
 				//                      item2.checked = checked;
 				//              }
 			},
+//			/**
+//			 *点击一级模块 后面都被选中 
+//			 */
+//			oneAllCheck(item){
+//				if(item.children){
+//					item.children.forEach((twoChildren)=>{
+//						twoChildren.checked=!item.checked;
+//						
+//					})
+//					console.log("adad")
+//				}
+//			},
 			/**
 			 * 获取角色权限列表数据
 			 */
