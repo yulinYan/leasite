@@ -5,7 +5,8 @@ import axios from 'axios'
 const interface_s = {
 	baseURL: 'http://192.168.2.41:9527/api/v1/',//非生产环境
 	//prodBaseURL:window.configs.leansiteAPI,//生产环境
-	prodBaseURL:"http://192.168.2.59:9527/api/v1/",//生产环境
+	//prodBaseURL:"http://192.168.2.59:9527/api/v1/",//生产环境
+	prodBaseURL:"http://192.168.2.59:9527/",//生产环境
 	//登录模块
 	login: "login", //登录
 	logout:"logout",//退出系统
@@ -29,6 +30,7 @@ const interface_s = {
     notGroupUser: '/dept/notGroupUser',//没有部门人员
     delDeptUser: '/dept/deleteUser',//删除部门人员
     getSysApp: '/app/getSysApp',//获取系统应用
+    checkPhoneOrEmail:'/user/phoneAndEmailEnable',//验证手机号或邮箱
 	//常量对象
 	constObj: {
 		pageIndex:1,

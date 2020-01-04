@@ -313,7 +313,7 @@ const formValidate = {
 		let newValue = value.trim();
 		if(newValue.length == 0) {
 			callback(new Error('请输入用户名(3~50个字符)'));
-		}else if(newValue.length < 2 || newValue.length > 17) {
+		}else if(newValue.length < 3 || newValue.length > 50) {
 			callback(new Error('用户名必须是3~50个字符'));
 		}else {
 			callback();
@@ -326,9 +326,24 @@ const formValidate = {
 		let newValue = value.trim();
 		if(newValue.length == 0) {
 			callback(new Error('请输入密码(6~15个字符)'));
-		}else if(newValue.length < 2 || newValue.length > 17) {
+		}else if(newValue.length < 6 || newValue.length > 15) {
 			callback(new Error('密码必须是6~15个字符'));
 		}else {
+			callback();
+		}
+	},
+	/**
+	 * 验证编辑密码
+	 */
+	validateEditPassword:(rule, value, callback) =>{
+		let newValue = value.trim();
+		if(newValue.length > 0) {
+			if(newValue.length >= 6 && newValue.length <= 15) {
+				callback();
+			}else {
+				callback(new Error('密码必须是6~15个字符'));
+			}
+		}else{
 			callback();
 		}
 	},

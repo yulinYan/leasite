@@ -24,9 +24,14 @@
 						</el-select>
 					</el-form-item>
 				</el-col>
-				<el-col :span="23">
-					<el-form-item label="密码" :prop="pageType=='add'?'password':'passwordEdit'">
+				<el-col :span="23" v-if="pageType=='add'">
+					<el-form-item label="密码" :prop="'password'">
 						<el-input v-model="userForm.password" show-password placeholder="请输入密码"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="23" v-else>
+					<el-form-item label="密码" :prop="'passwordEdit'">
+						<el-input v-model="userForm.passwordEdit" show-password placeholder="请输入密码"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="23">
@@ -67,6 +72,7 @@
 					username: '', //用户名
 					roleId: '', //角色id
 					password:'',//密码
+					passwordEdit:'',//编辑密码
 					roleName:'',//角色名
 					email:'',//邮箱
 					mobile:'',//手机号
@@ -120,7 +126,7 @@
 							trigger: 'blur'
 						},
 						{
-							validator:baseValidator.validatePassword,
+							validator:baseValidator.validateEditPassword,
 							trigger: 'blur'
 						}
 					],
@@ -130,7 +136,23 @@
 							trigger: 'blur'
 						},
 						{
-							validator:baseValidator.validateEmail,
+							validator:async (rule,value,callback)=>{//async 同步执行axios
+								let newValue = value.trim();
+						        if(/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(newValue) == false){
+						            callback(new Error("邮箱无效!"));
+						        }else{
+						            let oReq = {
+						            	name:'email',
+						            	value:newValue
+						            };
+						            let oRes = await this.checkEmailAndPhone(oReq);//await 同步执行axios
+						            if(oRes.data.status == 200 && oRes.data.data == true){
+						            	callback(new Error("邮箱重复，请重新输入!"));
+						            }else{
+						            	callback();
+						            }
+						        }
+						    },
 					    	trigger: 'blur'
 					    }
 					],
@@ -141,7 +163,23 @@
 							trigger: 'blur'
 						},
 						{
-							validator:baseValidator.validatePhone,
+							validator:async (rule,value,callback)=>{//async 同步执行axios
+								let newValue = value.trim();
+						        if(/^1[3456789]\d{9}$/.test(newValue) == false){
+						            callback(new Error("手机号无效!"));
+						        }else{
+						            let oReq = {
+						            	name:'mobile',
+						            	value:newValue
+						            };
+						            let oRes = await this.checkEmailAndPhone(oReq);//await 同步执行axios
+						            if(oRes.data.status == 200 && oRes.data.data == true){
+						            	callback(new Error("手机号重复，请重新输入!"));
+						            }else{
+						            	callback();
+						            }
+						        }
+						    },
 					    	trigger: 'blur'
 					    }
 					]
@@ -168,6 +206,24 @@
 
 		},
 		methods: {
+			/**
+			 * 验证 手机号或邮箱的唯一性
+			 */
+			checkEmailAndPhone(oCheckObj){
+				return new Promise((resolve, reject) => {
+					this.$axios.leansite({
+	            		method:'get',
+	                	url:this.API.leansite.checkPhoneOrEmail,
+	                	params:{
+	                		userId:this.userObj.userId,
+							name:oCheckObj.name,//mobile/email
+							value:oCheckObj.value, //对应的值
+	                	}
+	              	}).then(res => {
+			            resolve(res);
+			       	});
+              	});
+			},
 			/**
 			 * 表单赋值
 			 */
@@ -204,7 +260,6 @@
 		            		method:'post',
 		                	url:self.API.leansite.addUsers,
 		                	data:{
-								userId:self.userForm.userId.trim(),//用户id
 								nickname:self.userForm.nickname.trim(),//员工姓名
 								username:self.userForm.username.trim(), //用户名
 								roleId: self.userForm.roleId, //角色id
@@ -254,10 +309,11 @@
 		            		method:'post',
 		                	url:self.API.leansite.updateUser,
 		                	data:{
+		                		userId:self.userForm.userId,//用户id
 		                		nickname:self.userForm.nickname.trim(),//员工姓名
 								username:self.userForm.username.trim(), //用户名
 								roleId: self.userForm.roleId, //角色id
-								password:self.userForm.password.trim(),//密码
+								password:self.userForm.passwordEdit.trim(),//密码
 								roleName:self.userForm.roleName.trim(),//角色名
 								email:self.userForm.email.trim(),//邮箱
 								mobile:self.userForm.mobile.trim(),//手机号
