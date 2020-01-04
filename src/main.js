@@ -44,7 +44,7 @@ Vue.prototype.API = {
 	internet:apiInternet,//物联网平台
 	appPlatform:apiAppPlatform//运维中心
 };
-Vue.prototype.qs = qs
+Vue.prototype.qs = qs;
 Vue.prototype.commonFun = commonFun;
 Vue.prototype.$store = store;
 Vue.prototype.hasPermission = hasPermission;

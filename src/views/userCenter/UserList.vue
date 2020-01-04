@@ -158,12 +158,21 @@
                     });
                     return;
                 }
+        		let searchIndex = this.multipleSelection.findIndex((item, index, arr)=>{
+        			return item.username =='superAdmin' && item.roleName == 'root';
+        		});
+        		if(searchIndex != -1){
+        			this.$message({
+						type: 'error',
+						message: '超级管理员不能删除,请重新选择!'
+					});
+					return;
+            	}
                 this.$confirm('确定删除选中的用户', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-
                     let delUsers = [];
                     self.multipleSelection.forEach(function (item, index) {
                         delUsers.push(item.userId);
@@ -182,6 +191,13 @@
              * 用户编辑
              */
             handleEdit(index, row) {
+            	if(row.username =='superAdmin' && row.roleName == 'root'){
+        			this.$message({
+						type: 'error',
+						message: '超级管理员不能编辑!'
+					});
+					return;
+            	}
                 this.dialogTitle = "编辑用户";
                 this.userObj = this.tableData[index];
                 this.userDialogVisible = true;
@@ -190,7 +206,13 @@
              * 删除单个用户
              */
             handleDelete(index, row) {
-                this.idx = index;
+            	if(row.username =='superAdmin' && row.roleName == 'root'){
+        			this.$message({
+						type: 'error',
+						message: '超级管理员不能删除!'
+					});
+					return;
+            	}
                 this.$confirm('确定删除该用户', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

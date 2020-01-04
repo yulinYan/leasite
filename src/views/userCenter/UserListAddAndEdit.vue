@@ -4,12 +4,12 @@
 			<el-row :gutter="15">
 				<el-col :span="23">
 					<el-form-item label="员工姓名" prop="nickname">
-						<el-input v-model="userForm.nickname" minLength="2" maxLength="50" placeholder="请输入员工姓名"></el-input>
+						<el-input v-model="userForm.nickname" placeholder="请输入员工姓名"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="23">
 					<el-form-item label="用户名" prop="username">
-						<el-input v-model="userForm.username" minLength="3" maxLength="50" placeholder="请输入用户名"></el-input>
+						<el-input v-model="userForm.username"  placeholder="请输入用户名"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="23">
@@ -26,17 +26,17 @@
 				</el-col>
 				<el-col :span="23">
 					<el-form-item label="密码" :prop="pageType=='add'?'password':'passwordEdit'">
-						<el-input v-model="userForm.password" show-password minLength="6" maxLength="15" placeholder="请输入密码"></el-input>
+						<el-input v-model="userForm.password" show-password placeholder="请输入密码"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="23">
 					<el-form-item label="邮箱" prop="email">
-						<el-input v-model="userForm.email" minLength="3" maxLength="50" placeholder="请输入邮箱"></el-input>
+						<el-input v-model="userForm.email" placeholder="请输入邮箱"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="23">
 					<el-form-item label="电话" prop="mobile">
-						<el-input v-model="userForm.mobile" minLength="11" maxLength="11" placeholder="请输入手机号"></el-input>
+						<el-input v-model="userForm.mobile" placeholder="请输入手机号"></el-input>
 					</el-form-item>
 				</el-col>
 			</el-row>
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+	import baseValidator from "../../common/baseValidator.js"
 	export default {
 		name: 'UserListAddAndEdit', //用户新增和编辑
 		props:{
@@ -76,15 +77,14 @@
 				isCheckPassword:true,
 				pageType:'add',//页面类型 pageType=add 新增/pageType=edit 修改
 				rules: {
-					nickname: [{
+					nickname: [
+						{
 							required: true,
 							message: '请输入员工姓名',
 							trigger: 'blur'
 						},
 						{
-							min: 2,
-							max: 50,
-							message: '员工姓名2-50 个字符',
+							validator:baseValidator.validateName,
 							trigger: 'blur'
 						}
 					],
@@ -94,9 +94,7 @@
 							trigger: 'blur'
 						},
 						{
-							min: 3,
-							max: 50,
-							message: '用户名 3-50 个字符',
+							validator:baseValidator.validateUserName,
 							trigger: 'blur'
 						}
 					],
@@ -112,9 +110,7 @@
 							trigger: 'blur'
 						},
 						{
-							min: 6,
-							max: 15,
-							message: '密码 6-15 个字符',
+							validator:baseValidator.validatePassword,
 							trigger: 'blur'
 						}
 					],
@@ -124,9 +120,7 @@
 							trigger: 'blur'
 						},
 						{
-							min: 6,
-							max: 15,
-							message: '密码 6-15 个字符',
+							validator:baseValidator.validatePassword,
 							trigger: 'blur'
 						}
 					],
@@ -136,13 +130,7 @@
 							trigger: 'blur'
 						},
 						{
-							validator:function(rule,value,callback){
-					            if(/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(value) == false){
-					                callback(new Error("邮箱无效!"));
-					            }else{
-					                callback();
-					            }
-					        },
+							validator:baseValidator.validateEmail,
 					    	trigger: 'blur'
 					    }
 					],
@@ -153,13 +141,7 @@
 							trigger: 'blur'
 						},
 						{
-							validator:function(rule,value,callback){
-					            if(/^1[3456789]\d{9}$/.test(value) == false){
-					                callback(new Error("手机号码无效!"));
-					            }else{
-					                callback();
-					            }
-					        },
+							validator:baseValidator.validatePhone,
 					    	trigger: 'blur'
 					    }
 					]
@@ -221,7 +203,18 @@
 		                self.$axios.leansite({
 		            		method:'post',
 		                	url:self.API.leansite.addUsers,
-		                	data:self.userForm
+		                	data:{
+								userId:self.userForm.userId.trim(),//用户id
+								nickname:self.userForm.nickname.trim(),//员工姓名
+								username:self.userForm.username.trim(), //用户名
+								roleId: self.userForm.roleId, //角色id
+								password:self.userForm.password.trim(),//密码
+								roleName:self.userForm.roleName.trim(),//角色名
+								email:self.userForm.email.trim(),//邮箱
+								mobile:self.userForm.mobile.trim(),//手机号
+								ssex:self.userForm.ssex.trim(),//性别
+								status:self.userForm.status.trim(),//账号状态，默认为1  0锁定  1是正常
+		                	}
 		                }).then((res) => {
 		                    var resData = res.data;
 		                    if(resData.status == "200"){
@@ -260,7 +253,17 @@
 		                self.$axios.leansite({
 		            		method:'post',
 		                	url:self.API.leansite.updateUser,
-		                	data:self.userForm
+		                	data:{
+		                		nickname:self.userForm.nickname.trim(),//员工姓名
+								username:self.userForm.username.trim(), //用户名
+								roleId: self.userForm.roleId, //角色id
+								password:self.userForm.password.trim(),//密码
+								roleName:self.userForm.roleName.trim(),//角色名
+								email:self.userForm.email.trim(),//邮箱
+								mobile:self.userForm.mobile.trim(),//手机号
+								ssex:self.userForm.ssex.trim(),//性别
+								status:self.userForm.status.trim(),//账号状态，默认为1  0锁定  1是正常
+		                	}
 		                }).then((res) => {
 		                    var resData = res.data;
 		                    if(resData.status =="200"){
