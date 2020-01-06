@@ -533,10 +533,22 @@ export default {
             }).then(res => {
                 this.$message({
                     type: 'success',
-                    message: '成功'
+                    message: '添加资产成功!'
                 });
                 this.getAssets();
-            }).catch(function(err) {
+            }).catch((err) =>{
+            	let resData = err.response.data;
+            	if(resData && resData.errorCode == 31){
+            		this.$message({
+	                    type: 'error',
+	                    message: '添加资产失败，资产名称重复!'
+	                });
+            	}else{
+            		this.$message({
+	                    type: 'error',
+	                    message: '添加资产失败。'
+	                });
+            	}
                 console.log(err.response);
             })
         },

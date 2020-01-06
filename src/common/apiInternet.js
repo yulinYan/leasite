@@ -3,7 +3,7 @@ import axios from 'axios'
  * 物联网平台接口api
  */
 const interface_s = {
-	baseURL: 'http://192.168.2.16:8070/',//非生产环境
+	baseURL: 'http://192.168.2.31:8070/',//非生产环境
 	//prodBaseURL:'http://192.168.2.31:8070/',//生产环境
 	prodBaseURL:"http://192.168.2.59:9050/",//生产环境
 	//登录模块

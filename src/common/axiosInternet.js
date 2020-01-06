@@ -50,9 +50,9 @@ instanceInternet.interceptors.response.use(response => {
     //  }
     return response;
 }, error => {
-    Message.error({
-        message: '加载失败'
-    })
+//  Message.error({
+//      message: '加载失败'
+//  })
     return Promise.reject(error);
 })
 export default instanceInternet;

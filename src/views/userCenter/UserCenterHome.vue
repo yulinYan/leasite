@@ -1,7 +1,7 @@
 <template>
 <el-container class="userCenterHome">
     <el-header>
-        <img src="../../assets/img/dhLogo.png" alt="大航联科logo">
+        <img src="../../assets/img/logo.png" alt="平台logo">
         <span>用户中心</span>
     </el-header>
     <el-container class="platformContainer">
@@ -176,8 +176,8 @@ export default {
         height: 60px;
         background-color: #ffffff;
         >img {
-            margin: 12px 21px 0 30px;
-            max-width: 136px;
+            margin: 12px 21px 0 0;
+            max-width: 130px;
         }
         >span {
             font-family: 'MicrosoftYaHei';

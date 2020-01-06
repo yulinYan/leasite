@@ -1,5 +1,5 @@
 <template>
-	<el-dialog ref="xhzqDialog" :width="width"  class="xhzqDialog" :title="appObj.appName" :fullscreen="isfullscreen" :modal="false" :visible.sync="dialogVisible"  :append-to-body="false" :close-on-click-modal="false" :destroy-on-close="true" :show-close="false"  :class="isminimize? 'isminimize': ''" center>
+	<el-dialog ref="xhzqDialog" :width="width" style="height: 100%;" class="xhzqDialog" :title="appObj.appName" :fullscreen="isfullscreen" :modal="false" :visible.sync="dialogVisible"  :append-to-body="false" :close-on-click-modal="false" :destroy-on-close="true" :show-close="false"  :class="isminimize? 'isminimize': ''" center>
 		<div v-show="!isminimize" slot="title" class="medium">
 			<div class="centers"><span>{{appObj.appName}}</span></div>
 			<div class="icons">
@@ -9,7 +9,7 @@
 			</div>
 		</div>
 		<div v-show="!isminimize" class="dialogBody" style="height: 100% !important;">
-			<iframe :src="appObj.appUrl" id="mobsf" scrolling="no" sandbox="allow-same-origin allow-top-navigation allow-forms allow-scripts" frameborder="0" width="100%" height="100%"></iframe>
+			<iframe class="iframeClass" :src="appObj.appUrl" id="mobsf" marginheight="50px" marginwidth="15px"  scrolling="auto" sandbox="allow-same-origin allow-top-navigation allow-forms allow-scripts" frameborder="0" width="100%" height="75%"></iframe>
 		</div>
 	</el-dialog>
 </template>
@@ -66,8 +66,14 @@
 			},
 			// 全屏
 			IsFullscreen() {
-				this.isfullscreen = !this.isfullscreen
-				if(this.isfullscreen) this.$emit('isfullscreen')
+				this.isfullscreen = !this.isfullscreen;
+				const elIframe = this.$refs.xhzqDialog.$el.querySelector('iframe');
+				if(this.isfullscreen){
+					elIframe.style.height = "90%";
+				}else{
+					elIframe.style.height = "75%";
+				}
+				if(this.isfullscreen) this.$emit('isfullscreen');
 			}
 		},
 		mounted() {
@@ -80,7 +86,7 @@
 </script>
 <style lang="scss" type="text/css" scoped>
 	.el-dialog {
-		margin-top: 10vh!important;
+		/*margin-top: 10vh!important;*/
 		height: 60vh;
 	}
 
@@ -126,6 +132,7 @@
 
 	.xhzqDialog{
 		min-height: 600px;
+		overflow-y: hidden !important;
 		.is-fullscreen{
 			width: 100% !important;
 			left: 0 !important;
@@ -239,23 +246,26 @@
 				height: 100% !important;
 				.dialogBody {
 					height: 100%;
-					overflow: auto;
+					overflow: hidden;
 					padding: 0 !important;
 					background: #f7f9fc;
-					&::-webkit-scrollbar {
-						width: 4px;
-						height: 8px;
+					.iframeClass{
+						&::-webkit-scrollbar {
+							width: 4px;
+							height: 8px;
+						}
+						&::-webkit-scrollbar-thumb {
+							background: transparent;
+							border-radius: 4px;
+						}
+						&:hover::-webkit-scrollbar-thumb {
+							background: hsla(0, 0%, 53%, .4)
+						}
+						&:hover::-webkit-scrollbar-track {
+							background: hsla(0, 0%, 53%, .1)
+						}						
 					}
-					&::-webkit-scrollbar-thumb {
-						background: transparent;
-						border-radius: 4px;
-					}
-					&:hover::-webkit-scrollbar-thumb {
-						background: hsla(0, 0%, 53%, .4)
-					}
-					&:hover::-webkit-scrollbar-track {
-						background: hsla(0, 0%, 53%, .1)
-					}
+
 				}
 				.dialogFooter {
 					padding: 10px 15px;
@@ -283,6 +293,22 @@
 		}
 		/deep/.el-dialog.is-fullscreen{
 			overflow: hidden !important;
+		}
+		/deep/.iframeClass{
+			::-webkit-scrollbar {
+				width: 4px;
+				height: 8px;
+			}
+			::-webkit-scrollbar-thumb {
+				background: transparent;
+				border-radius: 4px;
+			}
+			:hover::-webkit-scrollbar-thumb {
+				background: hsla(0, 0%, 53%, .4)
+			}
+			:hover::-webkit-scrollbar-track {
+				background: hsla(0, 0%, 53%, .1)
+			}						
 		}
 	}
 </style>

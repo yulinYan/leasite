@@ -330,7 +330,7 @@ export default {
                 this.deviceMessageOption.xAxis.data = [];
                 this.deviceMessageOption.series = [];
                 res.data.forEach((v, i) => {
-                    v.deviceRes.forEach((vD, iD) => {
+                    v.deviceSet.forEach((vD, iD) => {
                         if (i === 0) {
                             this.deviceMessageOption.series.push({
                                 name: vD.name,
@@ -359,7 +359,7 @@ export default {
             this.deviceTimeOption.yAxis.data = [];
             this.deviceTimeOption.series[0].data = [];
             this.deviceTimeOption.grid.left = '70px';
-            res.devices.forEach((v, i) => {
+            res.devicesRes.forEach((v, i) => {
                 this.deviceTimeOption.yAxis.data.push(v.name);
                 this.deviceTimeOption.series[0].data.push(this.sToH(v.totaltime));
             })
