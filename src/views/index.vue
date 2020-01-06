@@ -472,7 +472,7 @@
 			cursor: pointer;
 			margin: 0 5px;
 			padding: 0 8px;
-			height: 45px;
+			height: 33px;
 			border: none;
 			border-bottom: 3px solid #a0a9b5;
 			img.statusIcon{

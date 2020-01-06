@@ -8,7 +8,8 @@
 					<span @click="delAllAssets"><img :src="require('../../assets/img/internetPlatform/shanchu.png')" alt=""> 批量删除</span>
 					<div>
 						<input type="text" v-model="searchInp" placeholder="请输入设备名称">
-						<img @click="searchDevice" :src="require('../../assets/img/internetPlatform/sousuo.png')" alt="">
+						<span id="dividingLine"></span>
+						<img @click="searchDevice" src="../../assets/img/internetPlatform/sousuo.png" alt="">
 					</div>
 				</div>
 			</div>
@@ -49,7 +50,7 @@
 					<el-table-column label="操作" width="240">
 						<template slot-scope="scope">
 							<el-button type="text" @click="addDevice(scope.row)" size="small" class="detailsBtn">
-								<img :src="require('../../assets/img/internetPlatform/bianji.png')" alt="">编辑</el-button>
+								<img src="../../assets/img/internetPlatform/bianji.png" alt="">编辑</el-button>
 							<el-button type="text" size="small" @click="delDevice(scope.row)" class="delBtn"><i class="el-icon-error"></i>删除</el-button>
 						</template>
 					</el-table-column>
@@ -74,7 +75,11 @@
 								<el-input title="请勿修改" readonly v-model="currentTableData.id==null?'':currentTableData.id.id"></el-input>
 							</el-form-item>
 							<el-form-item label="访问令牌：">
-								<el-input title="点击按钮修改" readonly v-model="currentTableData.credentialsId"></el-input><button class="changeCredentialsId" @click="changeCredentialsId(currentTableData.id.id)">修改</button>
+								<el-input title="点击按钮修改" readonly v-model="currentTableData.credentialsId">
+
+								</el-input>
+								<el-button  class="changeCredentialsId" @click="changeCredentialsId(currentTableData.id.id)">
+									<img src="../../assets/img/internetPlatform/bianji.png" alt="">修改</el-button>
 							</el-form-item>
 							<el-form-item label="设备标签：">
 								<el-input v-model="currentTableData.label" maxlength="10" placeholder="请输入十位以内字符"></el-input>
@@ -122,7 +127,7 @@
 					<el-tab-pane label="遥测" name="third">
 						<div class="telemetry">
 							<p v-if="telemetryList.length===0">暂无数据</p>
-							<div v-for="(item, index) in telemetryList" :key="index" :class="{'active':item.active,'empty':item.empty}">
+							<div v-for="(item, index) in telemetryList" :key="index"  :class="{'active':item.active,'empty':item.empty}">
 								<p><em :title="item.name">{{item.name}}</em><span>{{item.time}}</span></p>
 								<div>{{item.num}}</div>
 								<span @click="telemetryDetails(index,item.name)">数据详情</span>
@@ -649,7 +654,6 @@
 		                    message: '添加设备失败。'
 		                });
 	            	}
-					console.log(err.response);
 				})
 			},
 			//搜索设备
@@ -918,6 +922,8 @@
 						img {
 							float: right;
 							margin: 6px 10px 0 0;
+							width: 18px;
+							height: 18px;
 						}
 					}
 					input {
@@ -941,14 +947,22 @@
 		}
 		.changeCredentialsId {
 			position: absolute;
-			right: -60px;
-			height: 32px;
-			line-height: 32px;
+			margin-left:15px;
+			height: 30px;
+			width: 80px;
+			line-height: 30px;
 			border: none;
 			top: 2px;
 			border-radius: 4px;
-			padding: 0px 8px;
+			border: solid 1px #68c161;
+			color:#68c161;
+			border-radius: 4px;
+			padding: 0px 0px;
 			cursor: pointer;
+			img{
+				
+			    margin-right: 5px;
+			}
 		}
 		/deep/ .el-table {
 			td .cell {
@@ -1054,9 +1068,9 @@
 			width: 140px;
 		}
 		/deep/ .el-input--medium .el-input__inner {
-			height: 32px;
-			line-height: 32px;
-			background-color: #f2f4f6;
+			height: 36px;
+			line-height: 36px;
+			background-color: #f1f3f6;
 			border-radius: 4px;
 			border: none;
 		}
@@ -1095,7 +1109,7 @@
 				}
 				>div {
 					margin: 18px 0 8px;
-					font-family: 'GrayDesign';
+					font-family: GrayDesign-Medium;
 					font-size: 30px;
 					text-align: center;
 				}
@@ -1120,7 +1134,7 @@
 				}
 			}
 			p {
-				font-family: 'MicrosoftYaHei';
+				font-family: MicrosoftYaHei;
 				font-size: 14px;
 				span {
 					font-family: 'Helvetica';
@@ -1138,6 +1152,19 @@
 				display: inline-block;
 				cursor: pointer;
 			}
+		}
+		.telemetry>div:hover{
+			width: 289px;
+			height: 160px;
+		}
+		.telemetry>div:hover>div{
+			font-size:36px;
+		}
+		.telemetry>div:hover>p{
+			font-size:16px;
+		}
+		.telemetry>div:hover>span{
+			font-size:16px;
 		}
 		/deep/ .el-dialog {
 			overflow: hidden;
@@ -1197,4 +1224,20 @@
 			height: 392px;
 		}
 	}
+	#dividingLine {
+		position: relative;
+		top: -13px;
+		border-left: solid 1px #cccccc;
+	}
+	
+	/deep/ .el-form-item__label:before {
+		margin-left: -12px;
+	}
+	 /deep/ .el-table tr{
+	 	height: 70px;
+	 }
+	 /deep/ .el-table__body tr:hover>td{ 
+    /*box-shadow: 0px 1px 12px 5px rgba(37, 69, 134, 0.3);*/
+		background-color:#ecf5ff!important
+}
 </style>
