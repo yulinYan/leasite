@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {},//需要 proxyTable 代理的接口（可跨域）
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: '192.168.2.15', // can be overwritten by process.env.HOST
     port: 8000, // 运行测试页面的端口
     errorOverlay: true,
     notifyOnErrors: true,

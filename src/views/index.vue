@@ -37,7 +37,7 @@
     <!--弹框打开第三方应用-->
     <DialogUrl v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 2" width="80%" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogUrl'+index"></DialogUrl>
     <!--弹框打开组件-->
-    <DialogComponent v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 1" width="80%" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogComponent'+index"></DialogComponent>
+    <DialogComponent v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 1" width="80%" @callBackFun="closeParentDialog" :appObj="app" :key="timeStamp" :ref="'dialogComponent'+index"></DialogComponent>
 </div>
 </template>
 
@@ -53,6 +53,7 @@
 		},
 		data() {
 			return {
+				timeStamp:new Date().getTime(),
 				searchApp:"",//搜索应用
 				systemMenuVisible:false,//是否显示状态栏系统菜单
 				thirdAppList:[],//桌面第三方应用

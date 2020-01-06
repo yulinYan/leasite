@@ -10,7 +10,7 @@
         </div>
     </div>
     <div v-show="!isminimize" class="dialogBody">
-        <currComponent :username="username" :leansiteToken="leansiteToken"></currComponent>
+        <currComponent :key="timeStamp" :username="username" :leansiteToken="leansiteToken"></currComponent>
     </div>
 </el-dialog>
 </template>
@@ -32,6 +32,7 @@ export default {
     },
     data() {
         return {
+        	timeStamp:new Date().getTime(),
             isfullscreen: false, // 全屏
             isminimize: false, // 最小化
             moduleDialogVisible: false, // 隐藏弹窗

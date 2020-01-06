@@ -643,10 +643,10 @@
 					this.getDevice();
 				}).catch((err) =>{
 	            	let resData = err.response.data;
-	            	if(resData && resData.errorCode == 31){
+	            	if(resData){
 	            		this.$message({
 		                    type: 'error',
-		                    message: '添加设备失败，设备名称重复!'
+		                    message: '添加设备失败，'+resData.message
 		                });
 	            	}else{
 	            		this.$message({

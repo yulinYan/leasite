@@ -133,7 +133,7 @@
 				console.log(this.roleForm.userId);
 			},
 			/**
-			 * 添加用户
+			 * 添加角色
 			 * @param formName {Object} form表单名称
 			 */
 			addRole(formName) {
@@ -161,10 +161,17 @@
 					          	});
 		                    }
 		                }).catch((err) => {
-		                	self.$message({
-					            type: 'error',
-					            message: '请求异常，请检查网络！'
-					        });  
+							if(err.response.data.status == 500){
+		                    	self.$message({
+						            type: 'error',
+						            message: '添加角色失败，'+err.response.data.message
+					          	});
+		                    }else{
+					          	self.$message({
+						            type: 'error',
+						            message: '请求异常，请检查网络！'
+						        });
+		                    } 
 		                })
 					} else {
 						return false;

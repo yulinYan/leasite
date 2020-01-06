@@ -539,10 +539,10 @@ export default {
                 this.getAssets();
             }).catch((err) =>{
             	let resData = err.response.data;
-            	if(resData && resData.errorCode == 31){
+            	if(resData){
             		this.$message({
 	                    type: 'error',
-	                    message: '添加资产失败，资产名称重复!'
+	                    message: '添加资产失败，'+resData.message
 	                });
             	}else{
             		this.$message({

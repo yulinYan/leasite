@@ -9,7 +9,7 @@
 				</el-col>
 				<el-col :span="23">
 					<el-form-item label="用户名" prop="username">
-						<el-input v-model="userForm.username"  placeholder="请输入用户名"></el-input>
+						<el-input v-model="userForm.username"  placeholder="请输入用户名" :readonly="userNameReadOnly"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="23">
@@ -79,8 +79,8 @@
 					ssex:'',//性别
 					status:'1',//账号状态，默认为1  0锁定  1是正常
 				},
+				userNameReadOnly:false,//用户名是否只读
 				roleList:[],//角色列表
-				isCheckPassword:true,
 				pageType:'add',//页面类型 pageType=add 新增/pageType=edit 修改
 				rules: {
 					nickname: [
@@ -192,12 +192,12 @@
 		mounted() {
 			this.getRoleList();
 			if(this.userObj.userId){
-				this.isCheckPassword = false;
 				this.pageType = 'edit';
+				this.userNameReadOnly = true;
 				this.setFormData();//表单赋值
 
 			}else{
-				this.isCheckPassword = true;
+				this.userNameReadOnly = false;
 				this.pageType ='add';
 
 			}
