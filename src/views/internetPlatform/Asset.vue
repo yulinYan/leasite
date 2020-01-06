@@ -8,6 +8,7 @@
                 <span @click="delAllAssets"><img :src="require('../../assets/img/internetPlatform/shanchu.png')" alt=""> 批量删除</span>
                 <div>
                     <input type="text" v-model="searchInp" placeholder="请输入资产名称">
+                    <span id="dividingLine"></span>
                     <img @click="searchAssets" :src="require('../../assets/img/internetPlatform/sousuo.png')" alt="">
                 </div>
             </div>
@@ -809,6 +810,8 @@ export default {
                     img {
                         float: right;
                         margin: 6px 10px 0 0;
+                        width: 18px;
+                        height: 18px;
                     }
                 }
                 input {
@@ -1077,4 +1080,18 @@ export default {
         height: 392px;
     }
 }
+	#dividingLine{
+		position: relative;
+    	top: -13px;
+		border-left: solid 1px #cccccc;
+	}
+	/deep/ .el-table tr{
+	 	height: 70px;
+	 }
+	 /*/deep/ .el-table tr:hover{
+	 	box-shadow: 0px 1px 12px 0px rgba(37, 69, 134, 0.6);
+	 }*/
+	/deep/ .el-table__row:hover{
+		box-shadow: 0px 1px 12px 0px rgba(37, 69, 134, 0.3);
+	}
 </style>

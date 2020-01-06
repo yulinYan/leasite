@@ -399,7 +399,7 @@ export default {
             float: left;
             height: 240px;
             background-color: #ffffff;
-            box-shadow: 0px 15px 25px 0px rgba(49, 59, 87, 0.12);
+            
             border-radius: 16px;
             &:nth-of-type(2) {
                 margin: 0 30px;
@@ -433,6 +433,9 @@ export default {
             em {
                 font-size: 20px;
             }
+        }
+        li:hover{
+        	box-shadow: 0px 15px 25px 0px rgba(49, 59, 87, 0.12);
         }
     }
     .overview {
