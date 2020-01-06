@@ -75,6 +75,12 @@ export default {
          */
         IsFullscreen() {
             this.isfullscreen = !this.isfullscreen
+			const elDialogBody = this.$refs.xhzqDialog.$el.querySelector('dialogBody');
+			if(this.isfullscreen){
+				elDialogBody.style.height = "95%";
+			}else{
+				elDialogBody.style.height = "75%";
+			}
             if (this.isfullscreen) this.$emit('isfullscreen')
             if (this.appObj.appName === '物联网') {
                 bus.$emit("resize", true);
@@ -106,8 +112,8 @@ export default {
 </script>
 <style lang="scss" type="text/css" scoped>
 	.el-dialog {
-		margin-top: 10vh!important;
-		height: 60vh;
+		/*margin-top: 10vh!important;*/
+		/*height: 60vh;*/
 	}
 
 	.no_select {
@@ -151,7 +157,7 @@ export default {
 
 .systemModuleDialog {
     min-height: 600px;
-    max-height: calc(100% - 15vh);
+    /*max-height: calc(100% - 15vh);*/
     .is-fullscreen {
         width: 100% !important;
         left: 0 !important;
@@ -165,9 +171,9 @@ export default {
         .el-dialog__body {
             height: 100%;
             .dialogBody {
-                height: 100%!important;
+                /*height: 100%!important;*/
                 max-height: none!important;
-                padding-bottom: 120px!important;
+                padding-bottom: 50px!important;
             }
         }
         .dialogFooter {
@@ -262,9 +268,7 @@ export default {
         .el-dialog__body {
             padding: 1px !important;
             .dialogBody {
-                max-height: calc(80vh - 50px);
                 overflow: auto;
-                padding: 0 !important;
                 background: #f7f9fc;
                 &::-webkit-scrollbar {
                     width: 4px;

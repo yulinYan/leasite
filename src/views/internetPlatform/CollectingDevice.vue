@@ -9,7 +9,7 @@
 					<div>
 						<input type="text" v-model="searchInp" placeholder="请输入设备名称">
 						<span id="dividingLine"></span>
-						<img @click="searchDevice" :src="require('../../assets/img/internetPlatform/sousuo.png')" alt="">
+						<img @click="searchDevice" src="../../assets/img/internetPlatform/sousuo.png" alt="">
 					</div>
 				</div>
 			</div>
@@ -50,7 +50,7 @@
 					<el-table-column label="操作" width="240">
 						<template slot-scope="scope">
 							<el-button type="text" @click="addDevice(scope.row)" size="small" class="detailsBtn">
-								<img :src="require('../../assets/img/internetPlatform/bianji.png')" alt="">编辑</el-button>
+								<img src="../../assets/img/internetPlatform/bianji.png" alt="">编辑</el-button>
 							<el-button type="text" size="small" @click="delDevice(scope.row)" class="delBtn"><i class="el-icon-error"></i>删除</el-button>
 						</template>
 					</el-table-column>
@@ -638,12 +638,25 @@
 				}).then(res => {
 					this.$message({
 						type: 'success',
-						message: '成功'
+						message: '添加设备成功'
 					});
 					this.drawer = false;
 					this.getDevice();
-				}).catch(function(err) {
-//					console.log(err.response);
+
+				}).catch((err) =>{
+	            	let resData = err.response.data;
+	            	if(resData && resData.errorCode == 31){
+	            		this.$message({
+		                    type: 'error',
+		                    message: '添加设备失败，设备名称重复!'
+		                });
+	            	}else{
+	            		this.$message({
+		                    type: 'error',
+		                    message: '添加设备失败。'
+		                });
+	            	}
+
 				})
 				
 			},
@@ -1215,7 +1228,6 @@
 			height: 392px;
 		}
 	}
-	
 	#dividingLine {
 		position: relative;
 		top: -13px;

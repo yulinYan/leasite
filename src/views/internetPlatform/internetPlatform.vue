@@ -2,12 +2,12 @@
 <div class="internetPlatform">
     <el-container>
         <el-header>
-            <img :src="require('../../assets/img/dhLogo.png')" alt="">
+            <img src="../../assets/img/logo.png" alt="平台logo">
             <span>物联网平台</span>
         </el-header>
         <el-container class="platformContainer">
             <el-tabs tab-position="left" style="width: 100%;" v-model="activeName" @tab-click="asideClick" :lazy="true" class="plantFormClass">
-                <el-tab-pane label="信息总览" v-for="(item,index) in asideList" :key="index" :name="item.name" class="plantFormClassItem">
+                <el-tab-pane v-for="(item,index) in asideList" :key="index" :name="item.name" class="plantFormClassItem">
                     <span slot="label"><img style="margin-right: 15px;" :src="item.isactive ? item.icon[1]:item.icon[0]" alt="" >{{item.name}}</span>
                     <component v-if="activeName === item.name&&ajaxMsg.Authorization!=''" :is="item.com" :ajaxMsg="ajaxMsg" />
                 </el-tab-pane>
@@ -166,8 +166,8 @@ export default {
         height: 60px;
         background-color: #ffffff;
         >img {
-            margin: 12px 21px 0 30px;
-            max-width: 136px;
+            margin: 12px 21px 0 0;
+            max-width: 130px;
         }
         >span {
             font-family: 'MicrosoftYaHei';
