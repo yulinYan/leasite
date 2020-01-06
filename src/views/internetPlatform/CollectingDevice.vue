@@ -57,7 +57,7 @@
 				</el-table>
 			</div>
 		</div>
-		<el-drawer :modal='false' :visible.sync="drawer" :with-header="false" size="900px" :modal-append-to-body="false" :destroy-on-close='true' direction="rtl">
+		<el-drawer :modal='false' :visible.sync="drawer" :with-header="false" size="900px" :modal-append-to-body="false" destroy-on-close='true' direction="rtl">
 			<div>
 				<el-tabs v-model="activeName" @tab-click="handleClick">
 					<el-tab-pane label="设备详情" name="first">
@@ -616,7 +616,7 @@
 			},
 			//保存设备
 			saveDevice() {
-				if(this.currentTableData.name === '' || this.currentTableData.type === '') {
+				if(this.currentTableData.name.trim() === '' || this.currentTableData.type.trim() === '') {
 					this.$message({
 						type: 'warning',
 						message: '请填写完整'
@@ -640,10 +640,12 @@
 						type: 'success',
 						message: '成功'
 					});
+					this.drawer = false;
 					this.getDevice();
 				}).catch(function(err) {
-					console.log(err.response);
+//					console.log(err.response);
 				})
+				
 			},
 			//搜索设备
 			searchDevice() {

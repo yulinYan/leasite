@@ -1,7 +1,7 @@
 <template>
 <el-container class="userCenterHome">
     <el-header>
-        <img src="../../assets/img/dhLogo.png" title="dahanglianke" alt="大航联科logo">
+        <img src="../../assets/img/dhLogo.png"  alt="大航联科logo">
         <span>用户中心</span>
     </el-header>
     <el-container class="platformContainer">
