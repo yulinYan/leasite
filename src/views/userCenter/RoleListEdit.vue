@@ -17,7 +17,7 @@
 				<div v-if="item.children && item.children.length > 0">
 					<div class="model_2" v-for="(item2,index2) in item.children" :key="index2">
 						<!--   模块2-->
-						<div class="model_2_2" style="width: 175px">
+						<div class="model_2_2" style="width: 175px" @click="TwoAllCheck(item,item2)">
 							<el-checkbox class="model2_checkbox" @change="model_2_selectAll(item,item2)" v-model="item2.checked">{{item2.title}}</el-checkbox>
 						</div>
 						<!--  模块3-->
@@ -153,15 +153,31 @@
 //			/**
 //			 *点击一级模块 后面都被选中 
 //			 */
-//			oneAllCheck(item){
-//				if(item.children){
-//					item.children.forEach((twoChildren)=>{
-//						twoChildren.checked=!item.checked;
-//						
-//					})
-//					console.log("adad")
-//				}
-//			},
+			oneAllCheck(item){
+				
+					if(item.children){
+					item.children.forEach((twoChildren)=>{
+						twoChildren.checked=!item.checked;
+						if(twoChildren.children){
+							twoChildren.children.forEach((threeChildren)=>{
+								threeChildren.checked=twoChildren.checked
+							})
+						}
+					})
+				}
+			},
+			/**
+			 *点击二级目录三级被全选 
+			 */
+			TwoAllCheck(item,item2){
+				
+				if(item2.children){
+					item2.children.forEach((threeChildren)=>{
+						threeChildren.checked=!item2.checked;
+					})
+				}
+				
+			},
 			/**
 			 * 获取角色权限列表数据
 			 */

@@ -15,26 +15,23 @@
         </div>
         <div class="con">
             <el-table @selection-change="handleSelectionChange" class="assetsTable" :height="tableDataHeight" :data="tableData" stripe highlight-current-row style="width: 100%;" :cell-style="cellStyle" :header-cell-style="headerStyle">
-                <el-table-column type="selection" width="55">
-                </el-table-column>
-                <el-table-column prop="name" label="资产名称" show-overflow-tooltip>
-                </el-table-column>
-                <el-table-column prop="type" label="资产分组" show-overflow-tooltip>
-                </el-table-column>
-                <el-table-column prop="name" label="资产ID" show-overflow-tooltip>
+                <el-table-column type="selection" width="55"></el-table-column>
+                <el-table-column prop="name" width="180" label="资产名称" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="type"  width="180" label="资产分组" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="name" width="300" label="资产ID" show-overflow-tooltip>
                     <template slot-scope="scope">
                         {{scope.row.id.id}}
-</template>
+					</template>
                 </el-table-column>
-                <el-table-column prop="createdTime" label="创建时间" show-overflow-tooltip>
+                <el-table-column prop="createdTime" width="300" label="创建时间" show-overflow-tooltip>
 <template slot-scope="scope">
  {{scope.row.createdTime | momentDate}}
 </template>
                 </el-table-column>
-                <el-table-column prop="name" label="说明" show-overflow-tooltip>
-<template slot-scope="scope">
- {{scope.row.additionalInfo==null?'':scope.row.additionalInfo.description}}
-</template>
+                <el-table-column prop="name" min-width="130"  label="说明" show-overflow-tooltip>
+					<template slot-scope="scope">
+					 	{{scope.row.additionalInfo==null?'':scope.row.additionalInfo.description}}
+					</template>
                 </el-table-column>
                 <el-table-column label="操作" width="240">
 <template slot-scope="scope">
@@ -458,6 +455,7 @@ export default {
             }).catch(function(err) {
                 console.log(err.response);
             })
+            this.attributeVisible = false;
         },
         //编辑属性
         editAttribute(row) {
@@ -512,7 +510,7 @@ export default {
         },
         //保存资产
         saveAssets() {
-            if (this.currentTableData.name === '' || this.currentTableData.type === '') {
+            if (this.currentTableData.name.trim() === '' || this.currentTableData.type.trim() === '') {
                 this.$message({
                     type: 'warning',
                     message: '请填写完整'
@@ -534,9 +532,11 @@ export default {
             }).then(res => {
                 this.$message({
                     type: 'success',
+
                     message: '添加资产成功!'
                 });
                 this.getAssets();
+                this.drawer = false
             }).catch((err) =>{
             	let resData = err.response.data;
             	if(resData){
@@ -550,6 +550,7 @@ export default {
 	                    message: '添加资产失败。'
 	                });
             	}
+
                 console.log(err.response);
             })
         },
