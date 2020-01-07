@@ -65,14 +65,14 @@
 				systemModules:[//系统功能模块
 					{ 
 						appName:'用户中心',
-						appUrl:'/userCenterHome',
+						appUrl:'UserCenterHome',
 						appIcon:require("../assets/img/yonghuzhongxin.png"),
                     	powerName:'user:view',
                     	isAuth:false//是否有权限
 					},
 					{ 
 						appName:'物联网',
-						appUrl:'/internetPlatform',
+						appUrl:'InternetPlatform',
 						appIcon:require("../assets/img/wulianwang.png"),
                     	powerName:'iot',
                     	isAuth:false//是否有权限
@@ -316,6 +316,7 @@
 	         */
 			alertComponent(menuObj) {
 				this.systemMenuVisible = false;
+				this.timeStamp=new Date().getTime();
 				switch (menuObj.appName){
 					case "退出系统":
 						this.logout();

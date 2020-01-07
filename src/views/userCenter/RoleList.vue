@@ -60,7 +60,6 @@
 		},
         data() {
             return {
-
                 tableData: [],
                 multipleSelection: [],//选中项
                 pageObj: {
