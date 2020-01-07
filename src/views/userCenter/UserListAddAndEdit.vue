@@ -4,12 +4,12 @@
 			<el-row :gutter="15">
 				<el-col :span="23">
 					<el-form-item label="员工姓名" prop="nickname">
-						<el-input v-model="userForm.nickname" placeholder="请输入员工姓名"></el-input>
+						<el-input v-model.trim="userForm.nickname"  placeholder="请输入员工姓名"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="23">
 					<el-form-item label="用户名" prop="username">
-						<el-input v-model="userForm.username"  placeholder="请输入用户名" :readonly="userNameReadOnly"></el-input>
+						<el-input v-model.trim="userForm.username"  placeholder="请输入用户名" :readonly="userNameReadOnly"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="23">

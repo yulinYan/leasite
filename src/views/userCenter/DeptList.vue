@@ -12,7 +12,6 @@
 		      :indent="10"
 		      @node-click="treeClick"
 		      :expand-on-click-node="false">
-		      {{aDeptDatas.children}}
 		       <span class="custom-tree-node" slot-scope="{ node, data }"  style="padding-right:10px;">
 		        <i :class="node.level == 1?'iconfont leansite-ziyuan':'iconfont leansite-bumen'" style="color:#aee4fa;"></i>
 		        <span style="display:inline-block;margin-left:5px;width:104px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{ node.label }}</span>
