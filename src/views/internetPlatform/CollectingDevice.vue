@@ -7,7 +7,7 @@
 					<span class="el-icon-plus" @click="addDevice()">新增设备</span>
 					<span @click="delAllAssets"><img :src="require('../../assets/img/internetPlatform/shanchu.png')" alt=""> 批量删除</span>
 					<div>
-						<input type="text" v-model="searchInp" placeholder="请输入设备名称">
+						<input type="text" v-model="searchInp" @keyup.enter="searchEnterFun" placeholder="请输入设备名称">
 						<span id="dividingLine"></span>
 						<img @click="searchDevice" src="../../assets/img/internetPlatform/sousuo.png" alt="">
 					</div>
@@ -682,6 +682,15 @@
 					console.log(err.response);
 				})
 			},
+			/**
+             * 按回车键搜索
+             */
+            searchEnterFun(e) {
+                var keyCode = window.event ? e.keyCode : e.which;
+                if (keyCode == 13) {
+                    this.searchDevice()
+                }
+            },
 			//新增设备
 			addDevice(row) {
 				if(row !== undefined) {
@@ -1240,8 +1249,12 @@
 	 /deep/ .el-table tr{
 	 	height: 70px;
 	 }
+	 /deep/ .el-table__body tr:hover{
+	 	box-shadow: 0px 1px 12px 5px rgba(37, 69, 134, 0.3)!important;
+	 }
 	 /deep/ .el-table__body tr:hover>td{ 
     /*box-shadow: 0px 1px 12px 5px rgba(37, 69, 134, 0.3);*/
-		background-color:#ecf5ff!important
+		/*background-color:#ecf5ff!important*/
+		background-color: none;
 }
 </style>

@@ -7,7 +7,7 @@
                 <span class="el-icon-plus" @click="addAssets()">新增资产</span>
                 <span @click="delAllAssets"><img :src="require('../../assets/img/internetPlatform/shanchu.png')" alt=""> 批量删除</span>
                 <div>
-                    <input type="text" v-model="searchInp" placeholder="请输入资产名称">
+                    <input type="text" v-model="searchInp" @keyup.enter="searchEnterFun" placeholder="请输入资产名称">
                     <span id="dividingLine"></span>
                     <img @click="searchAssets" :src="require('../../assets/img/internetPlatform/sousuo.png')" alt="">
                 </div>
@@ -576,6 +576,15 @@ export default {
                 console.log(err.response);
             })
         },
+        /**
+             * 按回车键搜索
+             */
+            searchEnterFun(e) {
+                var keyCode = window.event ? e.keyCode : e.which;
+                if (keyCode == 13) {
+                    this.searchAssets()
+                }
+            },
         //新增资产
         addAssets(row) {
             if (row !== undefined) {
