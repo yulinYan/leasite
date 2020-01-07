@@ -1,6 +1,17 @@
 <template>
-<el-dialog ref="systemModuleDialog" :width="width" class="systemModuleDialog" :title="appObj.appName" :fullscreen="isfullscreen" :modal="false" :visible.sync="moduleDialogVisible" :append-to-body="false" :close-on-click-modal="false" :destroy-on-close="true"
-    :show-close="false" :class="isminimize? 'isminimize': ''" center>
+<el-dialog ref="systemModuleDialog" 
+	:width="width" 
+	class="systemModuleDialog" 
+	:title="appObj.appName" 
+	:fullscreen="isfullscreen" 
+	:modal="false" 
+	:visible.sync="moduleDialogVisible" 
+	:append-to-body="false" 
+	:close-on-click-modal="false" 
+	:destroy-on-close="true"
+    :show-close="false" 
+    :class="isminimize? 'isminimize': ''" 
+    center>
     <div v-show="!isminimize" slot="title" class="medium">
         <div class="centers"><span>{{appObj.appName}}</span></div>
         <div class="icons">
@@ -10,7 +21,7 @@
         </div>
     </div>
     <div v-show="!isminimize" class="dialogBody">
-        <currComponent :key="timeStamp" :username="username" :leansiteToken="leansiteToken"></currComponent>
+        <currComponent :is="currTag" :key="timeStamp" :username="username" :leansiteToken="leansiteToken"></currComponent>
     </div>
 </el-dialog>
 </template>
@@ -18,6 +29,8 @@
 <script>
 import Vue from 'vue';
 import bus from '../common/bus';
+import UserCenterHome from '../views/userCenter/UserCenterHome.vue';
+import InternetPlatform from '../views/internetPlatform/internetPlatform.vue';
 export default {
     name: 'DialogComponent', //弹框打开组件
     props: {
@@ -30,6 +43,10 @@ export default {
             required: true
         }
     },
+    components:{
+    	UserCenterHome,
+    	InternetPlatform
+    },
     data() {
         return {
         	timeStamp:new Date().getTime(),
@@ -38,6 +55,7 @@ export default {
             moduleDialogVisible: false, // 隐藏弹窗
             username: this.$store.state.user.username,
             leansiteToken: this.$store.state.token,
+            currTag:''
         }
     },
     created() {
@@ -91,15 +109,8 @@ export default {
          * 加载组件,打开弹窗
          */
         openDialog() {
-            let routers = this.$router.options.routes;
-            let currComponent = '';
-            for (let i = 0; i < routers.length; i++) {
-                if (this.appObj.appUrl == routers[i].path) {
-                    currComponent = routers[i].component;
-                    break;
-                }
-            }
-            Vue.component('currComponent', currComponent);
+        	this.timeStamp=new Date().getTime();
+        	this.currTag = this.appObj.appUrl;
             this.moduleDialogVisible = true;
         }
     },
