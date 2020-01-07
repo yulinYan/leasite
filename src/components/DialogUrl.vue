@@ -1,5 +1,18 @@
 <template>
-	<el-dialog ref="xhzqDialog" :width="width" style="height: 100%;" class="xhzqDialog" :title="appObj.appName" :fullscreen="isfullscreen" :modal="false" :visible.sync="dialogVisible"  :append-to-body="false" :close-on-click-modal="false" :destroy-on-close="true" :show-close="false"  :class="isminimize? 'isminimize': ''" center>
+	<el-dialog 
+		ref="xhzqDialog" 
+		:width="width" 
+		class="xhzqDialog" 
+		:title="appObj.appName" 
+		:fullscreen="isfullscreen" 
+		:modal="false" 
+		:visible.sync="dialogVisible"  
+		:append-to-body="false" 
+		:close-on-click-modal="false" 
+		:destroy-on-close="true" 
+		:show-close="false"  
+		:class="isminimize? 'isminimize': ''" 
+		center>
 		<div v-show="!isminimize" slot="title" class="medium">
 			<div class="centers"><span>{{appObj.appName}}</span></div>
 			<div class="icons">
@@ -87,7 +100,7 @@
 <style lang="scss" type="text/css" scoped>
 	.el-dialog {
 		/*margin-top: 10vh!important;*/
-		height: 60vh;
+		/*height: 60vh;*/
 	}
 
 	.no_select {
@@ -116,7 +129,7 @@
 			width: 240px !important;
 			height: 40px;
 			bottom: 0 !important;
-			left:50px !important;
+			left:0 !important;
 		}
 		.el-dialog__header{
 			cursor: auto!important;
@@ -277,15 +290,23 @@
 				}
 			}
 		}
+	    .systemModuleDialog {
+	        .el-select {
+	            width: 100%;
+	        }
+	        .el-date-editor {
+	            width: 100%;
+	        }
+	    }
 		/deep/ .el-dialog--center{
 			height: 100%;
 			overflow: hidden !important;
 			.el-dialog__header{
-					height: 48px;
-				    padding: 0 20px !important;
-				    color: #303030;
-				    border-bottom: solid 1px #d9e3f3 !important;
-				}
+				height: 48px;
+			    padding: 0 20px !important;
+			    color: #303030;
+			    border-bottom: solid 1px #d9e3f3 !important;
+			}
 			.el-dialog__body{
 				height:100%;
 				padding: 0;

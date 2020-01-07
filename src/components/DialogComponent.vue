@@ -316,6 +316,8 @@ export default {
         }
     }
     /deep/ .el-dialog--center {
+    	height: 100%;
+    	overflow: hidden !important;
         .el-dialog__header {
             height: 48px;
             padding: 0 20px !important;
