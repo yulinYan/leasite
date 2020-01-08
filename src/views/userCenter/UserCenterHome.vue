@@ -173,6 +173,7 @@ export default {
     height: 100%;
     min-height: 500px;
     .el-header {
+    	display: none;
         height: 60px;
         background-color: #ffffff;
         >img {

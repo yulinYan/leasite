@@ -12,7 +12,10 @@
     :class="isminimize? 'isminimize': ''" 
     center>
     <div v-show="!isminimize" slot="title" class="medium">
-        <div class="centers"><span>{{appObj.appName}}</span></div>
+        <div class="centers">
+        	<img src="../assets/img/logo-noText.png" alt="平台logo"/>
+        	<span>{{appObj.appName}}</span>
+        </div>
         <div class="icons">
             <i class="el-icon-minus" @click="minimize"></i>
             <i :class="isfullscreen? 'iconfont leansite-suoxiao' : 'iconfont leansite-fangda' " style="font-size: 16px" @click="IsFullscreen"></i>
@@ -212,10 +215,16 @@ export default {
                 justify-content: space-between;
                 align-items: center;
                 .centers {
+                	img{
+                		height: 25px;
+                		margin-left: 25px;
+                	}
                     span {
                         text-align: left;
                         font-size: 16px;
                         color: #606266;
+                        vertical-align: middle;
+                        margin-left: 20px
                     }
                 }
                 .icons {

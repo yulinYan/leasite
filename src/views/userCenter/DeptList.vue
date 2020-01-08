@@ -1,7 +1,7 @@
 <template>
     <el-container class="deptList">
 	  	<el-aside class="outAside" width="auto">
-	  		<!--<el-button type="text" v-if="hasPermission('dept:add')" icon="el-icon-plus" @click="addDept" style="padding-left: 10px;">新增集团</el-button>-->
+	  		<el-button type="text" v-if="hasPermission('dept:add')" icon="el-icon-plus" @click="addDept" style="padding-left: 10px;">新增集团</el-button>
 	  		<el-tree
 		      :data="aDeptDatas.children"
 		      node-key="id"
@@ -183,8 +183,9 @@
 				this.$prompt('请输入部门名称', '新增部门', {
 		          confirmButtonText: '确定',
                   cancelButtonText: '取消',
-                  inputPattern: /^[\S\n\s]{1,10}$/,
-		          inputErrorMessage: '请输入部门名称(10个字符以内)'
+                  inputPattern: /^[\S\n\s]{2,10}$/,
+		          inputPlaceholder:"请输入部门名称(2~10个字符)",
+		          inputErrorMessage: '部门名称必须是2~10个字符'
 		        }).then(({ value }) => {
 		          this.addDeptRequest({parentId:this.aDeptDatas.id,name:value.trim()});
 		        }).catch(() => {});

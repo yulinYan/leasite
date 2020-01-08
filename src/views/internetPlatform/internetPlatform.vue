@@ -163,6 +163,7 @@ export default {
     }
     height: 100%;
     header {
+    	display: none;
         height: 60px;
         background-color: #ffffff;
         >img {
