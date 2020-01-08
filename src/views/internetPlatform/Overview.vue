@@ -473,4 +473,7 @@ export default {
         height: 267px;
     }
 }
+/deep/ .el-tabs__content{
+	height: 84%!important;
+}
 </style>
