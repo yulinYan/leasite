@@ -8,7 +8,6 @@
 	:visible.sync="moduleDialogVisible" 
 	:append-to-body="false" 
 	:close-on-click-modal="false" 
-	:destroy-on-close="true"
     :show-close="false" 
     :class="isminimize? 'isminimize': ''" 
     center>
@@ -21,7 +20,7 @@
         </div>
     </div>
     <div v-show="!isminimize" class="dialogBody">
-        <currComponent :is="currTag" :key="timeStamp" :username="username" :leansiteToken="leansiteToken"></currComponent>
+        <currComponent :is="currTag"  :username="username" :leansiteToken="leansiteToken"></currComponent>
     </div>
 </el-dialog>
 </template>
@@ -280,6 +279,7 @@ export default {
         .el-dialog__body {
             padding: 1px !important;
             .dialogBody {
+            	height: 100%;
                 overflow: auto;
                 background: #f7f9fc;
                 &::-webkit-scrollbar {

@@ -62,7 +62,13 @@ export default {
          * @param formName {Object} form表单名称
          */
         addUser(formName) {
-            console.log(this.multipleSelection)
+            if(this.multipleSelection.length == 0 ){
+        	    this.$message({
+                    type: 'warning',
+                    message: '您还没有选择用户!'
+                });
+            	return;
+            }
             let userId = '';
             this.multipleSelection.forEach((v, i) => {
                 userId += v.userId + ',';

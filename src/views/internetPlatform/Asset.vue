@@ -17,7 +17,7 @@
             <el-table @selection-change="handleSelectionChange" class="assetsTable" :height="tableDataHeight" :data="tableData" stripe highlight-current-row style="width: 100%;" :cell-style="cellStyle" :header-cell-style="headerStyle">
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="name" width="180" label="资产名称" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="type"  width="180" label="资产分组" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="type"  width="180" label="资产类型" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="name" width="300" label="资产ID" show-overflow-tooltip>
                     <template slot-scope="scope">
                         {{scope.row.id.id}}

@@ -1,7 +1,7 @@
 <template>
 <div class="index">
     <!--桌面-->
-    <div class="main-block" @click="systemMenuBlur">
+    <div class="main-block">
         <div v-for="app in thirdAppList" :class="app.available=='0'?'block-item noActive':'block-item'" @click="openDialog(app)" :title="app.available=='0'?'您没有'+app.appName+'的操作权限':app.appName">
             <img :src="app.appIcon" />
             <span class="demonstration">{{app.appName}}</span>
@@ -10,7 +10,7 @@
     <!--状态栏-->
     <div class="status-bar" >
         <!--状态栏系统菜单-->
-        <div v-show="systemMenuVisible" class="systemMenu"  >
+        <div id="systemMenuDiv" v-show="systemMenuVisible" class="systemMenu" tabIndex='1'  @blur="systemMenuBlur">
             <ul class="leftMenus">
                 <li v-for="menus in systemMenus" @click="alertComponent(menus)" :title="menus.appName">
                     <img :src="menus.appIcon" :alt="menus.appName" />
@@ -35,9 +35,9 @@
         </el-tooltip>
     </div>
     <!--弹框打开第三方应用-->
-    <DialogUrl v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 2" width="80%" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogUrl'+index"></DialogUrl>
+    <DialogUrl v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 2" width="80%" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogUrl'+app.appName"></DialogUrl>
     <!--弹框打开组件-->
-    <DialogComponent v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 1" width="80%" @callBackFun="closeParentDialog" :appObj="app" :key="timeStamp" :ref="'dialogComponent'+index"></DialogComponent>
+    <DialogComponent v-for="(app,index) in activeApps" v-if="app.isShowDialog==true && app.webSource == 1" width="80%" @callBackFun="closeParentDialog" :appObj="app" :key="`${app.appName}`" :ref="'dialogComponent'+app.appName"></DialogComponent>
 </div>
 </template>
 
@@ -136,7 +136,7 @@
 			/**
 			 * 系统菜单失去焦点事件
 			 */
-			systemMenuBlur(){
+			systemMenuBlur(e){
 				this.systemMenuVisible = false;
 			},
 			/**
@@ -294,14 +294,22 @@
 					if(searchIndex != -1){
 						let editApp = this.activeApps[searchIndex];
 						editApp.isMinimize = true;
+						let oRefs = null;
 						if(appObj.webSource == 1){//显示本项目模块
-							this.$refs['dialogComponent'+searchIndex][0].isminimize= false;
-							this.$refs['dialogComponent'+searchIndex][0].moduleDialogVisible= true;
+							oRefs = this.$refs['dialogComponent'+appObj.appName][0];
+							oRefs.moduleDialogVisible= false;
 						}else{//显示第三方应用
-							this.$refs['dialogUrl'+searchIndex][0].isminimize= false;
-							this.$refs['dialogUrl'+searchIndex][0].dialogVisible= true;
+							oRefs = this.$refs['dialogUrl'+appObj.appName][0];
+							oRefs.dialogVisible= false;
 						}
-
+						setTimeout(()=>{
+							oRefs.isminimize= false;
+							if(appObj.webSource == 1){
+								oRefs.moduleDialogVisible= true;
+							}else{
+								oRefs.dialogVisible= true;
+							}
+						},0);
 					}
 				}
 			},
@@ -310,6 +318,14 @@
 			 */
 			clickSystemMenu(){
 				this.systemMenuVisible = !this.systemMenuVisible;
+				setTimeout(()=>{
+					if(this.systemMenuVisible){
+						let elDiv = document.getElementById('systemMenuDiv');
+						elDiv.focus();	
+						elDiv.style.borderColor="transparent !important";
+					}
+				},0);
+				
 			},
 			/**
 	         * 点击弹出组件
@@ -450,6 +466,9 @@
 				    	background-color: #4c5363;
 				    }
 				}
+        }
+        #systemMenuDiv:focus{
+        	outline-color: transparent;
         }
     	img.menuLogo{
 			width: 30px;

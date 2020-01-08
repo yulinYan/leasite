@@ -27,7 +27,7 @@
                 <el-table-column label="操作" width="220" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" slot="reference" v-if="hasPermission('role:addRoleAndMenu')" class="edit" @click="handleEdit(scope.$index, scope.row)" >
-                        	<img src='../../assets/img/internetPlatform/bianji.png' class="edit-img" alt="">编辑权限
+                        	<img src='../../assets/img/internetPlatform/bianji.png' class="edit-img" alt="">分配权限
                         </el-button>
                         <el-button  type="text" v-if="hasPermission('role:delete')" icon="el-icon-error" class="red delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
@@ -40,7 +40,7 @@
             <RoleListAdd :roleObj="roleObj" @RoleCallBack="RoleCallBack" ></RoleListAdd>
        	</el-dialog>
         <el-dialog class="outRoleAuthDialog" key="roleAuthDialog" :title='dialogAuthTitle'  v-if="roleAuthDialogVisible" :visible.sync="roleAuthDialogVisible"  width="85%" height="730px" append-to-body  :close-on-click-modal="false" :show-close="false">
-            <!--编辑权限-->
+            <!--分配权限-->
             <RoleListEdit :roleObj="roleObj"  @RoleAuthCallBack="RoleAuthCallBack"></RoleListEdit>
         </el-dialog>
 
@@ -56,7 +56,7 @@
         components: {
 			Pagination, //分页组件
 			RoleListAdd,//新增角色
-            RoleListEdit, //编辑权限
+            RoleListEdit, //分配权限
 		},
         data() {
             return {
@@ -127,7 +127,6 @@
 					var resData = res.data;
 					if(resData.status == 200) {
 						this.tableData = resData.data.rows;
-						// console.log (this.tableData);
 						this.pageObj.total = resData.data.total;
 					} else {
 						this.$message({
@@ -177,7 +176,7 @@
         		});
         		if(searchIndex != -1){
         			this.$message({
-						type: 'error',
+						type: 'warning',
 						message: 'root角色不能删除,请重新选择!'
 					});
 					return;
@@ -204,11 +203,17 @@
              */
             handleEdit(index, row) {
             	if(row.roleName == 'root'){
-        			this.$message({
-						type: 'error',
-						message: 'root角色不能编辑!'
-					});
-					return;
+	            	let aUserRoles = this.$store.state.roles;
+            		let nIndex = aUserRoles.findIndex((val)=>{
+            			return val == "root";
+            		});
+            		if(nIndex < 0){
+            			this.$message({
+							type: 'warning',
+							message: 'root角色不能编辑!'
+						});
+						return;
+            		}
             	}
 				this.roleObj = this.tableData[index];
                 this.roleAuthDialogVisible = true;
@@ -219,7 +224,7 @@
             handleDelete(index, row) {
             	if(row.roleName == 'root'){
         			this.$message({
-						type: 'error',
+						type: 'warning',
 						message: 'root角色不能删除'
 					});
 					return;

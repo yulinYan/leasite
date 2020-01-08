@@ -55,7 +55,7 @@ export default {
                         require('../../assets/img/userCenter/quanxianguanli1.png'),
                         require('../../assets/img/userCenter/quanxianguanli2.png')
                     ],
-                    name: '权限管理',
+                    name: '角色管理',
                     links: '/roleList',
                     powerName:'role:view'
                 },

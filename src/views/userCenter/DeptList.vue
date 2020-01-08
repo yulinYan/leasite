@@ -1,7 +1,7 @@
 <template>
     <el-container class="deptList">
 	  	<el-aside class="outAside" width="auto">
-	  		<el-button type="text" v-if="hasPermission('dept:add')" icon="el-icon-plus" @click="addDept" style="padding-left: 10px;">新增集团</el-button>
+	  		<!--<el-button type="text" v-if="hasPermission('dept:add')" icon="el-icon-plus" @click="addDept" style="padding-left: 10px;">新增集团</el-button>-->
 	  		<el-tree
 		      :data="aDeptDatas.children"
 		      node-key="id"
@@ -11,11 +11,12 @@
 		      current-node-key="0"
 		      :indent="10"
 		      @node-click="treeClick"
+		      @node-contextmenu="rightClick"
 		      :expand-on-click-node="false">
 		       <span class="custom-tree-node" slot-scope="{ node, data }"  style="padding-right:10px;">
 		        <i :class="node.level == 1?'iconfont leansite-ziyuan':'iconfont leansite-bumen'" style="color:#aee4fa;"></i>
-		        <span style="display:inline-block;margin-left:5px;width:104px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{ node.label }}</span>
-		        <span>
+		        <span style="display:inline-block;margin-left:5px;width: 120px;overflow: hidden !important;text-overflow:ellipsis;white-space: nowrap;" :title="node.label">{{ node.label }}</span>
+		        <!--<span>
 		          <el-button
 		          	v-if="hasPermission('dept:add')"
 		            type="text"
@@ -31,9 +32,15 @@
 		            style="color:red"
 		            @click="() => remove(node, data)">
 		          </el-button>
-		        </span>
+		        </span>-->
 		      </span>
-		   </el-tree>
+		    </el-tree>
+	   		<ul v-show="showRightMenu" id="rightMenu">
+		   	   <li @click="editDeptHandle" v-if="hasPermission('dept:update')">编辑</li>
+			   <li @click="delDeptHandle" v-if="hasPermission('dept:delete')">删除</li>
+		   	   <li @click="addBroDeptHandle" v-if="hasPermission('dept:add')">添加同级部门</li>
+		   	   <li @click="addChildDeptHandle" v-if="hasPermission('dept:add')">添加子级部门</li>
+		   </ul>
 	  	</el-aside>
 	  	<el-container class="rightContainer">
 	        <el-header>
@@ -42,7 +49,7 @@
 				  	{{showDeptName}}
 				  </div>
 				  <div class="rightHeader">
-				  	<el-button type="text" v-if="hasPermission('dept:addUser')" icon="el-icon-plus" class="addUser" @click="handleAddUser">新增人员</el-button>
+				  	<el-button type="text" v-if="hasPermission('dept:addUser')" icon="el-icon-plus" class="addUser" @click="handleAddUser">添加用户</el-button>
 				  	<el-button type="text" v-if="hasPermission('dept:deleteUser')" icon="el-icon-error" class="batchDel" @click="datchDel">批量删除</el-button><el-input
 				  		style="width:200px;"
 				  		v-if="hasPermission('dept:deleteUser')"
@@ -103,6 +110,8 @@
 					total: 0, //数据总数
 					pageSize: this.API.leansite.constObj.pageSize, //页大小
 				},
+				oChioceDept:{},//选中的部门
+				showRightMenu:false,//部门树右键菜单是否显示
 				userDialogVisible:false,//是否显示用户信息弹框
 				deptId:'',//选中的部门id
 				searchText:'',//搜索字段
@@ -138,6 +147,29 @@
 					this.getData();
 				}
 			},
+			/**
+			 * 部门树 右击事件
+			 */
+			rightClick(event, data, node, obj) {
+			  this.oChioceDept = data;
+		      this.showRightMenu = false; // 先把模态框关死，目的是：第二次或者第n次右键鼠标的时候 它默认的是true
+		      this.showRightMenu = true;
+		      let menu = document.querySelector('#rightMenu');
+		      menu.style.left = event.srcElement.offsetLeft + 'px';
+		      menu.style.top = event.srcElement.offsetTop+20 + 'px';
+		      // 给整个document添加监听鼠标事件，点击任何位置执行closeRightMenu方法，及时将菜单关闭
+		      document.addEventListener('click', this.closeRightMenu)
+		    },
+		    /**
+		     * 关闭右键菜单
+		     */
+		    closeRightMenu() {
+		      this.showRightMenu = false
+		      document.removeEventListener('click', this.closeRightMenu);// 及时关掉鼠标监听事件
+		    },
+			/**
+			 * 部门树点击事件
+			 */
 			treeClick(nodeObj,nodes,nodeSelf){
                 this.deptId = nodeObj.id;
                 this.showDeptName = nodeObj.text;
@@ -152,7 +184,7 @@
 		          confirmButtonText: '确定',
                   cancelButtonText: '取消',
                   inputPattern: /^[\S\n\s]{1,10}$/,
-		          inputErrorMessage: '请输入十位以内字符'
+		          inputErrorMessage: '请输入部门名称(10个字符以内)'
 		        }).then(({ value }) => {
 		          this.addDeptRequest({parentId:this.aDeptDatas.id,name:value.trim()});
 		        }).catch(() => {});
@@ -180,16 +212,54 @@
 					}
 				}).catch((err) => {
 					let res = err.response.data;
-					if(res.data == "部门名称重复录入"){
+					if(res.message == "部门名称重复录入"){
 						this.$message({
 							type: 'error',
 							message: '部门名称重复!'
 						});
+					}else{
+						this.$message({
+							type: 'error',
+							message: '请求异常，请检查网络！'
+						});	
 					}
-					this.$message({
-						type: 'error',
-						message: '请求异常，请检查网络！'
-					});
+					
+				})
+            },
+			/**
+			 * 修改部门请求
+			 */
+			updateDeptRequest(oDept){
+				this.$axios.leansite({
+					method: 'post',
+					url: this.API.leansite.updateDept,
+					data:{
+						'deptId':oDept.deptId,
+						'deptName':oDept.name
+					}
+				}).then((res) => {
+					var resData = res.data;
+					if(resData.status == 200) {
+						this.getDeptData();//获取部门数据
+					} else {
+						this.$message({
+							type: 'error',
+							message: '修改部门名称失败，请重新添加！'
+						});
+					}
+				}).catch((err) => {
+					let res = err.response.data;
+					if(res.message == "部门名称重复录入"){
+						this.$message({
+							type: 'error',
+							message: '修改部门名称失败,部门名称重复!'
+						});
+					}else{
+						this.$message({
+							type: 'error',
+							message: '请求异常，请检查网络！'
+						});	
+					}
 				})
             },
             //获取首个部门
@@ -369,6 +439,79 @@
                 this.multipleSelection = val;
             },
             /**
+             * 新增子部门
+             */
+			addChildDeptHandle() {
+				this.$prompt('请输入部门名称', '新增部门', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+                  inputPattern: /^[\S\n\s]{2,10}$/,
+		          inputPlaceholder:"请输入部门名称(2~10个字符)",
+		          inputErrorMessage: '部门名称必须是2~10个字符'
+		        }).then(({ value }) => {
+		          this.addDeptRequest({parentId:this.oChioceDept.id,name:value.trim()});
+		        }).catch(() => {});
+		    },
+            /**
+             * 新增兄弟部门
+             */
+			addBroDeptHandle() {
+				this.$prompt('请输入部门名称', '新增部门', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+                  inputPattern: /^[\S\n\s]{2,10}$/,
+		          inputPlaceholder:"请输入部门名称(2~10个字符)",
+		          inputErrorMessage: '部门名称必须是2~10个字符'
+		        }).then(({ value }) => {
+		          this.addDeptRequest({parentId:this.oChioceDept.parentId,name:value.trim()});
+		        }).catch(() => {});
+		    },
+            /**
+             * 编辑部门
+             */
+			editDeptHandle() {
+				this.$prompt('请输入部门名称', '新增部门', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+                  inputPattern: /^[\S\n\s]{2,10}$/,
+                  inputValue:this.oChioceDept.title,
+                  inputPlaceholder:"请输入部门名称(2~10个字符)",
+		          inputErrorMessage: '部门名称必须是2~10个字符'
+		        }).then(({ value }) => {
+		          this.updateDeptRequest({deptId:this.oChioceDept.id,name:value.trim()});
+		        }).catch(() => {});
+		    },
+			/**
+			 * 删除部门
+			 */
+	        delDeptHandle() {
+            	this.$confirm('确定删除选中的部门', '提示', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+		          type: 'warning'
+		        }).then(() => {
+	                this.$axios.leansite({
+						method: 'delete',
+						url: this.API.leansite.addDept+'/'+this.oChioceDept.id,
+					}).then((res) => {
+						var resData = res.data;
+						if(resData.status == 200) {
+							this.getDeptData();
+						} else {
+							this.$message({
+								type: 'error',
+								message: '删除失败！'
+							});
+						}
+					}).catch((err) => {
+						this.$message({
+							type: 'error',
+							message: '请求异常，请检查网络！'
+						});
+					})
+				}).catch(() => {});
+	       },
+            /**
              * 新增部门
              */
 			append(data) {
@@ -446,14 +589,35 @@
             overflow: visible;
         }
 	    .outAside{
-	    	height: 100%;
+	    	height: auto;
             overflow: auto;
 	    	background-color: #eef1f7;
+	    	position:relative;
 	    	.el-tree{
-	    		height: 100%;
+	    		width: 220px;
+	    		height: auto;
 	    		background-color: #eef1f7;
 	    	}
-
+			ul{
+				z-index: 2;
+				width: 94px;
+				position:absolute;
+			    display: inline-block;
+			    border-bottom: solid 1px #ccc;
+			    background-color: #fff;
+			    li{
+				    padding: 5px 10px;
+				    text-align: center;
+				    border: solid 1px #ccc;
+				    border-bottom: none;
+				    cursor: pointer;
+				    font-size: 12px;
+				    color: #606266;
+			    }
+			    li:hover{
+			    	background-color: #eef1f7;
+			    }
+			}
 	    }
 	    /deep/ .el-tree-node__content{
 	    	height: 33px !important;

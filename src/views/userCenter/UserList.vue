@@ -11,10 +11,8 @@
 			  	<el-input
 			  		style="width:200px;"
 				   placeholder="输入用户名搜索"
-
 				   v-model="searchText"
 				   @keyup.enter.native="searchEnterFun">
-
 				</el-input>
                   <img @click="searchImgClick" class="search" src='../../assets/img/internetPlatform/sousuo.png' alt="">
 			  </el-col>
@@ -163,7 +161,7 @@
         		});
         		if(searchIndex != -1){
         			this.$message({
-						type: 'error',
+						type: 'warning',
 						message: '超级管理员不能删除,请重新选择!'
 					});
 					return;
@@ -192,11 +190,17 @@
              */
             handleEdit(index, row) {
             	if(row.username =='superAdmin' && row.roleName == 'root'){
-        			this.$message({
-						type: 'error',
-						message: '超级管理员不能编辑!'
-					});
-					return;
+	            	let aUserRoles = this.$store.state.roles;
+            		let nIndex = aUserRoles.findIndex((val)=>{
+            			return val == "root";
+            		});
+            		if(nIndex < 0){
+            			this.$message({
+							type: 'warning',
+							message: '超级管理员不能编辑!'
+						});
+						return;
+            		}
             	}
                 this.dialogTitle = "编辑用户";
                 this.userObj = this.tableData[index];
@@ -208,7 +212,7 @@
             handleDelete(index, row) {
             	if(row.username =='superAdmin' && row.roleName == 'root'){
         			this.$message({
-						type: 'error',
+						type: 'warning',
 						message: '超级管理员不能删除!'
 					});
 					return;
@@ -261,25 +265,13 @@
             /**
              * 改变隔行变色 颜色
              */
-            // tableRowClassName(row, rowIndex) {
-            //     let index = rowIndex + 1;
-            // 		if(index %2 == 1){
-            // 		    return 'warning-row'
-            // 		}
-            //
-            //       },
-            /**
-             * 改变隔行变色 颜色
-             */
 
             cellStyle({row, column, rowIndex, columnIndex}) {
                 let style = {
                     'text-align': 'center',
                     'font-size': '14px',
-                    // 'height': '70px',
                     'background-color': '#ffffff',
                     'color': '#303030',
-
                 }
                 if (rowIndex % 2 != 0) {
                     style['background-color'] = '#f2f4f6';
@@ -287,8 +279,6 @@
                 return style;
             }
         }
-
-
     }
 
 </script>
