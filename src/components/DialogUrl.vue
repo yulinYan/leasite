@@ -22,7 +22,7 @@
 			</div>
 		</div>
 		<div v-show="!isminimize" class="dialogBody" style="height: 100% !important;">
-			<iframe class="iframeClass" :src="appObj.appUrl" id="mobsf" marginheight="50px" marginwidth="15px"  scrolling="auto" sandbox="allow-same-origin allow-top-navigation allow-forms allow-scripts allow-modals" frameborder="0" width="100%" height="75%"></iframe>
+			<iframe class="iframeClass" :src="appObj.appUrl" id="mobsf" marginheight="50px" marginwidth="15px"  scrolling="auto" sandbox="allow-same-origin allow-top-navigation allow-forms allow-scripts allow-modals allow-popups" frameborder="0" width="100%" height="75%"></iframe>
 		</div>
 	</el-dialog>
 </template>
