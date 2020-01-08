@@ -28,9 +28,9 @@
 					</el-table-column>
 					<el-table-column prop="credentialsId" label="访问令牌" show-overflow-tooltip>
 					</el-table-column>
-					<el-table-column prop="name" label="网关" show-overflow-tooltip>
+					<el-table-column prop="name" label="是否网关" show-overflow-tooltip>
 						<template slot-scope="scope">
-							{{scope.row.additionalInfo==null?'不是网关':scope.row.additionalInfo.gateway?'是网关':'不是网关'}}
+							{{scope.row.additionalInfo==null?'否':scope.row.additionalInfo.gateway?'是':'否'}}
 						</template>
 					</el-table-column>
 					<el-table-column prop="label" label="设备标签" show-overflow-tooltip>
