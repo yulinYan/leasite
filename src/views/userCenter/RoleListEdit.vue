@@ -11,7 +11,7 @@
 			<div v-for="(item,index) in menuList" :key="index" class="models">
 				<!--   模块1-->
 				<div class="model_1" style="width: 154px;" @click="oneAllCheck(item)">
-					<el-checkbox class="model1_checkbox" @change="model_1_selectAll(index)"  v-model="item.checked">{{item.title}}</el-checkbox>
+					<el-checkbox class="model1_checkbox"  v-model="item.checked">{{item.title}}</el-checkbox>
 				</div>
 				<!-- 右边模块2 和模块3-->
 				<div v-if="item.children && item.children.length > 0">
@@ -38,7 +38,7 @@
 
 <script>
 	export default {
-		name: "RoleListEdit", //编辑角色权限
+		name: "RoleListEdit", //分配角色权限
 		props: {
 			roleObj: {
 				type: Object,
@@ -59,42 +59,9 @@
 		},
 		methods: {
 			/**
-			 * 一级全选
-			 */
-			model_1_selectAll(index) {
-				// if(this.menuList){
-				//     let checked = this.menuList[index].checked;
-				//     // console.log(checked);
-				//     if(this.menuList[index].children){
-				//         this.menuList[index].children.forEach((children)=>{
-				//             children.checked = checked;
-				//             if(children.children){
-				//                 children.children.forEach((children2)=>{
-				//                     children2.checked = checked;
-				//                 })
-				//             }
-				//         })
-				//     }
-				//     // this.model_2_selectAll(item,index2)
-				//     // this.model_3_select(item,item2,index3)
-				// }
-			},
-			/**
 			 * 二级全选
 			 */
 			model_2_selectAll(item, item2) {
-				// if(item.children){
-				//     let checked = item.children[index2].checked;
-				//     if(item.children[index2].children){
-				//         item.children[index2].children.forEach((children)=>{
-				//             children.checked = checked;
-				//         })
-				//     }
-				//     let model1_checked = item.children.every((model2)=>{
-				//         return model2.checked == true;
-				//     })
-				//     item.checked = model1_checked;
-				// }
 				if(item2.checked) {
 					if(!item.checked) {
 						item.checked = true;
@@ -105,21 +72,6 @@
 			 * 三级单选改变状态
 			 */
 			model_3_select(item, item2, item3) {
-				// if(item2.children){
-				//     let checked = item2.children.every((model3)=>{
-				//         return model3.checked==true
-				//     })
-				//     item2.checked = checked;
-				// }
-				// if(item.children){
-				// let one_checked = item.children.every((model2)=>{
-				//     return model2.checked==true;
-				// })
-				//     item.checked = one_checked;
-				// }
-				/**
-				 * 二级只要有一个被选中，一级被选中    chang监听二级变化  取消后面一级，前面一级不会被取消
-				 */
 				if(item3.checked) {
 					if(!item2.checked) {
 						item2.checked = true;
@@ -128,31 +80,10 @@
 						item.checked = true;
 					}
 				}
-				//              if(item.children){
-				//                  let one_checked = false;
-				//                  item.children.forEach((model2)=>{
-				//                      one_checked=true
-				//                  })
-				//                  item.checked = one_checked;
-				//              };
-				/**
-				 * 三级只要有一个被选中，二级被选中    chang监听三级变化  取消后面一级，前面一级不会被取消
-				 */
-				//              if(item2.children){
-				//                  let checked = null;
-				//                      item2.children.forEach((model3)=>{
-				//                          // if(item2.children==true){
-				//                            checked=true
-				//                          // }else {
-				//                          //     checked=true
-				//                          // }
-				//                      })
-				//                      item2.checked = checked;
-				//              }
 			},
-//			/**
-//			 *点击一级模块 后面都被选中 
-//			 */
+			/**
+			 *点击一级模块 后面都被选中 
+			 */
 			oneAllCheck(item){
 				
 					if(item.children){
@@ -195,7 +126,7 @@
 					} else {
 						this.$message({
 							type: 'error',
-							message: '查询失败，请刷新重试！'
+							message: '获取权限信息失败，请退出重试！'
 						});
 					}
 				}).catch((err) => {
@@ -226,13 +157,13 @@
 					if(resData.status == 200) {
 						this.$message({
 							type: 'success',
-							message: '权限编辑成功！'
+							message: '分配权限成功！'
 						});
 
 					} else {
 						this.$message({
 							type: 'error',
-							message: '保存失败，请刷新重试！'
+							message: '分配权限失败，请刷新重试！'
 						});
 					}
 				}).catch((err) => {
@@ -384,7 +315,6 @@
 			text-align: center;
 			.cancelBtn {
 				background-color: #c4d4e7!important;
-				/*margin-right: 20px;*/
 			}
 		}
 	}

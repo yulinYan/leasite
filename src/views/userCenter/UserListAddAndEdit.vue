@@ -9,12 +9,12 @@
 				</el-col>
 				<el-col :span="23">
 					<el-form-item label="用户名" prop="username">
-						<el-input v-model.trim="userForm.username"  placeholder="请输入用户名" :readonly="userNameReadOnly"></el-input>
+						<el-input v-model.trim="userForm.username"  placeholder="请输入用户名" :disabled="userNameReadOnly"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="23">
 					<el-form-item label="角色名称" prop="roleId">
-						<el-select v-model="userForm.roleId" value-key="roleId" placeholder="请选择角色状态" @change="handleRoleChange">
+						<el-select v-model="userForm.roleId" value-key="roleId" placeholder="请选择角色状态" @change="handleRoleChange" :disabled="roleIdDisable">
 						    <el-option
 						      v-for="item in roleList"
 						      :key="item.roleId"
@@ -79,6 +79,7 @@
 					ssex:'',//性别
 					status:'1',//账号状态，默认为1  0锁定  1是正常
 				},
+				roleIdDisable:false,//是否禁用选择角色下拉框
 				userNameReadOnly:false,//用户名是否只读
 				roleList:[],//角色列表
 				pageType:'add',//页面类型 pageType=add 新增/pageType=edit 修改
@@ -194,6 +195,14 @@
 			if(this.userObj.userId){
 				this.pageType = 'edit';
 				this.userNameReadOnly = true;
+				let aUserRoles = this.$store.state.roles;
+				let aUserName = this.$store.state.user;
+				let nIndex = aUserRoles.findIndex((val)=>{
+        			return val == "root";
+        		});
+        		if(nIndex >= 0 && aUserName.username == "superAdmin" && this.userObj.username =='superAdmin'){
+        			this.roleIdDisable = true;
+        		}
 				this.setFormData();//表单赋值
 
 			}else{

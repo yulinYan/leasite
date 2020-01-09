@@ -191,10 +191,11 @@
             handleEdit(index, row) {
             	if(row.username =='superAdmin' && row.roleName == 'root'){
 	            	let aUserRoles = this.$store.state.roles;
+	            	let aUserName = this.$store.state.user;
             		let nIndex = aUserRoles.findIndex((val)=>{
             			return val == "root";
             		});
-            		if(nIndex < 0){
+            		if(!(nIndex >= 0 && aUserName.username == "superAdmin")){
             			this.$message({
 							type: 'warning',
 							message: '超级管理员不能编辑!'

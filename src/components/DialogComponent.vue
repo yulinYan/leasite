@@ -7,7 +7,7 @@
 	:modal="false" 
 	:visible.sync="moduleDialogVisible" 
 	:append-to-body="false" 
-	:close-on-click-modal="false" 
+	
     :show-close="false" 
     :class="isminimize? 'isminimize': ''" 
     center>
@@ -96,7 +96,7 @@ export default {
          */
         IsFullscreen() {
             this.isfullscreen = !this.isfullscreen
-			const elDialogBody = this.$refs.xhzqDialog.$el.querySelector('dialogBody');
+			const elDialogBody = this.$refs.systemModuleDialog.$el.querySelector('.dialogBody');
 			if(this.isfullscreen){
 				elDialogBody.style.height = "95%";
 			}else{

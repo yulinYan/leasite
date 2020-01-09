@@ -16,23 +16,6 @@
 		       <span class="custom-tree-node" slot-scope="{ node, data }"  style="padding-right:10px;">
 		        <i :class="node.level == 1?'iconfont leansite-ziyuan':'iconfont leansite-bumen'" style="color:#aee4fa;"></i>
 		        <span style="display:inline-block;margin-left:5px;width: 120px;overflow: hidden !important;text-overflow:ellipsis;white-space: nowrap;" :title="node.label">{{ node.label }}</span>
-		        <!--<span>
-		          <el-button
-		          	v-if="hasPermission('dept:add')"
-		            type="text"
-		            size="mini"
-		            icon="el-icon-plus"
-		            @click="() => append(data)">
-		          </el-button>
-		          <el-button
-		          	v-if="hasPermission('dept:delete')"
-		            type="text"
-		            size="mini"
-		            icon="el-icon-delete"
-		            style="color:red"
-		            @click="() => remove(node, data)">
-		          </el-button>
-		        </span>-->
 		      </span>
 		    </el-tree>
 	   		<ul v-show="showRightMenu" id="rightMenu">
@@ -117,7 +100,7 @@
 				searchText:'',//搜索字段
 				userObj:{},//添加和编辑时的用户信息
 				dialogTitle:'添加用户',
-				showDeptName:'显示选中的部门名称'
+				showDeptName:'部门名称'
             }
         },
 
@@ -152,7 +135,7 @@
 			 */
 			rightClick(event, data, node, obj) {
 			  this.oChioceDept = data;
-		      this.showRightMenu = false; // 先把模态框关死，目的是：第二次或者第n次右键鼠标的时候 它默认的是true
+		      this.showRightMenu = false; //先把模态框关闭，目的是：第二次或者第n次右键鼠标的时候 它默认的是true
 		      this.showRightMenu = true;
 		      let menu = document.querySelector('#rightMenu');
 		      menu.style.left = event.srcElement.offsetLeft + 'px';
@@ -265,16 +248,22 @@
             },
             //获取首个部门
             getFirstDept(arr) {
-                for(let i = 0;i < arr.length;i++ ){
-                    if(arr[i].hasChildren){
-                        this.getFirstDept(arr[i].children);
-                        return;
-                    }else{
-                        this.deptId = arr[i].id;
-                        this.showDeptName = arr[i].text;
-                        this.getData();
-                        return;
-                    }
+            	if(arr.length > 0){
+	                for(let i = 0;i < arr.length;i++ ){
+	                    if(arr[i].hasChildren){
+	                        this.getFirstDept(arr[i].children);
+	                        return;
+	                    }else{
+	                        this.deptId = arr[i].id;
+	                        this.showDeptName = arr[i].text;
+	                        this.getData();
+	                        return;
+	                    }
+	                }
+                }else{
+                	this.deptId = null;
+	                this.showDeptName = "部门名称";
+	                this.tableData = [];
                 }
             },
 			/**
@@ -288,6 +277,7 @@
 					var resData = res.data;
 					if(resData.status == 200) {
                         this.aDeptDatas = resData.data.rows;
+                        console.log(this.aDeptDatas);
                         if(this.aDeptDatas.hasChildren){
                             this.getFirstDept(this.aDeptDatas.children);
                         }else{
@@ -367,7 +357,6 @@
 		          cancelButtonText: '取消',
 		          type: 'warning'
 		        }).then(() => {
-
 	            	let delUsers = [];
 	            	self.multipleSelection.forEach(function(item,index){
 	            		delUsers.push(item.userId);
@@ -378,8 +367,15 @@
             handleAddUser() {
             	this.dialogTitle = "添加用户";
             	this.userObj = {};
-                this.userDialogVisible = true;
-
+            	if(this.deptId!=null){
+            		this.userDialogVisible = true;	
+            	}else{
+            		this.$message({
+						type: 'warning',
+						message: '请先选择部门！'
+					});
+					return;
+            	}
             },
             /**
              * 用户编辑
@@ -416,14 +412,14 @@
 						this.multipleSelection = [];
 						this.$message({
 							type: 'success',
-							message: '删除成功！'
+							message: '删除用户成功！'
 						});
 				   		this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
 						this.getData();
 					} else {
 						this.$message({
 							type: 'error',
-							message: '删除失败！'
+							message: '删除用户失败！'
 						});
 					}
 				}).catch((err) => {
@@ -493,7 +489,7 @@
 		        }).then(() => {
 	                this.$axios.leansite({
 						method: 'delete',
-						url: this.API.leansite.addDept+'/'+this.oChioceDept.id,
+						url: this.API.leansite.delDept+'/'+this.oChioceDept.id,
 					}).then((res) => {
 						var resData = res.data;
 						if(resData.status == 200) {
@@ -501,60 +497,24 @@
 						} else {
 							this.$message({
 								type: 'error',
-								message: '删除失败！'
+								message: '删除部门失败！'
 							});
 						}
 					}).catch((err) => {
-						this.$message({
-							type: 'error',
-							message: '请求异常，请检查网络！'
-						});
+						if(err.response.data.status == 500){
+	                    	this.$message({
+					            type: 'error',
+					            message: '删除部门失败，'+err.response.data.message
+				          	});
+	                    }else{
+				          	this.$message({
+					            type: 'error',
+					            message: '请求异常，请检查网络！'
+					        });
+	                    } 
 					})
 				}).catch(() => {});
-	       },
-            /**
-             * 新增部门
-             */
-			append(data) {
-				this.$prompt('请输入部门名称', '新增部门', {
-		          confirmButtonText: '确定',
-		          cancelButtonText: '取消',
-                  inputPattern: /^[\S\n\s]{1,10}$/,
-		          inputErrorMessage: '请输入十位以内字符'
-		        }).then(({ value }) => {
-		          this.addDeptRequest({parentId:data.id,name:value.trim()});
-		        }).catch(() => {});
-		    },
-			/**
-			 * 删除部门
-			 */
-	        remove(node, data) {
-            	this.$confirm('确定删除选中的部门', '提示', {
-		          confirmButtonText: '确定',
-		          cancelButtonText: '取消',
-		          type: 'warning'
-		        }).then(() => {
-	                this.$axios.leansite({
-						method: 'delete',
-						url: this.API.leansite.addDept+'/'+data.id,
-					}).then((res) => {
-						var resData = res.data;
-						if(resData.status == 200) {
-							this.getDeptData();
-						} else {
-							this.$message({
-								type: 'error',
-								message: '删除失败！'
-							});
-						}
-					}).catch((err) => {
-						this.$message({
-							type: 'error',
-							message: '请求异常，请检查网络！'
-						});
-					})
-				}).catch(() => {});
-	       },
+	     	},
 	       /**
              * 改变隔行变色 颜色
              */
@@ -563,7 +523,6 @@
                 let style = {
                     'text-align': 'center',
                     'font-size': '14px',
-                    // 'height': '70px',
                     'background-color': '#ffffff',
                     'color': '#303030',
                     'font-family': 'MicrosoftYaHei',

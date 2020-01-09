@@ -25,10 +25,11 @@ const interface_s = {
     saveMenuState:"/role/addRoleAndMenu",  //保存角色权限
 	getDepts:'/dept',//获取所有部门
 	addDept:'/dept',//新增部门
+	delDept:'/dept',//删除部门
     getUserByDeptId:'/user/getUserByDeptId',//根据部门id获取用户
     addDeptUsers: '/dept/addUser',//新增部门人员
     notGroupUser: '/user/notGroupUser',//获取所有没有绑定部门的人员
-    delDeptUser: '/dept/deleteUser',//删除部门人员
+    delDeptUser: '/dept/deleteUser',//删除部门下人员
     getSysApp: '/app/getSysApp',//获取系统应用
     checkPhoneOrEmail:'/user/phoneAndEmailEnable',//验证手机号或邮箱
     updateDept: '/dept/update',//修改部门信息
