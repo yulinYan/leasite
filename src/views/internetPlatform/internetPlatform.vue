@@ -217,7 +217,7 @@ export default {
         float: right;
         padding: 30px;
         width: calc(100% - 180px);
-        height: 100%;
+        height: 94%;
         box-sizing: border-box;
         overflow: auto;
     }
