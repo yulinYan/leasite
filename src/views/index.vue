@@ -42,7 +42,8 @@
 </template>
 
 <script>
-	import Vue from 'vue'
+	import Vue from 'vue';
+	import Bus from '../common/bus.js';
 	import DialogUrl from '../components/DialogUrl.vue';//弹框打开第三方应用
 	import DialogComponent from '../components/DialogComponent.vue';//弹框打开系统组件
 	export default {
@@ -105,6 +106,11 @@
         		this.getData();
         		this.getSystemData();
         	}
+        	//重新加载数据
+        	Bus.$on('reloadData', msg => {
+                this.getData();
+        		this.getSystemData();
+            })
 		},
 		mounted(){
 		},

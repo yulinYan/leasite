@@ -27,7 +27,25 @@
 	  	</el-aside>
 	  	<el-container class="rightContainer">
 	        <el-header>
-	            <el-row>
+	        	<el-row>
+				  <el-col :span="8" class="leftHeader">
+				  	<span>{{showDeptName}}</span>
+				  </el-col>
+				  <el-col :span="16" class="rightHeader">
+				  	<el-button type="text" v-if="hasPermission('dept:addUser')" icon="el-icon-plus" class="addUser" @click="handleAddUser">添加用户</el-button>
+				  	<el-button type="text" v-if="hasPermission('dept:deleteUser')" icon="el-icon-error" class="batchDel" @click="datchDel">批量删除</el-button><el-input
+				  		style="width:200px;"
+				  		v-if="hasPermission('dept:deleteUser')"
+					   placeholder="输入用户名搜索"
+					   v-model="searchText"
+					   @keyup.enter.native="searchEnterFun">
+					</el-input>
+	                <img @click="clickSearch" class="search" src='../../assets/img/internetPlatform/sousuo.png' alt="搜索图标">
+				  </el-col>
+				</el-row>
+	        	
+	        	
+	            <!--<el-row>
 				  <div class="leftHeader" :title="showDeptName">
 				  	{{showDeptName}}
 				  </div>
@@ -37,12 +55,13 @@
 				  		style="width:200px;"
 				  		v-if="hasPermission('dept:deleteUser')"
 					   placeholder="输入用户名搜索"
-					   suffix-icon="el-icon-search"
+					   
 					   v-model="searchText"
 					   @keyup.enter.native="searchEnterFun">
 					</el-input>
+					<img @click="clickSearch" class="search" src='../../assets/img/internetPlatform/sousuo.png' alt="搜索图标">
 				  </div>
-				</el-row>
+				</el-row>-->
 	        </el-header>
 	        <div class="container">
 	            <el-table stripe :data="tableData" class="table" ref="multipleTable" @selection-change="handleSelectionChange" :cell-style="cellStyle" :header-cell-style="{background:'#f2f4f6',color:'#101010'}">
@@ -340,6 +359,13 @@
 					this.getData();
 			   }
 			},
+			/**
+			 * 点击搜索
+			 */
+            clickSearch(e){
+		   		this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
+				this.getData();
+			},
             /**
              * 批量删除用户
              */
@@ -605,44 +631,34 @@
 	        border-bottom: 1px solid #d9e3f3;
     		padding: 0 40px;
     		.leftHeader{
-    			font-size: 16px;
-    			color: #424956;
-                width: calc(100% - 397px);
-                float: left;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                cursor: pointer;
+    			span{
+    				font-size: 16px;
+    				color: #424956;
+    			}
     		}
-	        .rightHeader{
-                float: right;
-                width: 397px;
+	        .el-col.rightHeader{
 	        	text-align: right !important;
-	        	.addUser{
-	        		// margin-right: 23px;
+	        	.addRole{
+	        		margin-right: 23px;
 	        		font-size: 16px;
 	        		color: #2c5ac2;
-                    float: left;
-                    height: 60px;
 	        	}
 	        	.batchDel{
 	        		font-size: 16px;
 	        		color: #ed5151;
-                    float: left;
-                    height: 60px;
 	        	}
 	        	.el-input{
-	        		margin-left: 13px;
-                    float: left;
-	        		width: calc(100% - 197px);
-	        		/deep/ .el-icon-search{
-	        			color: #68c161!important;
-	        			font-size: 20px;
-	        			font-weight: 500;
-	        			margin-top: 3px;
+	        		margin-left: 23px;
+	        		width: 200px;
+	        		.el-icon-search{
+	        			color: #68c161;
 	        		}
 	        	}
-	        	
+                .search{
+                    position: relative;
+                    left: -30px;
+                    top: -2px;
+                }
 	        }
 	    }
 	    .container {

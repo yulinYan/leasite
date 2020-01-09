@@ -14,7 +14,7 @@
 				   v-model="searchText"
 				   @keyup.enter.native="searchEnterFun">
 				</el-input>
-                  <img @click="searchImgClick" class="search" src='../../assets/img/internetPlatform/sousuo.png' alt="">
+                  <img @click="searchImgClick" class="search" src='../../assets/img/internetPlatform/sousuo.png' alt="搜索">
 			  </el-col>
 			</el-row>
         </el-header>
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+	import Bus from '../../common/bus.js';
 	import Pagination from '../../components/Pagination.vue';
 	import RoleListAdd from '../../views/userCenter/RoleListAdd.vue';
 	import RoleListEdit from "./RoleListEdit";
@@ -104,8 +105,12 @@
 					this.getData();
 				}
 			},
+			/**
+			 * 分配权限完成回调函数
+			 */
             RoleAuthCallBack(isRefresh){
                 this.roleAuthDialogVisible = false;
+                Bus.$emit('reloadData');
                 if(isRefresh){
                     this.pageObj.pageIndex = this.API.leansite.constObj.pageIndex;
                     this.getData();
