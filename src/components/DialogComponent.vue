@@ -7,7 +7,6 @@
 	:modal="false" 
 	:visible.sync="moduleDialogVisible" 
 	:append-to-body="false" 
-	
     :show-close="false" 
     :class="isminimize? 'isminimize': ''" 
     center>

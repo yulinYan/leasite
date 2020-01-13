@@ -367,7 +367,7 @@ export default {
         },
         eventListener() {
             setTimeout(() => {
-                console.log(1)
+//              console.log(1)
                 this.deviceMessageCharts && this.deviceMessageCharts.resize();
                 this.deviceTimeCharts && this.deviceTimeCharts.resize();
             }, 0)
