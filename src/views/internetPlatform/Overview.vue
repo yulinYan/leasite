@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="overview">
-        <p class="header"><span>设备在线时长排行榜</span></p>
+        <p class="header timeLine"><span>设备在线时长排行榜</span></p>
         <div id="deviceTime">
         </div>
     </div>
@@ -174,10 +174,11 @@ export default {
                 grid: {
                     left: '40px',
                     right: '26px',
-                    // bottom: '60px',
-                    // top: '50px'
+//                     bottom: '20px',
+                       top: '40px'
                 },
                 yAxis: {
+//              	position:'right',
                     type: 'category',
                     nameGap: 10,
                     data: [],
@@ -188,8 +189,8 @@ export default {
                     },
                     axisLabel: { //坐标轴刻度标签的相关设置。
                         color: '#505050',
-                        margin: 70,
-                        align: 'left'
+                        margin: 10,
+                        align: 'right'
                     },
                     axisTick: { //坐标轴刻度相关设置。
                         show: false,
@@ -230,12 +231,12 @@ export default {
                     },
                 },
                 series: [{
-                    name: '数量',
+                    name: '在线时长',
                     type: 'bar',
                     itemStyle: {
                         normal: {
                             color: function(params) {
-                                var colorList = ['#3c70d7', '#7ea6f2', '#D4E8FF', '#7DE5D2', '#FEAE7B', '#003399', '#3366cc', '#0087cb', '#3399ff', '#017890', '#587498', '#74828f', '#666633', '#99cccc', '#a1bad0', '#c25b56', '#ff9933', '#d0a727', '#f9ca79', '#d9ccb9'];
+                                var colorList = ['red', '#7ea6f2', '#D4E8FF', '#7DE5D2', '#FEAE7B', '#003399', '#3366cc', '#0087cb', '#3399ff', '#017890', '#587498', '#74828f', '#666633', '#99cccc', '#a1bad0', '#c25b56', '#ff9933', '#d0a727', '#f9ca79', '#d9ccb9'];
                                 return colorList[params.dataIndex]
                             }
                         }
@@ -358,7 +359,8 @@ export default {
         getDeviceTime(res) {
             this.deviceTimeOption.yAxis.data = [];
             this.deviceTimeOption.series[0].data = [];
-            this.deviceTimeOption.grid.left = '70px';
+            this.deviceTimeOption.grid.left = '40px';
+            this.deviceTimeOption.grid.bottom = '40px';
             res.devicesRes.forEach((v, i) => {
                 this.deviceTimeOption.yAxis.data.push(v.name);
                 this.deviceTimeOption.series[0].data.push(this.sToH(v.totaltime));
@@ -470,8 +472,10 @@ export default {
     }
     #deviceMessage,
     #deviceTime {
-        height: 267px;
+        min-height: 267px !important;
     }
+    
+    
 }
 /deep/ .el-tabs__content{
 	height: 84%!important;

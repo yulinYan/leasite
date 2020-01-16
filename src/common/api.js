@@ -3,7 +3,7 @@ import axios from 'axios'
  * Leansite Paas平台和用户中心接口api
  */
 const interface_s = {
-	baseURL: 'http://192.168.2.41:9527/api/v1/',//非生产环境
+	baseURL: 'http://192.168.2.59:9527/api/v1/',//非生产环境
 	//prodBaseURL:window.configs.leansiteAPI,//生产环境
 	//prodBaseURL:"http://192.168.2.59:9527/api/v1/",//生产环境
 	prodBaseURL:"http://192.168.2.59:9527/",//生产环境
