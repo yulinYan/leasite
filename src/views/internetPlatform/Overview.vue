@@ -1,5 +1,5 @@
 <template>
-<<<<<<< HEAD
+
 <div class="Overview">
     <div class="deviceOverview">
         <ul>
