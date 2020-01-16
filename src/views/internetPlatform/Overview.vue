@@ -380,7 +380,7 @@ export default {
 </script>
 
 <style lang="scss" scoped type="text/css">
-<<<<<<< HEAD
+
 .Overview {
     height: 100%;
     .el-select {
@@ -483,105 +483,5 @@ export default {
 	height: 84%!important;
 }
 </style>
-=======
-	.Overview {
-		height: 100%;
-		.el-select {
-			width: 201px;
-			/deep/ .el-input--medium .el-input__inner {
-				background-color: #f2f4f6;
-				border-radius: 4px;
-				border: none;
-				height: 32px;
-			}
-		}
-		.deviceOverview {
-			ul {
-				width: 100%;
-				display: flex;
-				justify-content: space-between;
-			}
-			li {
-				width: calc( 100% / 3);
-				float: left;
-				height: 240px;
-				background-color: #ffffff;
-				border-radius: 16px;
-				&:nth-of-type(2) {
-					margin: 0 30px;
-				}
-				img {
-					display: block;
-					margin: 24px auto 0px;
-				}
-				div,
-				span {
-					text-align: center;
-					display: block;
-				}
-				.deviceOverviewName {
-					font-family: 'MicrosoftYaHei';
-					font-size: 16px;
-					font-weight: bold;
-					color: #424956;
-				}
-				span {
-					font-family: 'Helvetica';
-					font-size: 14px;
-					color: #929fae;
-					margin: 6px 0 33px 0;
-				}
-				.deviceOverviewNum {
-					font-family: 'GrayDesign-Medium';
-					font-size: 50px;
-					color: #303030;
-				}
-				em {
-					font-size: 20px;
-				}
-			}
-			li:hover {
-				box-shadow: 0px 15px 25px 0px rgba(49, 59, 87, 0.12);
-			}
-		}
-		.overview {
-			width: 100%;
-			background-color: #ffffff;
-			border-radius: 16px;
-			margin: 30px auto;
-			padding: 0 40px;
-			overflow: hidden;
-			box-sizing: border-box;
-			&:last-child {
-				margin-bottom: 0;
-			}
-			p.header {
-				text-align: left;
-				height: 60px;
-				line-height: 60px;
-				border-bottom: solid 1px #d9e3f3;
-				padding: 0 40px;
-				margin: 0 -40px;
-				position: relative;
-				background-color: #fff;
-				span {
-					font-size: 16px;
-					font-weight: bold;
-					color: #424956;
-				}
-				.fr {
-					float: right;
-				}
-			}
-		}
-		#deviceMessage,
-		#deviceTime {
-			height: 267px;
-		}
-	}
-	
-	/deep/ .el-tabs__content {
-		height: 84%!important;
-	}
-</style>
->>>>>>> 112d54ef99367fc7f461eb850f23f8bb6ebf13d7
+
+
