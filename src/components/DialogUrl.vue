@@ -15,7 +15,7 @@
 		center>
 		<div v-show="!isminimize" slot="title" class="medium">
 			<div class="centers">
-				<img src="../assets/img/logo-noText.png" alt="平台logo"/>
+				<img src="../assets/img/logo-noText.png" alt="平台logo" />
 				<span>{{appObj.appName}}</span>
 			</div>
 			<div class="icons">
@@ -90,7 +90,8 @@
 					elIframe.style.height = "75%";
 				}
 				if(this.isfullscreen) this.$emit('isfullscreen');
-			}
+			},
+			
 		},
 		mounted() {
 

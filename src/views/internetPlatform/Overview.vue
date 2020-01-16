@@ -276,103 +276,103 @@
 		},
 		computed: {
 
-		},
-		methods: {
-			//获取上面三个块
-			getDeviceOverviewList() {
-				this.$axios.internet({
-					loading: {
-						isShow: false,
-					},
-					method: 'get',
-					url: `${this.ajaxMsg.url}api/plugins/telemetry/online/devicesNumber`,
-					//请求头配置
-					headers: {
-						'X-Authorization': this.ajaxMsg.Authorization
-					}
-				}).then(res => {
-					this.deviceOverviewList[0].num = res.data.assetsTotal;
-					this.deviceOverviewList[1].num = res.data.onlineNumber + '/' + res.data.divicesTotal;
-				}).catch(function(err) {
-					console.log(err);
-				})
-				this.$axios.internet({
-					loading: {
-						isShow: false,
-					},
-					method: 'get',
-					url: `${this.ajaxMsg.url}api/plugins/telemetry/online/devicesHours`,
-					//请求头配置
-					headers: {
-						'X-Authorization': this.ajaxMsg.Authorization
-					}
-				}).then(res => {
-					this.deviceOverviewList[2].num = this.sToH(res.data.totalHours) + '/h';
-					this.getDeviceTime(res.data);
-				}).catch(function(err) {
-					console.log(err);
-				})
-			},
-			// 获取设备消息数
-			getDeviceMessage() {
-				this.$axios.internet({
-					loading: {
-						isShow: false,
-					},
-					method: 'get',
-					url: `${this.ajaxMsg.url}api/plugins/telemetry/${this.deviceMessageModel}/Number`,
-					//请求头配置
-					headers: {
-						'X-Authorization': this.ajaxMsg.Authorization
-					}
-				}).then(res => {
-					this.deviceMessageOption.xAxis.name = this.deviceMessageModel === 'month' ? '日' : '时';
-					this.deviceMessageOption.xAxis.data = [];
-					this.deviceMessageOption.series = [];
-					res.data.forEach((v, i) => {
-						v.deviceSet.forEach((vD, iD) => {
-							if(i === 0) {
-								this.deviceMessageOption.series.push({
-									name: vD.name,
-									type: 'bar',
-									stack: 'device',
-									data: [vD.number]
-								})
-							} else {
-								let index = this.deviceMessageOption.series.findIndex(item => item.name === vD.name);
-								this.deviceMessageOption.series[index].data.push(vD.number);
-							}
-						})
-						this.deviceMessageOption.xAxis.data.push(this.deviceMessageModel === 'month' ? this.$moment(v.ts).format('DD') : this.$moment(v.ts).format('HH'));
-					})
-					this.deviceMessageCharts.setOption(this.deviceMessageOption, true)
-				}).catch(function(err) {
-					console.log(err);
-				})
-			},
-			//时间转换
-			sToH(s) {
-				return Math.ceil((s / 3600) * 1000) / 1000;
-			},
-			// 获取设备在线时长
-			getDeviceTime(res) {
-				this.deviceTimeOption.yAxis.data = [];
-				this.deviceTimeOption.series[0].data = [];
-				this.deviceTimeOption.grid.left = '70px';
-				res.devicesRes.forEach((v, i) => {
-					this.deviceTimeOption.yAxis.data.push(v.name);
-					this.deviceTimeOption.series[0].data.push(this.sToH(v.totaltime));
-				})
-				this.deviceTimeCharts && this.deviceTimeCharts.setOption(this.deviceTimeOption, true);
-			},
-			eventListener() {
-				setTimeout(() => {
-					this.deviceMessageCharts && this.deviceMessageCharts.resize();
-					this.deviceTimeCharts && this.deviceTimeCharts.resize();
-				}, 0)
-			}
-		}
-	}
+    },
+    methods: {
+        //获取上面三个块
+        getDeviceOverviewList() {
+            this.$axios.internet({
+                loading: {
+                    isShow: false,
+                },
+                method: 'get',
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/online/devicesNumber`,
+                //请求头配置
+                headers: {
+                    'X-Authorization': this.ajaxMsg.Authorization
+                }
+            }).then(res => {
+                this.deviceOverviewList[0].num = res.data.assetsTotal;
+                this.deviceOverviewList[1].num = res.data.onlineNumber + '/' + res.data.divicesTotal;
+            }).catch(function(err) {
+                console.log(err);
+            })
+            this.$axios.internet({
+                loading: {
+                    isShow: false,
+                },
+                method: 'get',
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/online/devicesHours`,
+                //请求头配置
+                headers: {
+                    'X-Authorization': this.ajaxMsg.Authorization
+                }
+            }).then(res => {
+                this.deviceOverviewList[2].num = this.sToH(res.data.totalHours) + '/h';
+                this.getDeviceTime(res.data);
+            }).catch(function(err) {
+                console.log(err);
+            })
+        },
+        // 获取设备消息数
+        getDeviceMessage() {
+            this.$axios.internet({
+                loading: {
+                    isShow: false,
+                },
+                method: 'get',
+                url: `${this.ajaxMsg.url}api/plugins/telemetry/${this.deviceMessageModel}/Number`,
+                //请求头配置
+                headers: {
+                    'X-Authorization': this.ajaxMsg.Authorization
+                }
+            }).then(res => {
+                this.deviceMessageOption.xAxis.name = this.deviceMessageModel === 'month' ? '日' : '时';
+                this.deviceMessageOption.xAxis.data = [];
+                this.deviceMessageOption.series = [];
+                res.data.forEach((v, i) => {
+                    v.deviceSet.forEach((vD, iD) => {
+                        if (i === 0) {
+                            this.deviceMessageOption.series.push({
+                                name: vD.name,
+                                type: 'bar',
+                                stack: 'device',
+                                data: [vD.number]
+                            })
+                        } else {
+                            let index = this.deviceMessageOption.series.findIndex(item => item.name === vD.name);
+                            this.deviceMessageOption.series[index].data.push(vD.number);
+                        }
+                    })
+                    this.deviceMessageOption.xAxis.data.push(this.deviceMessageModel === 'month' ? this.$moment(v.ts).format('DD') : this.$moment(v.ts).format('HH'));
+                })
+                this.deviceMessageCharts.setOption(this.deviceMessageOption, true)
+            }).catch(function(err) {
+                console.log(err);
+            })
+        },
+        //时间转换
+        sToH(s) {
+            return Math.ceil((s / 3600) * 1000) / 1000;
+        },
+        // 获取设备在线时长
+        getDeviceTime(res) {
+            this.deviceTimeOption.yAxis.data = [];
+            this.deviceTimeOption.series[0].data = [];
+            this.deviceTimeOption.grid.left = '70px';
+            res.devicesRes.forEach((v, i) => {
+                this.deviceTimeOption.yAxis.data.push(v.name);
+                this.deviceTimeOption.series[0].data.push(this.sToH(v.totaltime));
+            })
+            this.deviceTimeCharts && this.deviceTimeCharts.setOption(this.deviceTimeOption, true);
+        },
+        eventListener() {
+            setTimeout(() => {
+                this.deviceMessageCharts && this.deviceMessageCharts.resize();
+                this.deviceTimeCharts && this.deviceTimeCharts.resize();
+            }, 0)
+        }
+    }
+}
 </script>
 
 <style lang="scss" scoped type="text/css">
