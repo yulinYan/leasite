@@ -72,7 +72,7 @@
                     	isAuth:false//是否有权限
 					},
 					{ 
-						appName:'物联网',
+						appName:'设备管理',
 						appUrl:'InternetPlatform',
 						appIcon:require("../assets/img/wulianwang.png"),
                     	powerName:'iot',
@@ -84,6 +84,20 @@
 						appIcon:require("../assets/img/yunweizhongxin.png"),
                     	powerName:'ops',
                     	isAuth:false//是否有权限
+					},
+					{ 
+						appName:'数据中台',
+						appUrl:"http://report.k8s.leansite-cloud.com/decision",
+						appIcon:require("../assets/img/dataControl.png"),
+                    	powerName:'dataControl',
+                    	isAuth:true//是否有权限
+					},
+					{ 
+						appName:'商业智能',
+						appUrl:"http://datalake.k8s.leansite-cloud.com/ui",
+						appIcon:require("../assets/img/businessIntelligence.png"),
+                    	powerName:'analysisControl',
+                    	isAuth:true//是否有权限
 					}
 				],
 				systemList:[],//系统应用
@@ -345,6 +359,12 @@
 						break;
 					case "运维中心":
 						this.openDialog(menuObj);
+						break;
+					case "数据中台":
+						window.open(menuObj.appUrl,'_blank');
+						break;
+					case "商业智能":
+						window.open(menuObj.appUrl,'_blank');
 						break;
 					default:
 						this.openComponent(menuObj);
