@@ -87,7 +87,7 @@
 					},
 					{ 
 						appName:'数据中台',
-						appUrl:"http://report.k8s.leansite-cloud.com/decision",
+						appUrl:"http://bi.k8s.leansite-cloud.com/decision",
 						appIcon:require("../assets/img/dataControl.png"),
                     	powerName:'dataControl',
                     	isAuth:true//是否有权限
